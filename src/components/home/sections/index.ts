@@ -1,0 +1,7 @@
+export { CustomizationSection } from './customization-section'
+export { FeaturedCollectionSection } from './featured-collection-section'
+export { FinalCTASection } from './final-cta-section'
+export { HowItWorksSection } from './how-it-works-section'
+export { LetterSection } from './letter-section'
+export { SocialProofSection } from './social-proof-section'
+export { WhatIsThisSection } from './what-is-this-section'

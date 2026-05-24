@@ -264,8 +264,8 @@
   }
   @media (min-width: 768px) {
     .hero-grid {
-      grid-template-columns: 1.1fr 0.9fr !important;
-      gap: 80px !important;
+      grid-template-columns: 1.3fr 0.7fr !important;
+      gap: 56px !important;
     }
   }
 

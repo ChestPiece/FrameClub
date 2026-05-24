@@ -6,3 +6,4 @@ export * from "./button-motion";
 export * from "./anime-config";
 export * from "./motion-primitives";
 export * from "./motion-hooks";
+export { scrollToCollectionSection } from "./scroll-to-collection";

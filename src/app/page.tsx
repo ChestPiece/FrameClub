@@ -4,13 +4,15 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { HomeAnimations } from "@/components/home/home-animations";
 import { HomeSectionScroll } from "@/components/home/home-section-scroll";
-import { WhatIsThisSection } from "@/components/home/what-is-this-section";
-import { LetterSection } from "@/components/home/letter-section";
-import { HowItWorksSection } from "@/components/home/how-it-works-section";
-import { FeaturedCollectionSection } from "@/components/home/featured-collection-section";
-import { CustomizationSection } from "@/components/home/customization-section";
-import { SocialProofSection } from "@/components/home/social-proof-section";
-import { FinalCTASection } from "@/components/home/final-cta-section";
+import {
+  WhatIsThisSection,
+  LetterSection,
+  HowItWorksSection,
+  FeaturedCollectionSection,
+  CustomizationSection,
+  SocialProofSection,
+  FinalCTASection,
+} from "@/components/home/sections";
 import { Button } from "@/components/ui/button";
 import { DIECAST_PRODUCT_IMAGES } from "@/lib/shop/diecast-assets";
 import { getProducts } from "@/lib/shop/data";
@@ -91,8 +93,8 @@ export default async function Home() {
                   className="hero-grid"
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "1.1fr 0.9fr",
-                    gap: 80,
+                    gridTemplateColumns: "1.3fr 0.7fr",
+                    gap: 56,
                     alignItems: "center",
                   }}
                 >
@@ -199,12 +201,12 @@ export default async function Home() {
                     </div>
 
                     {/* RIGHT */}
-                    <div data-hero-pin="image" style={{ position: "relative" }}>
+                    <div data-hero-pin="image" style={{ position: "relative", maxWidth: 360, marginInline: "auto" }}>
                       <div
                         style={{
                           border: "0.5px solid var(--border)",
                           background: "var(--bg-base)",
-                          padding: 18,
+                          padding: 14,
                           position: "relative",
                           aspectRatio: "4/5",
                           willChange: "transform, clip-path",
@@ -218,15 +220,15 @@ export default async function Home() {
                           loading="eager"
                           sizes="(max-width: 768px) 100vw, 50vw"
                           className="object-contain grayscale mix-blend-luminosity brightness-75 transition-all duration-700 hover:grayscale-0 hover:mix-blend-normal"
-                          style={{ padding: 18 }}
+                          style={{ padding: 14 }}
                         />
                         <div
                           className="grid items-end"
                           style={{
                             position: "absolute",
-                            left: 18,
-                            right: 18,
-                            bottom: 18,
+                            left: 14,
+                            right: 14,
+                            bottom: 14,
                             background:
                               "linear-gradient(to top, rgba(14,14,14,0.96), rgba(14,14,14,0))",
                             padding: "32px 20px 20px",
