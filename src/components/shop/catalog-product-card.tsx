@@ -17,6 +17,8 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
     <article
       data-animate-item
       data-flip-card
+      data-reveal
+      data-tilt
       className={`group flex flex-col bg-bg-elevated transition-colors duration-300 ${
         product.status === "unavailable" ? "opacity-75" : "opacity-100"
       }`}
@@ -29,7 +31,7 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain p-5 sm:p-8 opacity-95 transition-[opacity,transform] duration-500 ease-out motion-safe:group-hover:scale-[1.02] group-hover:opacity-100"
+              className="object-contain p-5 sm:p-8 opacity-95 transition-[opacity,transform] duration-500 ease-out motion-safe:group-hover:scale-[1.04] group-hover:opacity-100"
             />
             <div className="absolute right-4 top-4 z-10 rotate-12 border border-brand bg-bg-surface/80 px-2 py-1 text-[10px] uppercase tracking-widest text-brand backdrop-blur-sm">
               MADE TO ORDER

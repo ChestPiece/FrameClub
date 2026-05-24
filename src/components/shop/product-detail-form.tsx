@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { TransitionLink } from "@/components/layout/page-transition";
+import {
+  useProductCtaPulse,
+  useVariantSwatchSpring,
+} from "@/components/product/product-animations";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { WHATSAPP_LINK } from "@/lib/content/copy-constants";
@@ -58,6 +62,9 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
   const [qty, setQty] = useState<number>(1);
   const [tab, setTab] = useState<"spec" | "notes" | "shipping">("spec");
   const tiltRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const popSwatch = useVariantSwatchSpring();
+  useProductCtaPulse(ctaRef);
 
   useEffect(() => {
     const el = tiltRef.current;
@@ -320,12 +327,12 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
           {/* RIGHT — Config */}
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-            <div>
+            <div data-reveal>
               <StatusBadge status={product.status} />
             </div>
 
             {/* Header */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            <div data-reveal style={{ display: "flex", flexDirection: "column", gap: 0 }}>
               <div
                 className="font-body text-text-muted"
                 style={{
@@ -366,6 +373,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
             {/* Description */}
             <p
+              data-reveal
               className="text-text-muted"
               style={{ fontSize: 15, lineHeight: 1.75, maxWidth: 540, margin: 0 }}
             >
@@ -374,6 +382,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
             {/* Price/Lead row */}
             <div
+              data-reveal
               style={{
                 display: "flex",
                 alignItems: "baseline",
@@ -444,7 +453,10 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={bg.value}
-                        onClick={() => setBackground(bg.value)}
+                        onClick={(e) => {
+                          setBackground(bg.value);
+                          popSwatch(e.currentTarget);
+                        }}
                         aria-label={bg.label}
                         aria-pressed={active}
                         style={{
@@ -490,7 +502,10 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={f.value}
-                        onClick={() => setFinish(f.value)}
+                        onClick={(e) => {
+                          setFinish(f.value);
+                          popSwatch(e.currentTarget);
+                        }}
                         aria-pressed={active}
                         style={{
                           display: "flex",
@@ -536,7 +551,10 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={p.value}
-                        onClick={() => setPlate(p.value)}
+                        onClick={(e) => {
+                          setPlate(p.value);
+                          popSwatch(e.currentTarget);
+                        }}
                         aria-pressed={active}
                         style={{
                           padding: "14px 16px",
@@ -603,6 +621,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
               {/* Qty + CTA */}
               <div
+                data-reveal
                 style={{
                   display: "grid",
                   gridTemplateColumns: "auto 1fr",
@@ -665,6 +684,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
                 {product.status === "unavailable" ? (
                   <Button
+                    ref={ctaRef}
                     render={<TransitionLink href={`/contact?intent=notify&product=${product.slug}`} />}
                     variant="muted"
                     size="lg"
@@ -674,6 +694,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                   </Button>
                 ) : (
                   <Button
+                    ref={ctaRef}
                     type="submit"
                     variant="brand"
                     size="lg"
@@ -686,6 +707,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
               {/* Trust strip */}
               <div
+                data-reveal
                 className="font-body text-text-muted"
                 style={{
                   display: "grid",
@@ -768,7 +790,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
         </div>
 
         {tab === "spec" ? (
-          <div className="product-tab-grid">
+          <div data-reveal className="product-tab-grid">
             <div>
               <SpecRow k="Marque" v={product.brand} />
               <SpecRow k="Model" v={product.name} />
@@ -788,6 +810,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
         {tab === "notes" ? (
           <div
+            data-reveal
             className="product-tab-grid text-text-muted"
             style={{ fontSize: 15, lineHeight: 1.7 }}
           >
@@ -806,6 +829,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
         {tab === "shipping" ? (
           <div
+            data-reveal
             className="text-text-muted"
             style={{ maxWidth: 720, fontSize: 15, lineHeight: 1.7 }}
           >
@@ -865,7 +889,7 @@ function ConfigSection({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div data-reveal style={{ display: "flex", flexDirection: "column" }}>
       <div
         style={{
           display: "flex",

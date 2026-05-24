@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { CatalogProductCard } from "@/components/shop/catalog-product-card";
+import { ShopGridAnimations } from "@/components/shop/shop-grid-animations";
 import type { Product } from "@/lib/db/types";
 
 type ShopClientViewProps = {
@@ -244,19 +245,21 @@ export function ShopClientView({ products }: ShopClientViewProps) {
               </p>
             </div>
           ) : (
-            <div
-              data-shop-grid
-              data-animate-page="shop"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 24,
-              }}
-            >
-              {filtered.map((product) => (
-                <CatalogProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <ShopGridAnimations filterSignal={`${filter}::${sort}`}>
+              <div
+                data-shop-grid
+                data-animate-page="shop"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 24,
+                }}
+              >
+                {filtered.map((product) => (
+                  <CatalogProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </ShopGridAnimations>
           )}
         </div>
       </section>
