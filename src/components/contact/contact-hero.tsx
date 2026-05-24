@@ -59,7 +59,7 @@ export function ContactHero({ chapterLabel, title, subtitle }: Props) {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-bg-deep texture-overlay"
-      style={{ paddingTop: "calc(7.5rem + 64px)", paddingBottom: 120 }}
+      style={{ paddingTop: "calc(7.5rem + 40px)", paddingBottom: 80 }}
     >
       <div
         className="pointer-events-none absolute"
@@ -82,7 +82,7 @@ export function ContactHero({ chapterLabel, title, subtitle }: Props) {
             gridTemplateColumns: "auto 1fr auto",
             gap: 32,
             paddingBottom: 28,
-            marginBottom: 80,
+            marginBottom: 56,
           }}
         >
           <p className="font-body uppercase text-text-muted" style={KICKER}>
@@ -103,7 +103,7 @@ export function ContactHero({ chapterLabel, title, subtitle }: Props) {
             ref={titleRef}
             className="font-display uppercase text-text-primary"
             style={{
-              fontSize: "clamp(3rem, 7vw, 6rem)",
+              fontSize: "clamp(2.5rem, 5.5vw, 5rem)",
               lineHeight: 0.95,
               letterSpacing: "0.03em",
               margin: 0,

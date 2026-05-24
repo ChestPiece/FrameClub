@@ -75,7 +75,7 @@ export function AboutTimeline() {
       ref={sectionRef}
       className="bg-bg-deep"
       style={{
-        padding: "140px 0",
+        padding: "90px 0",
         borderTop: "0.5px solid var(--border)",
         borderBottom: "0.5px solid var(--border)",
       }}
@@ -85,7 +85,7 @@ export function AboutTimeline() {
           className="grid items-end"
           style={{
             gridTemplateColumns: "1fr auto",
-            marginBottom: 64,
+            marginBottom: 48,
             gap: 32,
           }}
         >
@@ -96,7 +96,7 @@ export function AboutTimeline() {
             <h2
               className="font-display uppercase text-text-primary"
               style={{
-                fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                fontSize: "clamp(2rem, 4vw, 3.5rem)",
                 lineHeight: 1,
                 letterSpacing: "0.04em",
                 margin: 0,

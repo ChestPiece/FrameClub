@@ -38,7 +38,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         {/* Body — form + info panel */}
         <section
           className="bg-bg-surface"
-          style={{ padding: "120px 0 160px" }}
+          style={{ padding: "80px 0 100px" }}
         >
           <div className="mx-auto" style={{ width: "min(calc(100% - 2rem), 80rem)" }}>
             <div className="contact-grid" style={{ gap: 80, alignItems: "start" }}>
