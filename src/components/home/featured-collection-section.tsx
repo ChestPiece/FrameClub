@@ -1,65 +1,52 @@
 "use client";
 
 import Image from "next/image";
-import { LayoutGrid, LayoutList } from "lucide-react";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/animation/gsap-config";
-import { Flip } from "gsap/Flip";
 import { useScrollTriggerReady } from "@/components/providers/scroll-trigger-environment";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedCTALink } from "@/components/shared/animated-cta-link";
-import { cn, formatPkr } from "@/lib/utils";
+import { TransitionLink } from "@/components/layout/page-transition";
+import { formatPkr } from "@/lib/utils";
 import type { Product } from "@/lib/db/types";
+import { FCHairline } from "@/components/home/fc-hairline";
+
+const KICKER: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: "0.28em",
+  textTransform: "uppercase",
+};
+
 
 type FeaturedCollectionSectionProps = {
   products: Product[];
 };
 
-export function FeaturedCollectionSection({ products }: FeaturedCollectionSectionProps) {
+export function FeaturedCollectionSection({
+  products,
+}: FeaturedCollectionSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
   const scrollTriggerReady = useScrollTriggerReady();
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  const handleViewToggle = useCallback(
-    (newMode: "grid" | "list") => {
-      if (newMode === viewMode) return;
-      const grid = gridRef.current;
-      if (!grid) return;
-      const cards = gsap.utils.toArray<HTMLElement>("[data-featured-product-card]", grid);
-      if (cards.length === 0) return;
-      if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setViewMode(newMode);
-        return;
-      }
-      flipStateRef.current = Flip.getState(cards);
-      setViewMode(newMode);
-    },
-    [viewMode],
-  );
 
   useGSAP(
     () => {
       if (!scrollTriggerReady || products.length === 0) return;
       const grid = gridRef.current;
       if (!grid) return;
-      const cards = gsap.utils.toArray<HTMLElement>("[data-featured-product-card]", grid);
+      const cards = gsap.utils.toArray<HTMLElement>(
+        "[data-featured-product-card]",
+        grid,
+      );
       if (cards.length !== products.length) return;
 
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(cards, {
-          y: 0,
-          opacity: 1,
-          clipPath: "none",
-          clearProps: "all",
-        });
+        gsap.set(cards, { y: 0, opacity: 1, clipPath: "none", clearProps: "all" });
         return () => {};
       });
 
@@ -74,11 +61,7 @@ export function FeaturedCollectionSection({ products }: FeaturedCollectionSectio
             duration: 1.1,
             ease: "power4.out",
             stagger: 0.15,
-            scrollTrigger: {
-              trigger: gridRef.current,
-              start: "top 75%",
-              once: true,
-            },
+            scrollTrigger: { trigger: grid, start: "top 75%", once: true },
           },
         );
         return () => {
@@ -92,125 +75,134 @@ export function FeaturedCollectionSection({ products }: FeaturedCollectionSectio
     { scope: sectionRef, dependencies: [scrollTriggerReady, products] },
   );
 
-  useLayoutEffect(() => {
-    const state = flipStateRef.current;
-    if (!state) return;
-    const grid = gridRef.current;
-    if (!grid) {
-      flipStateRef.current = null;
-      return;
-    }
-    const cards = gsap.utils.toArray<HTMLElement>("[data-featured-product-card]", grid);
-    if (cards.length === 0) {
-      flipStateRef.current = null;
-      return;
-    }
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      flipStateRef.current = null;
-      return;
-    }
-    Flip.from(state, {
-      duration: 0.5,
-      ease: "power2.inOut",
-      stagger: 0.04,
-      absolute: true,
-      onComplete: () => {
-        flipStateRef.current = null;
-      },
-    });
-  }, [viewMode]);
-
   return (
     <div ref={sectionRef}>
-      <div className="mb-8 md:mb-10 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-        <div className="space-y-2 min-w-0">
-          <h2 className="display-kicker text-3xl sm:text-4xl md:text-5xl">THE COLLECTION</h2>
-          <p className="max-w-xl text-sm sm:text-base text-text-muted leading-relaxed">
-            Every frame is made to order. No two are exactly alike.
+      {/* Header */}
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: "1fr auto",
+          alignItems: "end",
+          marginBottom: 48,
+          gap: 16,
+        }}
+      >
+        <div>
+          <p
+            className="font-body text-text-muted"
+            style={{ ...KICKER, marginBottom: 16 }}
+          >
+            Chapter Four · The Collection
           </p>
-        </div>
-        <div className="hidden md:flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Grid view"
-            className={cn("border border-border", viewMode === "grid" && "border-brand-mid")}
-            onClick={() => handleViewToggle("grid")}
+          <h2
+            className="font-display uppercase text-text-primary"
+            style={{
+              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              lineHeight: 1,
+              letterSpacing: "0.04em",
+              margin: 0,
+              fontWeight: 400,
+            }}
           >
-            <LayoutGrid className="h-4 w-4" strokeWidth={1.5} />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="List view"
-            className={cn("border border-border", viewMode === "list" && "border-brand-mid")}
-            onClick={() => handleViewToggle("list")}
-          >
-            <LayoutList className="h-4 w-4" strokeWidth={1.5} />
-          </Button>
+            Featured builds
+          </h2>
         </div>
+        <Button
+          render={<TransitionLink href="/shop" />}
+          variant="outline"
+          className="font-display uppercase"
+          style={{
+            padding: "14px 22px",
+            fontSize: 12,
+            letterSpacing: "0.14em",
+          }}
+        >
+          View all · {products.length}
+        </Button>
       </div>
 
+      <FCHairline />
+
       {products.length === 0 ? (
-        <EmptyState
-          label="THE COLLECTION"
-          title="COMING SOON"
-          description="New frames are being added. Follow us on Instagram for updates."
-          cta={{ label: "VISIT INSTAGRAM", href: "https://instagram.com/frameclub__" }}
-        />
+        <div style={{ marginTop: 32 }}>
+          <EmptyState
+            label="THE COLLECTION"
+            title="COMING SOON"
+            description="New frames are being added. Follow us on Instagram for updates."
+            cta={{ label: "VISIT INSTAGRAM", href: "https://instagram.com/frameclub__" }}
+          />
+        </div>
       ) : (
         <div
           ref={gridRef}
-          className={cn("grid gap-6 sm:gap-8", viewMode === "grid" ? "sm:grid-cols-2 md:grid-cols-3" : "md:grid-cols-1")}
+          className="grid"
+          style={{
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 24,
+            marginTop: 32,
+          }}
         >
           {products.map((product) => (
-            <Card
+            <article
               key={product.id}
               data-featured-product-card
               data-motion-reveal
-              className="group bg-bg-deep overflow-hidden border border-border/20 min-w-0"
+              className="group min-w-0"
               style={{ opacity: 0 }}
             >
-              <div
-                suppressHydrationWarning
-                className="relative aspect-square w-full overflow-hidden bg-bg-deep"
+              <TransitionLink
+                href={`/shop/${product.slug}`}
+                className="block"
               >
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-contain p-4 md:p-6 grayscale transition-all duration-500 group-hover:grayscale-0"
-                />
-              </div>
-
-              <CardContent className="p-5 sm:p-6">
-                <div className="mb-4 flex flex-wrap items-start justify-between gap-3 gap-y-2">
-                  <h3 className="display-kicker text-lg sm:text-xl leading-none min-w-0 wrap-break-word">{product.name}</h3>
-                  <span className="technical-label text-xs text-brand-bright shrink-0">{formatPkr(product.price)}</span>
+                <div
+                  className="relative w-full overflow-hidden bg-bg-deep"
+                  style={{ aspectRatio: "4/5", border: "0.5px solid var(--border-subtle)" }}
+                >
+                  <Image
+                    src={product.images[0]}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-contain p-6 grayscale transition-all duration-500 group-hover:grayscale-0"
+                  />
                 </div>
-
-                <p className="mb-6 text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-text-muted">
-                  {product.brand}
-                </p>
-                <div className="mb-6">
+                <div style={{ paddingTop: 20 }}>
+                  <div
+                    className="flex items-start justify-between"
+                    style={{ gap: 12, marginBottom: 8 }}
+                  >
+                    <h3
+                      className="font-display uppercase text-text-primary"
+                      style={{
+                        fontSize: 20,
+                        letterSpacing: "0.06em",
+                        lineHeight: 1,
+                        margin: 0,
+                        fontWeight: 400,
+                      }}
+                    >
+                      {product.name}
+                    </h3>
+                    <span
+                      className="font-display text-brand-bright shrink-0"
+                      style={{
+                        fontSize: 13,
+                        letterSpacing: "0.14em",
+                      }}
+                    >
+                      {formatPkr(product.price)}
+                    </span>
+                  </div>
+                  <p
+                    className="font-body uppercase text-text-muted"
+                    style={{ ...KICKER, marginBottom: 12 }}
+                  >
+                    {product.brand}
+                  </p>
                   <StatusBadge status={product.status} />
                 </div>
-
-                <Button
-                  render={
-                    <AnimatedCTALink
-                      href={`/shop/${product.slug}`}
-                      className="w-full border border-border py-4 text-center display-kicker tracking-widest focus-visible:ring-2 focus-visible:ring-brand-mid focus-visible:ring-offset-2 focus-visible:ring-offset-bg-deep"
-                    >
-                      VIEW SPECS
-                    </AnimatedCTALink>
-                  }
-                  variant="outline"
-                  className="relative w-full overflow-hidden"
-                />
-              </CardContent>
-            </Card>
+              </TransitionLink>
+            </article>
           ))}
         </div>
       )}

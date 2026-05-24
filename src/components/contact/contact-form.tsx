@@ -4,10 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 type ContactFormProps = {
   intentIsNotify: boolean;
@@ -26,6 +22,32 @@ const initialState: FormState = {
   message: "",
 };
 
+const KICKER: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: "0.28em",
+  textTransform: "uppercase",
+};
+
+const FIELD_WRAP: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
+};
+
+const INPUT_STYLE: React.CSSProperties = {
+  width: "100%",
+  background: "transparent",
+  border: "none",
+  borderBottom: "0.5px solid var(--border)",
+  color: "var(--text-primary)",
+  padding: "14px 0",
+  fontSize: 16,
+  letterSpacing: "0.02em",
+  outline: "none",
+  fontFamily: "var(--font-body, Inter, sans-serif)",
+};
+
 function createFormSchema(intentIsNotify: boolean) {
   return z
     .object({
@@ -41,7 +63,6 @@ function createFormSchema(intentIsNotify: boolean) {
           message: "Full name is required.",
         });
       }
-
       if (!intentIsNotify && values.message.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -88,19 +109,12 @@ export function ContactForm({ intentIsNotify, productSlug }: ContactFormProps) {
 
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const body = (await response.json().catch(() => null)) as
-        | {
-            success: false;
-            error: {
-              message: string;
-            };
-          }
+        | { success: false; error: { message: string } }
         | null;
 
       if (!response.ok) {
@@ -110,7 +124,11 @@ export function ContactForm({ intentIsNotify, productSlug }: ContactFormProps) {
       }
 
       setStatus("success");
-      setMessage(intentIsNotify ? "You will be notified when this model is available." : "Message received. We will contact you soon.");
+      setMessage(
+        intentIsNotify
+          ? "You will be notified when this model is available."
+          : "Message received. The workshop will reply within one working day.",
+      );
       reset(initialState);
     } catch {
       setStatus("error");
@@ -119,69 +137,146 @@ export function ContactForm({ intentIsNotify, productSlug }: ContactFormProps) {
   }
 
   return (
-    <form className="space-y-6 sm:space-y-7" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{ display: "flex", flexDirection: "column", gap: 36 }}
+    >
       {!intentIsNotify ? (
-        <div className="space-y-2">
-          <Label htmlFor="contact-name" className="technical-label block text-[10px] text-text-muted">
-            Full Name
-          </Label>
-          <Input
+        <div style={FIELD_WRAP}>
+          <label
+            htmlFor="contact-name"
+            className="font-body text-text-muted"
+            style={KICKER}
+          >
+            01 · Full Name
+          </label>
+          <input
             id="contact-name"
-            placeholder="Enter your full name"
-            className="min-touch-target w-full border-border/70 bg-bg-surface text-text-primary placeholder:text-text-muted/75 tracking-[0.04em] transition-colors duration-200 focus-visible:border-brand/80 focus-visible:ring-2 focus-visible:ring-brand/30"
+            placeholder="Your name"
+            style={INPUT_STYLE}
             {...register("name")}
           />
-          {errors.name ? <p className="mt-2 text-xs text-error">{errors.name.message}</p> : null}
+          {errors.name ? (
+            <p className="font-body" style={{ ...KICKER, color: "var(--text-error)" }}>
+              {errors.name.message}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
-      <div className="space-y-2">
-        <Label htmlFor="contact-email" className="technical-label block text-[10px] text-text-muted">
-          Email
-        </Label>
-        <Input
+      <div style={FIELD_WRAP}>
+        <label
+          htmlFor="contact-email"
+          className="font-body text-text-muted"
+          style={KICKER}
+        >
+          {intentIsNotify ? "01 · Email" : "02 · Email"}
+        </label>
+        <input
           id="contact-email"
           placeholder="name@email.com"
           type="email"
-          className="min-touch-target w-full border-border/70 bg-bg-surface text-text-primary placeholder:text-text-muted/75 tracking-[0.04em] transition-colors duration-200 focus-visible:border-brand/80 focus-visible:ring-2 focus-visible:ring-brand/30"
+          style={INPUT_STYLE}
           {...register("email")}
         />
-        {errors.email ? <p className="mt-2 text-xs text-error">{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p className="font-body" style={{ ...KICKER, color: "var(--text-error)" }}>
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       {!intentIsNotify ? (
-        <div className="space-y-2">
-          <Label htmlFor="contact-message" className="technical-label block text-[10px] text-text-muted">
-            Message
-          </Label>
-          <Textarea
+        <div style={FIELD_WRAP}>
+          <label
+            htmlFor="contact-message"
+            className="font-body text-text-muted"
+            style={KICKER}
+          >
+            03 · Message
+          </label>
+          <textarea
             id="contact-message"
-            placeholder="Tell us what you need"
+            placeholder="What car, what backdrop, what should the plate say?"
             rows={5}
-            className="w-full border-border/70 bg-bg-surface text-text-primary placeholder:text-text-muted/75 tracking-[0.04em] transition-colors duration-200 focus-visible:border-brand/80 focus-visible:ring-2 focus-visible:ring-brand/30"
+            style={{
+              ...INPUT_STYLE,
+              padding: "14px 0",
+              resize: "vertical",
+              minHeight: 140,
+              lineHeight: 1.6,
+            }}
             {...register("message")}
           />
-          {errors.message ? <p className="mt-2 text-xs text-error">{errors.message.message}</p> : null}
+          {errors.message ? (
+            <p className="font-body" style={{ ...KICKER, color: "var(--text-error)" }}>
+              {errors.message.message}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
-      <Button
-        type="submit"
-        disabled={isSubmitting || status === "loading"}
-        variant="brand"
-        className="display-kicker min-touch-target w-full py-4 text-sm sm:text-base"
+      <div
+        style={{
+          paddingTop: 24,
+          borderTop: "0.5px solid var(--border-subtle)",
+          marginTop: 8,
+        }}
       >
-        {status === "loading" ? "Submitting" : intentIsNotify ? "Notify Me" : "Send Message"}
-      </Button>
+        <button
+          type="submit"
+          disabled={isSubmitting || status === "loading"}
+          className="font-display uppercase"
+          style={{
+            width: "100%",
+            padding: "20px 32px",
+            background:
+              isSubmitting || status === "loading"
+                ? "color-mix(in srgb, var(--brand-bright) 50%, transparent)"
+                : "var(--brand-bright)",
+            color: "var(--text-primary)",
+            border: "1px solid var(--brand-bright)",
+            fontSize: 16,
+            letterSpacing: "0.18em",
+            cursor: isSubmitting || status === "loading" ? "wait" : "pointer",
+            transition: "background 0.25s ease",
+          }}
+        >
+          {status === "loading"
+            ? "SENDING…"
+            : intentIsNotify
+              ? "NOTIFY ME →"
+              : "SEND MESSAGE →"}
+        </button>
+      </div>
 
       {status === "success" ? (
-        <p role="status" aria-live="polite" className="text-sm text-success">
-          {message}
+        <p
+          role="status"
+          aria-live="polite"
+          className="font-body"
+          style={{
+            ...KICKER,
+            color: "var(--text-success)",
+            padding: "16px 0",
+            borderTop: "0.5px solid var(--status-success-border)",
+          }}
+        >
+          ✓ {message}
         </p>
       ) : null}
       {status === "error" ? (
-        <p role="alert" className="text-sm text-error">
-          {message}
+        <p
+          role="alert"
+          className="font-body"
+          style={{
+            ...KICKER,
+            color: "var(--text-error)",
+            padding: "16px 0",
+            borderTop: "0.5px solid var(--text-error)",
+          }}
+        >
+          ✗ {message}
         </p>
       ) : null}
     </form>

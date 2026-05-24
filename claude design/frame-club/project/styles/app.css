@@ -1,0 +1,264 @@
+/* ============================================================
+   Frame Club — Application styles
+   Premium polish: cursor, transitions, scroll, marquee.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; border-radius: 0 !important; }
+html { scroll-behavior: auto; }
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Native cursor stays — we add only a subtle accent dot. */
+@media (pointer: coarse) {
+  .fc-cursor-dot { display: none !important; }
+}
+
+::selection { background: var(--brand); color: var(--text-primary); }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--bg-elevated); }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-mid); }
+
+/* ============================================================
+   Cursor — subtle 6px accent dot that follows the pointer.
+   ============================================================ */
+.fc-cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 6px; height: 6px;
+  background: var(--brand-bright);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10000;
+  transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease;
+  mix-blend-mode: difference;
+}
+.fc-cursor-dot.is-hover {
+  width: 14px; height: 14px;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   Page transition — quiet dark veil that fades in & out.
+   ============================================================ */
+.fc-veil {
+  position: fixed; inset: 0;
+  background: var(--bg-deep);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Marquee ticker
+   ============================================================ */
+@keyframes fc-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.fc-ticker-track {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  animation: fc-ticker 38s linear infinite;
+}
+
+/* ============================================================
+   Reveal primitives (initial state — GSAP overrides)
+   ============================================================ */
+[data-fc-rise] { opacity: 0; transform: translateY(28px); }
+[data-fc-clip] { clip-path: inset(0 100% 0 0); }
+[data-fc-draw] { stroke-dasharray: 1; stroke-dashoffset: 1; }
+[data-fc-fade] { opacity: 0; }
+
+/* ============================================================
+   Pulsing dot (Available indicator)
+   ============================================================ */
+.fc-pulse {
+  position: relative;
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--text-success);
+  flex-shrink: 0;
+}
+.fc-pulse::before, .fc-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--text-success);
+  opacity: 0;
+  animation: fc-pulse 2.4s ease-out infinite;
+}
+.fc-pulse::after { animation-delay: 1.2s; }
+@keyframes fc-pulse {
+  0%   { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ============================================================
+   Hover underline (nav links)
+   ============================================================ */
+.fc-nav-link { position: relative; overflow: hidden; }
+.fc-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 16px; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--brand-bright);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(.6,.05,.05,.95);
+}
+.fc-nav-link:hover::after { transform: scaleX(1); }
+
+/* ============================================================
+   Frame number glyph (giant ghost outline)
+   ============================================================ */
+.fc-ghost-num {
+  font-family: var(--font-display);
+  -webkit-text-stroke: 1px var(--border);
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Subtle film grain overlay
+   ============================================================ */
+.fc-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.96 0 0 0 0 0.96 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   Texture overlay (subtle soft-light wash)
+   ============================================================ */
+.fc-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Form / Input
+   ============================================================ */
+.fc-input {
+  width: 100%;
+  background: var(--bg-deep);
+  border: 0.5px solid var(--border);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 16px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.fc-input:focus {
+  outline: none;
+  border-color: var(--brand-bright);
+  background: var(--bg-surface);
+}
+.fc-input::placeholder { color: #5a5654; }
+.fc-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ============================================================
+   Magnetic button wrapper
+   ============================================================ */
+[data-magnetic] {
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+}
+
+/* ============================================================
+   Diagonal corner clip (signature)
+   ============================================================ */
+.fc-corner-clip {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 40px; height: 40px;
+  background: var(--brand-bright);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  z-index: 3;
+}
+
+/* ============================================================
+   Background patterns (for product backgrounds picker)
+   ============================================================ */
+.fc-bg-carbon {
+  background:
+    repeating-linear-gradient(45deg, rgba(245,245,245,0.10) 0 1px, transparent 1px 6px),
+    var(--bg-deep);
+}
+.fc-bg-race {
+  background:
+    linear-gradient(135deg, transparent 44%, rgba(245,245,245,0.18) 45%, transparent 46%),
+    var(--bg-deep);
+}
+.fc-bg-atlas {
+  background:
+    repeating-linear-gradient(90deg, rgba(245,245,245,0.12) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(0deg, rgba(245,245,245,0.06) 0 1px, transparent 1px 8px),
+    var(--bg-deep);
+}
+.fc-bg-monolith { background: var(--bg-deep); }
+.fc-bg-heritage {
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--brand) 40%, transparent), transparent 60%),
+    var(--bg-deep);
+}
+
+/* ============================================================
+   Section frame brackets (corners)
+   ============================================================ */
+.fc-brackets { position: relative; }
+.fc-brackets::before,
+.fc-brackets::after {
+  content: "";
+  position: absolute;
+  width: 20px; height: 20px;
+  border: 1px solid var(--brand);
+  pointer-events: none;
+}
+.fc-brackets::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+.fc-brackets::after  { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* ============================================================
+   Scroll progress bar
+   ============================================================ */
+.fc-progress {
+  position: fixed;
+  left: 0; top: 0;
+  height: 2px;
+  background: var(--brand-bright);
+  z-index: 50;
+  transform-origin: left;
+  transform: scaleX(0);
+  width: 100%;
+  mix-blend-mode: difference;
+}

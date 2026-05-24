@@ -35,33 +35,23 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
 
   return (
     <>
-      <main id="main-content" className="pb-24">
-        <section className="border-b border-border bg-bg-surface py-16 md:py-20">
-          <div className="frame-container">
-            <p className="technical-label text-[10px] text-text-muted">Checkout</p>
-            <h1 className="display-kicker mt-5 text-3xl leading-none sm:text-5xl md:text-8xl">COMPLETE YOUR ORDER</h1>
-            <p className="mt-6 max-w-2xl text-sm leading-relaxed text-text-muted">
-              Confirm your frame details, complete shipping information, and proceed to PayFast.
-            </p>
-            <p className="mt-5 text-[10px] uppercase tracking-[0.16em] text-text-accent">No COD. Full upfront payment only.</p>
-          </div>
-        </section>
-
-        <section className="frame-container py-16 md:py-20">
-          <CheckoutForm
-            product={product}
-            slug={slug}
-            background={background}
-            notes={notes}
-            initialValues={{
-              customerName: retryOrder?.customerName,
-              customerEmail: retryOrder?.customerEmail,
-              customerPhone: retryOrder?.customerPhone,
-              customerAddress: retryOrder?.customerAddress,
-              customerCity: retryOrder?.customerCity,
-            }}
-          />
-        </section>
+      <main
+        id="main-content"
+        style={{ paddingTop: "calc(7.5rem + 60px)", paddingBottom: 80 }}
+      >
+        <CheckoutForm
+          product={product}
+          slug={slug}
+          background={background}
+          notes={notes}
+          initialValues={{
+            customerName: retryOrder?.customerName,
+            customerEmail: retryOrder?.customerEmail,
+            customerPhone: retryOrder?.customerPhone,
+            customerAddress: retryOrder?.customerAddress,
+            customerCity: retryOrder?.customerCity,
+          }}
+        />
       </main>
       <SiteFooter />
     </>

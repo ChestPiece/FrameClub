@@ -1,59 +1,42 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/animation/gsap-config";
 import { useScrollTriggerReady } from "@/components/providers/scroll-trigger-environment";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { TransitionLink } from "@/components/layout/page-transition";
+import { Button } from "@/components/ui/button";
+import { FCHairline } from "@/components/home/fc-hairline";
+
+const KICKER: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: "0.28em",
+  textTransform: "uppercase",
+};
 
 const steps = [
   {
-    label: "PICK YOUR CAR",
-    description: "Select from available models or request your preferred car.",
+    n: "01",
+    title: "Pick your car",
+    body: "Choose from the running collection — Porsche, Nissan, Ferrari, Lamborghini, Toyota — or request a model. We source 1:64 scale from Hot Wheels, Tomica Premium, Mini-GT, and the occasional private import.",
   },
   {
-    label: "CUSTOMISE IT",
-    description: "Choose your background style and share notes for the build.",
+    n: "02",
+    title: "Specify the build",
+    body: "Pick the backdrop, the wood finish, and what the spec plate should say. Five backgrounds, four lacquers, four plate variants. Twenty-thousand configurations from a single SKU.",
   },
   {
-    label: "WE BUILD & SHIP",
-    description: "We source, build, and ship your frame nationwide across Pakistan.",
+    n: "03",
+    title: "We build & ship",
+    body: "Assembled by hand in Lahore over seven days. Photographed before dispatch. Shipped nationwide via TCS Overnight in a custom rigid foam cradle. Insured, tracked, doorstepped.",
   },
 ];
 
+
 export function HowItWorksSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const ghostRefs = useRef<HTMLDivElement[]>([]);
   const scrollTriggerReady = useScrollTriggerReady();
-
-  const setGhostRef = useCallback((el: HTMLDivElement | null, index: number) => {
-    if (el) ghostRefs.current[index] = el;
-  }, []);
-
-  const handleCardEnter = useCallback((index: number) => {
-    const ghost = ghostRefs.current[index];
-    if (!ghost) return;
-    gsap.killTweensOf(ghost);
-    gsap.to(ghost, {
-      opacity: 0.07,
-      scale: 1.04,
-      duration: 0.35,
-      ease: "expo.out",
-    });
-  }, []);
-
-  const handleCardLeave = useCallback((index: number) => {
-    const ghost = ghostRefs.current[index];
-    if (!ghost) return;
-    gsap.killTweensOf(ghost);
-    gsap.to(ghost, {
-      opacity: 0.03,
-      scale: 1,
-      duration: 0.3,
-      ease: "expo.in",
-    });
-  }, []);
 
   useGSAP(
     () => {
@@ -80,11 +63,7 @@ export function HowItWorksSection() {
             duration: 0.9,
             ease: "power3.out",
             stagger: 0.12,
-            scrollTrigger: {
-              trigger: root,
-              start: "top 75%",
-              once: true,
-            },
+            scrollTrigger: { trigger: root, start: "top 75%", once: true },
           },
         );
         return () => {
@@ -99,46 +78,136 @@ export function HowItWorksSection() {
   );
 
   return (
-    <div ref={sectionRef}>
-      <div className="mb-10 md:mb-14 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-        <h2 className="display-kicker text-3xl leading-tight sm:text-4xl md:text-5xl max-w-full">
-          THREE STEPS. ONE FRAME. DELIVERED TO YOUR DOOR.
-        </h2>
-        <p className="technical-label text-xs sm:text-[11px] text-text-muted uppercase tracking-[0.14em] sm:tracking-[0.22em] shrink-0">
-          Three Steps to Perfection
-        </p>
-      </div>
-      <Separator className="mb-8 bg-border/40" />
-
-      <div className="grid gap-0 md:grid-cols-3">
-        {steps.map((step, index) => (
-          <Card
-            key={step.label}
-            data-how-step-card
-            data-motion-reveal
-            onMouseEnter={() => handleCardEnter(index)}
-            onMouseLeave={() => handleCardLeave(index)}
-            onFocus={() => handleCardEnter(index)}
-            onBlur={() => handleCardLeave(index)}
-            tabIndex={0}
-            className={`relative min-h-[260px] sm:min-h-[280px] md:min-h-0 md:aspect-square overflow-hidden border border-border/30 flex flex-col justify-end outline-none focus-visible:ring-2 focus-visible:ring-brand-mid focus-visible:ring-inset ${
-              index === 1 ? "bg-bg-elevated border-t-2 border-t-brand" : "bg-bg-surface"
-            }`}
-            style={{ opacity: 0 }}
-          >
-            <div
-              ref={(el) => setGhostRef(el, index)}
-              className="absolute -top-6 -left-2 text-[clamp(4rem,18vw,10rem)] md:text-[160px] lg:text-[200px] leading-none display-kicker text-text-primary select-none pointer-events-none"
-              style={{ opacity: 0.03 }}
+    <div
+      ref={sectionRef}
+      className="bg-bg-surface"
+      style={{ padding: "140px 0 160px" }}
+    >
+      <div
+        className="mx-auto"
+        style={{ width: "min(calc(100% - 2rem), 80rem)" }}
+      >
+        {/* Header */}
+        <div
+          className="grid items-end"
+          style={{
+            gridTemplateColumns: "1fr auto",
+            marginBottom: 64,
+            gap: 32,
+          }}
+        >
+          <div style={{ maxWidth: 800 }}>
+            <p
+              className="font-body text-text-muted"
+              style={{ ...KICKER, marginBottom: 24 }}
             >
-              0{index + 1}
+              Chapter Three · The Process
+            </p>
+            <h2
+              className="font-display uppercase text-text-primary"
+              style={{
+                fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                lineHeight: 1,
+                letterSpacing: "0.04em",
+                margin: 0,
+                fontWeight: 400,
+              }}
+            >
+              Three steps.
+              <br />
+              One frame. <span className="text-brand-bright">Delivered.</span>
+            </h2>
+          </div>
+          <p className="font-body text-text-muted" style={KICKER}>
+            S001 — S003
+          </p>
+        </div>
+
+        <FCHairline />
+
+        {/* Steps */}
+        <div
+          className="grid"
+          style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
+        >
+          {steps.map((step, i) => (
+            <div
+              key={step.n}
+              data-how-step-card
+              data-motion-reveal
+              className="flex flex-col"
+              style={{
+                padding: "56px 40px 56px 0",
+                paddingLeft: i > 0 ? 40 : 0,
+                borderRight:
+                  i < 2 ? "0.5px solid var(--border-subtle)" : "none",
+                gap: 24,
+                opacity: 0,
+              }}
+            >
+              <div
+                className="flex items-baseline"
+                style={{ gap: 16 }}
+              >
+                <span
+                  className="font-display text-brand-bright"
+                  style={{
+                    fontSize: 40,
+                    letterSpacing: "0.04em",
+                    lineHeight: 1,
+                  }}
+                >
+                  {step.n}
+                </span>
+                <span
+                  style={{
+                    flex: 1,
+                    height: 1,
+                    background: "var(--border)",
+                  }}
+                />
+              </div>
+              <h3
+                className="font-display uppercase text-text-primary"
+                style={{
+                  fontSize: 30,
+                  letterSpacing: "0.04em",
+                  fontWeight: 400,
+                  lineHeight: 1,
+                  margin: 0,
+                }}
+              >
+                {step.title}
+              </h3>
+              <p
+                className="text-text-muted"
+                style={{ fontSize: 15, lineHeight: 1.75, margin: 0 }}
+              >
+                {step.body}
+              </p>
             </div>
-            <CardContent className="p-6 md:p-8 flex flex-col justify-end h-full relative z-10 mt-auto">
-              <h3 className="display-kicker mb-3 md:mb-4 text-lg sm:text-xl leading-none">{step.label}</h3>
-              <p className="text-sm text-text-muted leading-relaxed">{step.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div style={{ marginTop: 80 }}>
+          <Button
+            render={<TransitionLink href="/shop" />}
+            variant="outline"
+            className="font-display uppercase inline-flex"
+            style={{
+              padding: "16px 28px",
+              fontSize: 14,
+              letterSpacing: "0.14em",
+              gap: 10,
+              minHeight: 44,
+              border: "1px solid var(--border)",
+              background: "transparent",
+            }}
+          >
+            Begin a build →
+          </Button>
+        </div>
       </div>
     </div>
   );

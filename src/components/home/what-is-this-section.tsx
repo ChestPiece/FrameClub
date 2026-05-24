@@ -5,6 +5,13 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/animation/gsap-config";
 import { useScrollTriggerReady } from "@/components/providers/scroll-trigger-environment";
 
+const KICKER_STYLE: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: "0.28em",
+  textTransform: "uppercase",
+};
+
 export function WhatIsThisSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -13,7 +20,6 @@ export function WhatIsThisSection() {
   useGSAP(
     () => {
       if (!scrollTriggerReady) return;
-
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
@@ -27,7 +33,7 @@ export function WhatIsThisSection() {
         const inner = gsap.matchMedia();
         inner.add("(min-width: 768px)", () => {
           const tween = gsap.to(headlineRef.current, {
-            yPercent: -15,
+            yPercent: -8,
             ease: "none",
             scrollTrigger: {
               trigger: sectionRef.current,
@@ -36,7 +42,6 @@ export function WhatIsThisSection() {
               scrub: 1.5,
             },
           });
-
           return () => {
             tween.scrollTrigger?.kill();
             tween.kill();
@@ -51,58 +56,79 @@ export function WhatIsThisSection() {
   );
 
   return (
-    <div ref={sectionRef} className="frame-container grid gap-10 md:gap-12 md:grid-cols-[1fr_1.5fr]">
-      <div className="md:sticky md:top-32 md:self-start relative pl-4 min-w-0">
-        <svg
-          aria-hidden="true"
-          data-drawsvg-vert
-          className="absolute left-0 top-0 h-full w-px"
-          viewBox="0 0 1 100"
-          preserveAspectRatio="none"
-        >
-          <line x1="0.5" y1="0" x2="0.5" y2="100" stroke="var(--brand)" strokeWidth="1" />
-        </svg>
-        <h2 ref={headlineRef} className="display-kicker text-3xl leading-none sm:text-4xl md:text-5xl">
-          NOT A POSTER.
-          <br />
-          NOT A TOY.
-          <br />
-          <span className="text-brand-bright">SOMETHING BETTER.</span>
-        </h2>
-      </div>
-
-      <div className="space-y-10 md:space-y-12 text-text-muted min-w-0">
-        <div data-animate-item className="space-y-6 text-sm sm:text-base leading-relaxed">
-          <p>
-            Every frame is built to order around your selected car and your chosen background design. No warehouse
-            stock, no random variants, and no shortcuts.
+    <div
+      ref={sectionRef}
+      className="bg-bg-surface"
+      style={{ padding: "160px 0 140px" }}
+    >
+      <div
+        className="mx-auto"
+        style={{ width: "min(calc(100% - 2rem), 80rem)" }}
+      >
+        {/* Header */}
+        <div style={{ maxWidth: 920, marginBottom: 80 }}>
+          <p
+            data-animate-item
+            className="font-body text-text-muted"
+            style={{ ...KICKER_STYLE, marginBottom: 24 }}
+          >
+            Chapter One · The Premise
           </p>
-          <p>
-            Each unit is sourced, assembled, and finished by hand. The website captures your request, then production
-            starts.
-          </p>
+          <h2
+            ref={headlineRef}
+            data-animate-item
+            className="font-display uppercase text-text-primary"
+            style={{
+              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              lineHeight: 1.02,
+              letterSpacing: "0.04em",
+              margin: 0,
+              fontWeight: 400,
+            }}
+          >
+            NOT A POSTER.
+            <br />
+            NOT A TOY.
+            <br />
+            <span className="text-brand-bright">SOMETHING BUILT.</span>
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 pt-2 md:pt-4">
-          <article data-animate-item className="flex items-start gap-4 sm:gap-6">
-            <span className="display-kicker text-3xl sm:text-4xl text-brand shrink-0">01</span>
-            <div className="min-w-0">
-              <h3 className="display-kicker text-xl sm:text-2xl mb-2 text-text-primary">ARCHIVAL PROTECTION</h3>
-              <p className="text-sm leading-relaxed text-text-muted">
-                Museum-style framing, archival mounting, and clean typography built for long-term display.
-              </p>
-            </div>
-          </article>
-
-          <article data-animate-item className="flex items-start gap-4 sm:gap-6">
-            <span className="display-kicker text-3xl sm:text-4xl text-brand shrink-0">02</span>
-            <div className="min-w-0">
-              <h3 className="display-kicker text-xl sm:text-2xl mb-2 text-text-primary">HANDCRAFTED PROCESS</h3>
-              <p className="text-sm leading-relaxed text-text-muted">
-                Built manually for each order, from model sourcing to final sealing and shipping prep.
-              </p>
-            </div>
-          </article>
+        {/* 2-col grid */}
+        <div
+          className="grid"
+          style={{
+            gridTemplateColumns: "1fr 1.6fr",
+            gap: 80,
+            alignItems: "start",
+          }}
+        >
+          <p
+            data-animate-item
+            className="font-body text-text-muted"
+            style={{ ...KICKER_STYLE, paddingTop: 12 }}
+          >
+            Lahore, Pakistan
+          </p>
+          <div
+            className="flex flex-col"
+            style={{ gap: 28 }}
+          >
+            <p
+              data-animate-item
+              className="text-text-primary"
+              style={{ fontSize: 18, lineHeight: 1.75, margin: 0 }}
+            >
+              Every Frame Club piece is built to order around a car you&apos;ve chosen and a backdrop you&apos;ve specified. No warehouse stock. No random variants. No assembly line.
+            </p>
+            <p
+              data-animate-item
+              className="text-text-muted"
+              style={{ fontSize: 18, lineHeight: 1.75, margin: 0 }}
+            >
+              We source the model, finish the wood, print the backdrop, mount the spec plate, seal the glass — and photograph the result before it leaves Lahore. Fifty frames so far. Zero complaints. Same flat price for every car in the collection.
+            </p>
+          </div>
         </div>
       </div>
     </div>

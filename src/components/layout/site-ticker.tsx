@@ -2,22 +2,62 @@
 
 import * as React from "react";
 
+const TICKER_ITEMS = [
+  "NATIONWIDE DELIVERY — RS. 5,000",
+  "HANDCRAFTED TO ORDER",
+  "BUILT IN PAKISTAN 🇵🇰",
+  "SECURE PAYMENT VIA PAYFAST",
+  "1:64 SCALE · ARCHIVAL FRAMING",
+  "MADE-TO-ORDER · 7 DAY LEAD",
+];
+
+function TickerTrack() {
+  return (
+    <>
+      {TICKER_ITEMS.map((item) => (
+        <span key={item} style={{ display: "inline-flex", alignItems: "center", gap: 48 }}>
+          <span>{item}</span>
+          <span
+            style={{
+              color: "var(--brand-bright)",
+              letterSpacing: 0,
+            }}
+          >
+            ●
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
 export function SiteTicker() {
   return (
-    <div className="relative z-50 flex w-full overflow-hidden whitespace-nowrap bg-brand py-1.5 text-text-primary">
-      <div className="flex animate-marquee display-kicker text-xs tracking-[0.2em] uppercase">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="flex items-center shrink-0">
-            <span className="mx-4">FRAME CLUB PAKISTAN</span>
-            <span className="mx-4">✦</span>
-            <span className="mx-4">MADE TO ORDER</span>
-            <span className="mx-4">✦</span>
-            <span className="mx-4">NATIONWIDE DELIVERY</span>
-            <span className="mx-4">✦</span>
-            <span className="mx-4">PER-FRAME PRICING</span>
-            <span className="mx-4">✦</span>
-          </div>
-        ))}
+    <div
+      style={{
+        height: "2.5rem",
+        overflow: "hidden",
+        borderBottom: "0.5px solid var(--border-subtle)",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <div
+        className="fc-ticker-track"
+        style={{
+          display: "flex",
+          whiteSpace: "nowrap",
+          fontFamily: "var(--font-body)",
+          fontSize: 10,
+          fontWeight: 500,
+          letterSpacing: "0.28em",
+          textTransform: "uppercase",
+          color: "var(--text-muted)",
+        }}
+      >
+        {/* Duplicate for seamless loop */}
+        <TickerTrack />
+        <TickerTrack />
       </div>
     </div>
   );
