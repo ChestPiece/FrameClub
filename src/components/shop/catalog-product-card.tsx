@@ -73,6 +73,14 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
             >
               Notify Me
             </Button>
+          ) : product.status === "preorder" ? (
+            <Button
+              render={<TransitionLink href={quickAddHref} />}
+              variant="brand"
+              className="display-kicker min-touch-target w-full justify-center"
+            >
+              Pre-Order Now
+            </Button>
           ) : (
             <Button
               render={<TransitionLink href={quickAddHref} />}

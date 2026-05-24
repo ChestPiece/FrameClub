@@ -129,7 +129,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
 
   const ctaLabel =
     product.status === "unavailable"
-      ? "Currently Unavailable"
+      ? "Notify Me When Available"
       : product.status === "preorder"
         ? `Reserve · ${formatPkr(product.price)}`
         : `Add to Order · ${formatPkr(product.price)}`;
@@ -444,6 +444,24 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
               <input type="hidden" name="plate" value={plate} />
               <input type="hidden" name="quantity" value={qty} />
 
+              {product.status === "unavailable" ? (
+                <div
+                  data-reveal
+                  style={{
+                    padding: "24px",
+                    border: "0.5px solid var(--border)",
+                    textAlign: "center",
+                  }}
+                >
+                  <p
+                    className="font-body text-text-muted"
+                    style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", margin: 0 }}
+                  >
+                    Configuration available when in stock
+                  </p>
+                </div>
+              ) : (
+              <>
               {/* A. Background */}
               <ConfigSection label="01 · Background" current={bgLabel}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 8 }}>
@@ -506,6 +524,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                           setFinish(f.value);
                           popSwatch(e.currentTarget);
                         }}
+                        aria-label={f.label}
                         aria-pressed={active}
                         style={{
                           display: "flex",
@@ -618,18 +637,21 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                   })}
                 </div>
               </ConfigSection>
+              </>
+              )}
 
               {/* Qty + CTA */}
               <div
                 data-reveal
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "auto 1fr",
+                  gridTemplateColumns: product.status === "unavailable" ? "1fr" : "auto 1fr",
                   gap: 16,
                   paddingTop: 24,
                   borderTop: "0.5px solid var(--border)",
                 }}
               >
+                {product.status !== "unavailable" && (
                 <div
                   style={{
                     display: "flex",
@@ -681,6 +703,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                     +
                   </button>
                 </div>
+                )}
 
                 {product.status === "unavailable" ? (
                   <Button
