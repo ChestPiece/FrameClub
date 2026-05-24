@@ -45,6 +45,18 @@ yarn-error.log*
 docs/restructuring-plan.md
 docs/superpowers/specs/
 
+# ruflo / claude-flow generated local files
+.claude-flow/
+.claude/agents/
+.claude/commands/
+.claude/helpers/
+.claude/skills/
+.claude/memory.db
+.claude/settings.json
+.mcp.json
+.swarm/
+ruvector.db
+
 # vercel
 .vercel
 
