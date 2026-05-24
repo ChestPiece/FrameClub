@@ -174,8 +174,11 @@ describe("api routes", () => {
   it("POST /api/payfast/webhook updates paid order and sends emails", async () => {
     verifySignatureMock.mockReturnValue(true);
 
+    // maybeSingle: idempotency check — no duplicate found (payment not yet processed)
+    const maybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+    // single: price lookup
     const single = vi.fn().mockResolvedValue({ data: { price: 5000 }, error: null });
-    const eq = vi.fn().mockReturnValue({ single });
+    const eq = vi.fn().mockReturnValue({ single, maybeSingle });
     const select = vi.fn().mockReturnValue({ eq });
     const from = vi.fn(() => ({ select }));
     createServiceClientMock.mockResolvedValue({ from });
