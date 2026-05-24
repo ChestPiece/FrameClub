@@ -10,9 +10,9 @@ import {
   SplitText,
   ScrambleTextPlugin,
   TextPlugin,
+  DrawSVGPlugin,
+  Flip,
 } from "gsap/all";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
-import { Flip } from "gsap/Flip";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(

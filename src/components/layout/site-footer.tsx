@@ -1,5 +1,9 @@
+"use client";
+
+import * as React from "react";
 import type { CSSProperties } from "react";
 import { TransitionLink } from "@/components/layout/page-transition";
+import { useFooterReveal } from "@/components/layout/layout-animations";
 
 const kickerStyle: CSSProperties = {
   fontFamily: "var(--font-body)",
@@ -12,6 +16,10 @@ const kickerStyle: CSSProperties = {
 };
 
 export function SiteFooter() {
+  const wordmarkRef = React.useRef<HTMLDivElement>(null);
+  const linksContainerRef = React.useRef<HTMLDivElement>(null);
+  useFooterReveal(wordmarkRef, linksContainerRef);
+
   return (
     <footer
       style={{
@@ -31,6 +39,7 @@ export function SiteFooter() {
       >
         {/* Massive wordmark */}
         <div
+          ref={wordmarkRef}
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(4rem, 16vw, 14rem)",
@@ -48,6 +57,7 @@ export function SiteFooter() {
 
         {/* 4-col grid */}
         <div
+          ref={linksContainerRef}
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr 1fr",
@@ -58,10 +68,11 @@ export function SiteFooter() {
         >
           {/* Col 1: The Build */}
           <div>
-            <div style={kickerStyle}>
+            <div data-reveal style={kickerStyle}>
               The Build
             </div>
             <p
+              data-reveal
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 14,
@@ -79,7 +90,7 @@ export function SiteFooter() {
 
           {/* Col 2: Navigate */}
           <div>
-            <div style={kickerStyle}>
+            <div data-reveal style={kickerStyle}>
               Navigate
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -92,6 +103,7 @@ export function SiteFooter() {
                 <TransitionLink
                   key={link.href}
                   href={link.href}
+                  data-reveal
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: 13,
@@ -109,13 +121,14 @@ export function SiteFooter() {
 
           {/* Col 3: Logistics */}
           <div>
-            <div style={kickerStyle}>
+            <div data-reveal style={kickerStyle}>
               Logistics
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {["Shipping", "Returns", "FAQ", "Care Guide"].map((item) => (
                 <span
                   key={item}
+                  data-reveal
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: 13,
@@ -132,10 +145,11 @@ export function SiteFooter() {
 
           {/* Col 4: Workshop */}
           <div>
-            <div style={kickerStyle}>
+            <div data-reveal style={kickerStyle}>
               Workshop
             </div>
             <p
+              data-reveal
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 13,
