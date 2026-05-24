@@ -125,9 +125,15 @@ export function SiteFooter() {
               Logistics
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {["Shipping", "Returns", "FAQ", "Care Guide"].map((item) => (
-                <span
-                  key={item}
+              {[
+                { label: "Shipping", subject: "shipping" },
+                { label: "Returns", subject: "returns" },
+                { label: "FAQ", subject: "faq" },
+                { label: "Care Guide", subject: "care-guide" },
+              ].map((item) => (
+                <TransitionLink
+                  key={item.label}
+                  href={`/contact?subject=${item.subject}`}
                   data-reveal
                   style={{
                     fontFamily: "var(--font-display)",
@@ -135,10 +141,11 @@ export function SiteFooter() {
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
                     color: "var(--text-primary)",
+                    textDecoration: "none",
                   }}
                 >
-                  {item}
-                </span>
+                  {item.label}
+                </TransitionLink>
               ))}
             </div>
           </div>

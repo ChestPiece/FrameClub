@@ -78,6 +78,9 @@ export function AboutAnimations() {
 
           if (heading) {
             try {
+              if (!heading.getAttribute("aria-label")) {
+                heading.setAttribute("aria-label", heading.textContent ?? "");
+              }
               const split = SplitText.create(heading, {
                 type: "chars",
                 charsClass: "about-hero-char",

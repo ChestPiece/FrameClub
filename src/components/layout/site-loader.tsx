@@ -74,17 +74,17 @@ export function SiteLoader() {
       });
 
       tl.addLabel("intro")
-        .to(label, { autoAlpha: 1, y: 0, duration: 0.4 }, "intro")
-        .to(headline, { autoAlpha: 1, y: 0, duration: 0.5 }, "intro+=0.15")
-        .to(barContainer, { autoAlpha: 1, duration: 0.3 }, "intro+=0.4")
-        .addLabel("load", "+=0.2")
-        .to(bar, { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, "load")
-        .addLabel("exit", "+=0.15")
+        .to(label, { autoAlpha: 1, y: 0, duration: 0.25 }, "intro")
+        .to(headline, { autoAlpha: 1, y: 0, duration: 0.3 }, "intro+=0.1")
+        .to(barContainer, { autoAlpha: 1, duration: 0.2 }, "intro+=0.25")
+        .addLabel("load", "+=0.1")
+        .to(bar, { scaleX: 1, duration: 0.6, ease: "power2.inOut" }, "load")
+        .addLabel("exit", "+=0.05")
         .to(
           el,
           {
             clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
-            duration: 0.5,
+            duration: 0.3,
             ease: "power4.inOut",
           },
           "exit"

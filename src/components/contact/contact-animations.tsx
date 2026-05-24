@@ -60,6 +60,9 @@ export function ContactAnimations() {
 
           if (heading) {
             try {
+              if (!heading.getAttribute("aria-label")) {
+                heading.setAttribute("aria-label", heading.textContent ?? "");
+              }
               const split = SplitText.create(heading, {
                 type: "chars",
                 charsClass: "contact-hero-char",

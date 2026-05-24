@@ -218,9 +218,9 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
 
         {/* Cart button — col 3 (desktop only) */}
         <TransitionLink
-          href="/cart"
+          href="/shop"
           className="fc-nav-cart"
-          aria-label={`Cart, ${cartCount} item${cartCount === 1 ? "" : "s"}`}
+          aria-label="View collection"
           style={{
             alignItems: "center",
             gap: 8,
@@ -252,19 +252,6 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
             <circle cx="11.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
           </svg>
           <span style={{ color: "var(--text-primary)" }}>Cart</span>
-          <span
-            aria-hidden="true"
-            style={{
-              color: cartCount > 0 ? "var(--brand-bright)" : "var(--text-muted)",
-              fontFamily: "var(--font-display)",
-              fontSize: 12,
-              letterSpacing: "0.06em",
-              minWidth: 18,
-              textAlign: "center",
-            }}
-          >
-            [{cartCount.toString().padStart(2, "0")}]
-          </span>
         </TransitionLink>
 
         {/* ORDER NOW — col 4 (desktop only) */}
