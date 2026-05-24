@@ -81,7 +81,7 @@ export function HowItWorksSection() {
     <div
       ref={sectionRef}
       className="bg-bg-surface"
-      style={{ padding: "140px 0 160px" }}
+      style={{ padding: "90px 0 100px" }}
     >
       <div
         className="mx-auto"
@@ -92,7 +92,7 @@ export function HowItWorksSection() {
           className="grid items-end"
           style={{
             gridTemplateColumns: "1fr auto",
-            marginBottom: 64,
+            marginBottom: 48,
             gap: 32,
           }}
         >
@@ -106,7 +106,7 @@ export function HowItWorksSection() {
             <h2
               className="font-display uppercase text-text-primary"
               style={{
-                fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                fontSize: "clamp(2rem, 4vw, 3.5rem)",
                 lineHeight: 1,
                 letterSpacing: "0.04em",
                 margin: 0,
@@ -137,8 +137,8 @@ export function HowItWorksSection() {
               data-motion-reveal
               className="flex flex-col"
               style={{
-                padding: "56px 40px 56px 0",
-                paddingLeft: i > 0 ? 40 : 0,
+                padding: "40px 32px 40px 0",
+                paddingLeft: i > 0 ? 32 : 0,
                 borderRight:
                   i < 2 ? "0.5px solid var(--border-subtle)" : "none",
                 gap: 24,
@@ -190,7 +190,7 @@ export function HowItWorksSection() {
         </div>
 
         {/* CTA */}
-        <div style={{ marginTop: 80 }}>
+        <div style={{ marginTop: 56 }}>
           <Button
             render={<TransitionLink href="/shop" />}
             variant="outline"

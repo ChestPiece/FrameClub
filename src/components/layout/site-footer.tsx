@@ -33,8 +33,8 @@ export function SiteFooter() {
         style={{
           margin: "0 auto",
           width: "min(calc(100% - 2rem), 80rem)",
-          paddingTop: 80,
-          paddingBottom: 32,
+          paddingTop: 56,
+          paddingBottom: 28,
         }}
       >
         {/* Massive wordmark */}
@@ -42,11 +42,11 @@ export function SiteFooter() {
           ref={wordmarkRef}
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(4rem, 16vw, 14rem)",
+            fontSize: "clamp(3rem, 12vw, 10rem)",
             letterSpacing: "0.04em",
             color: "var(--text-primary)",
             lineHeight: 0.9,
-            marginBottom: 48,
+            marginBottom: 36,
             opacity: 0.96,
           }}
         >
@@ -62,7 +62,7 @@ export function SiteFooter() {
             display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr 1fr",
             gap: 48,
-            paddingTop: 48,
+            paddingTop: 36,
             borderTop: "0.5px solid var(--border)",
           }}
         >
@@ -177,7 +177,7 @@ export function SiteFooter() {
         {/* Bottom bar */}
         <div
           style={{
-            marginTop: 64,
+            marginTop: 48,
             paddingTop: 24,
             borderTop: "0.5px solid var(--border)",
             display: "flex",

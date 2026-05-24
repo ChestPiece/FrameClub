@@ -121,7 +121,7 @@ export function FinalCTASection() {
           ref={headlineRef}
           className="font-display uppercase text-text-primary"
           style={{
-            fontSize: "clamp(3rem, 7.5vw, 7rem)",
+            fontSize: "clamp(2.25rem, 6vw, 5.5rem)",
             letterSpacing: "0.03em",
             lineHeight: 0.95,
             margin: "0 0 32px",
@@ -163,8 +163,8 @@ export function FinalCTASection() {
             size="xl"
             className="font-display uppercase"
             style={{
-              padding: "26px 56px",
-              fontSize: 20,
+              padding: "18px 40px",
+              fontSize: 17,
               letterSpacing: "0.18em",
               border: "1px solid var(--brand-bright)",
               background: "var(--brand-bright)",

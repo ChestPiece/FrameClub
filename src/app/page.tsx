@@ -42,7 +42,7 @@ export default async function Home() {
             id="hero-section"
             data-animate-section="hero"
             className="scroll-margin-site-header relative overflow-hidden bg-bg-deep texture-overlay"
-            style={{ paddingTop: "calc(7.5rem + 64px)", paddingBottom: 96 }}
+            style={{ paddingTop: "calc(7.5rem + 40px)", paddingBottom: 64 }}
           >
             <div
               className="pointer-events-none absolute"
@@ -108,7 +108,7 @@ export default async function Home() {
                         data-hero-headline
                         className="font-display uppercase text-text-primary"
                         style={{
-                          fontSize: "clamp(3.5rem, 7.4vw, 6.5rem)",
+                          fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
                           lineHeight: 0.92,
                           letterSpacing: "0.03em",
                           margin: 0,
@@ -292,7 +292,7 @@ export default async function Home() {
             id="collection-section"
             data-animate-section="collection"
             className="bg-bg-surface"
-            style={{ padding: "140px 0" }}
+            style={{ padding: "100px 0" }}
           >
             <div
               className="mx-auto"
@@ -302,7 +302,7 @@ export default async function Home() {
             </div>
           </section>
 
-          <section data-animate-section="customization" className="bg-bg-deep py-16 md:py-24 lg:py-28">
+          <section data-animate-section="customization" className="bg-bg-deep py-12 md:py-16 lg:py-20">
             <div className="frame-container">
               <CustomizationSection />
             </div>
@@ -315,7 +315,7 @@ export default async function Home() {
           <section
             data-animate-section="final-cta"
             className="bg-bg-deep texture-overlay relative overflow-hidden"
-            style={{ padding: "160px 0" }}
+            style={{ padding: "110px 0" }}
           >
             <FinalCTASection />
           </section>

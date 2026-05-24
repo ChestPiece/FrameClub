@@ -75,7 +75,7 @@ export function LetterSection() {
       ref={sectionRef}
       className="bg-bg-deep"
       style={{
-        padding: "140px 0",
+        padding: "90px 0",
         borderTop: "0.5px solid var(--border)",
         borderBottom: "0.5px solid var(--border)",
       }}
@@ -87,7 +87,7 @@ export function LetterSection() {
         {/* Header rail */}
         <div
           className="flex flex-wrap items-baseline justify-between"
-          style={{ marginBottom: 64, gap: 16 }}
+          style={{ marginBottom: 40, gap: 16 }}
         >
           <p className="font-body text-text-muted" style={KICKER}>
             Chapter Two · From the Workshop
@@ -102,7 +102,7 @@ export function LetterSection() {
           ref={quoteRef}
           className="font-display uppercase text-text-primary"
           style={{
-            fontSize: "clamp(1.1rem, 3.4vw, 3rem)",
+            fontSize: "clamp(1rem, 2.8vw, 2.4rem)",
             lineHeight: 1.2,
             letterSpacing: "0.02em",
             margin: 0,
@@ -133,7 +133,7 @@ export function LetterSection() {
         <div
           className="grid letter-body-grid"
           style={{
-            marginTop: 80,
+            marginTop: 56,
             gap: 80,
             alignItems: "start",
           }}

@@ -22,17 +22,17 @@ export default function AboutPage() {
         {/* The Premise — workshop voice */}
         <section
           className="bg-bg-surface"
-          style={{ padding: "160px 0 140px" }}
+          style={{ padding: "100px 0 90px" }}
         >
           <div className="mx-auto" style={{ width: "min(calc(100% - 2rem), 80rem)" }}>
-            <div style={{ maxWidth: 920, marginBottom: 80 }}>
+            <div style={{ maxWidth: 920, marginBottom: 56 }}>
               <p className="font-body text-text-muted" style={{ ...KICKER, marginBottom: 24 }}>
                 Chapter One · The Origin
               </p>
               <h2
                 className="font-display uppercase text-text-primary"
                 style={{
-                  fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                  fontSize: "clamp(2rem, 4vw, 3.5rem)",
                   lineHeight: 1.02,
                   letterSpacing: "0.04em",
                   margin: 0,
@@ -85,7 +85,7 @@ export default function AboutPage() {
         {/* Final CTA */}
         <section
           className="bg-bg-deep relative overflow-hidden"
-          style={{ padding: "160px 0" }}
+          style={{ padding: "110px 0" }}
         >
           <div
             aria-hidden="true"
@@ -110,7 +110,7 @@ export default function AboutPage() {
             <h2
               className="font-display uppercase text-text-primary"
               style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                fontSize: "clamp(2rem, 4.5vw, 4.5rem)",
                 letterSpacing: "0.03em",
                 lineHeight: 0.95,
                 margin: "0 0 32px",
@@ -137,8 +137,8 @@ export default function AboutPage() {
               size="xl"
               className="font-display uppercase"
               style={{
-                padding: "26px 56px",
-                fontSize: 20,
+                padding: "18px 40px",
+                fontSize: 17,
                 letterSpacing: "0.18em",
                 border: "1px solid var(--brand-bright)",
                 background: "var(--brand-bright)",

@@ -59,14 +59,14 @@ export function WhatIsThisSection() {
     <div
       ref={sectionRef}
       className="bg-bg-surface"
-      style={{ padding: "160px 0 140px" }}
+      style={{ padding: "100px 0 90px" }}
     >
       <div
         className="mx-auto"
         style={{ width: "min(calc(100% - 2rem), 80rem)" }}
       >
         {/* Header */}
-        <div style={{ maxWidth: 920, marginBottom: 80 }}>
+        <div style={{ maxWidth: 920, marginBottom: 56 }}>
           <p
             data-animate-item
             className="font-body text-text-muted"
@@ -79,7 +79,7 @@ export function WhatIsThisSection() {
             data-animate-item
             className="font-display uppercase text-text-primary"
             style={{
-              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
               lineHeight: 1.02,
               letterSpacing: "0.04em",
               margin: 0,

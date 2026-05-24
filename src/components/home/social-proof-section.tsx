@@ -19,7 +19,7 @@ export function SocialProofSection() {
       {/* Testimonial */}
       <div
         className="bg-bg-surface"
-        style={{ padding: "clamp(60px, 10vw, 160px) 0" }}
+        style={{ padding: "clamp(48px, 7vw, 110px) 0" }}
       >
         <div
           className="mx-auto"
@@ -45,7 +45,7 @@ export function SocialProofSection() {
               <p
                 className="font-display uppercase text-text-primary"
                 style={{
-                  fontSize: "clamp(1.1rem, 3.8vw, 3.4rem)",
+                  fontSize: "clamp(1rem, 3vw, 2.6rem)",
                   letterSpacing: "0.02em",
                   lineHeight: 1.15,
                   margin: "0 0 48px",

@@ -23,14 +23,10 @@ const orderStatusOptions: OrderStatus[] = [
 export function OrderStatusSelect({
   orderId,
   currentStatus,
-  customerEmail,
-  orderNumber,
   productSlug,
 }: {
   orderId: string
   currentStatus: OrderStatus
-  customerEmail: string
-  orderNumber: string
   productSlug: string
 }) {
   const [isPending, startTransition] = useTransition()
@@ -47,8 +43,6 @@ export function OrderStatusSelect({
             const result = await updateOrderStatus(
               orderId,
               value as OrderStatus,
-              customerEmail,
-              orderNumber,
               productSlug
             )
 

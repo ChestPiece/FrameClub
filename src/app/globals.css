@@ -119,19 +119,19 @@
   }
 
   .display-fluid {
-    font-size: clamp(2rem, 6vw, 6rem);
+    font-size: clamp(1.75rem, 5vw, 5rem);
   }
 
   .display-section {
-    font-size: clamp(1.75rem, 4vw, 4rem);
+    font-size: clamp(1.5rem, 3.5vw, 3.25rem);
   }
 
   .display-hero-fluid {
-    font-size: clamp(2.75rem, 9vw, 8rem);
+    font-size: clamp(2.25rem, 7vw, 6rem);
   }
 
   .display-massive-fluid {
-    font-size: clamp(4rem, 10vw, 9rem);
+    font-size: clamp(3rem, 8vw, 7rem);
   }
 
   .technical-label {
@@ -283,13 +283,13 @@
 
   /* Hero section: reduce top padding on mobile */
   #hero-section {
-    padding-top: calc(var(--site-header-height) + 2rem) !important;
-    padding-bottom: 3rem !important;
+    padding-top: calc(var(--site-header-height) + 1.5rem) !important;
+    padding-bottom: 2.5rem !important;
   }
   @media (min-width: 768px) {
     #hero-section {
-      padding-top: calc(7.5rem + 64px) !important;
-      padding-bottom: 6rem !important;
+      padding-top: calc(7.5rem + 40px) !important;
+      padding-bottom: 4rem !important;
     }
   }
 

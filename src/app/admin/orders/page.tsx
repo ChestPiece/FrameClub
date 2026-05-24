@@ -77,8 +77,6 @@ export default async function AdminOrdersPage() {
                 <OrderStatusSelect
                   orderId={order.id}
                   currentStatus={order.orderStatus}
-                  customerEmail={order.customerEmail}
-                  orderNumber={order.orderNumber}
                   productSlug={order.productSlug}
                 />
               </TableCell>
