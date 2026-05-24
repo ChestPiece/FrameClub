@@ -36,11 +36,11 @@ export function ShopClientView({ products }: ShopClientViewProps) {
   }, [products, filter, sort]);
 
   return (
-    <div style={{ paddingTop: "calc(7.5rem + 60px)" }}>
+    <div style={{ paddingTop: "calc(7.5rem + 36px)" }}>
       <section
         style={{
           background: "var(--bg-deep)",
-          padding: "80px 0 60px",
+          padding: "56px 0 40px",
           position: "relative",
           overflow: "hidden",
         }}
@@ -77,7 +77,7 @@ export function ShopClientView({ products }: ShopClientViewProps) {
             <h1
               style={{
                 fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
-                fontSize: "clamp(3.5rem, 8vw, 7rem)",
+                fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
                 color: "var(--text-primary)",
@@ -213,7 +213,7 @@ export function ShopClientView({ products }: ShopClientViewProps) {
       <section
         style={{
           background: "var(--bg-surface)",
-          padding: "60px 0 120px",
+          padding: "40px 0 80px",
         }}
       >
         <div
