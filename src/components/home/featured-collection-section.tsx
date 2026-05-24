@@ -23,10 +23,12 @@ const KICKER: React.CSSProperties = {
 
 type FeaturedCollectionSectionProps = {
   products: Product[];
+  totalCount?: number;
 };
 
 export function FeaturedCollectionSection({
   products,
+  totalCount,
 }: FeaturedCollectionSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -117,7 +119,7 @@ export function FeaturedCollectionSection({
             letterSpacing: "0.14em",
           }}
         >
-          View all · {products.length}
+          View all · {totalCount ?? products.length}
         </Button>
       </div>
 

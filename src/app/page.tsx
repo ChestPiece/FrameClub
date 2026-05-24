@@ -22,7 +22,9 @@ const HERO_STATS = [
 ];
 
 export default async function Home() {
-  const featuredProducts = (await getProducts()).slice(0, 3);
+  const allProducts = await getProducts();
+  const featuredProducts = allProducts.slice(0, 3);
+  const totalProductCount = allProducts.length;
   const heroProduct = featuredProducts[0];
   const heroImage = heroProduct?.images[0] ?? DIECAST_PRODUCT_IMAGES[0];
   const heroBrand = heroProduct?.brand ?? "Frame Club";
@@ -296,7 +298,7 @@ export default async function Home() {
               className="mx-auto"
               style={{ width: "min(calc(100% - 2rem), 80rem)" }}
             >
-              <FeaturedCollectionSection products={featuredProducts} />
+              <FeaturedCollectionSection products={featuredProducts} totalCount={totalProductCount} />
             </div>
           </section>
 
