@@ -213,6 +213,191 @@
   .scroll-margin-site-header {
     scroll-margin-top: var(--site-header-height);
   }
+
+  /* Background pattern classes */
+  .fc-bg-carbon {
+    background:
+      repeating-linear-gradient(45deg, rgba(245,245,245,0.10) 0 1px, transparent 1px 6px),
+      var(--bg-deep);
+  }
+
+  .fc-bg-race {
+    background:
+      linear-gradient(135deg, transparent 44%, rgba(245,245,245,0.18) 45%, transparent 46%),
+      var(--bg-deep);
+  }
+
+  .fc-bg-atlas {
+    background:
+      repeating-linear-gradient(90deg, rgba(245,245,245,0.12) 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(0deg, rgba(245,245,245,0.06) 0 1px, transparent 1px 8px),
+      var(--bg-deep);
+  }
+
+  .fc-bg-monolith {
+    background: var(--bg-deep);
+  }
+
+  .fc-bg-heritage {
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--brand) 40%, transparent), transparent 60%),
+      var(--bg-deep);
+  }
+
+  /* Pulsing dot */
+  .fc-pulse {
+    position: relative;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--text-success);
+    flex-shrink: 0;
+  }
+
+  .fc-pulse::before,
+  .fc-pulse::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 1px solid var(--text-success);
+    opacity: 0;
+    animation: fc-pulse 2.4s ease-out infinite;
+  }
+
+  .fc-pulse::after {
+    animation-delay: 1.2s;
+  }
+
+  @keyframes fc-pulse {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  /* Form field styles */
+  .fc-input {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 0.5px solid var(--border);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    padding: 16px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .fc-input:focus {
+    outline: none;
+    border-color: var(--brand-bright);
+    background: var(--bg-surface);
+  }
+
+  .fc-input::placeholder {
+    color: #5a5654;
+  }
+
+  .fc-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Corner clip */
+  .fc-corner-clip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    background: var(--brand-bright);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    z-index: 3;
+  }
+
+  /* Bracket corners */
+  .fc-brackets {
+    position: relative;
+  }
+
+  .fc-brackets::before,
+  .fc-brackets::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--brand);
+    pointer-events: none;
+  }
+
+  .fc-brackets::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .fc-brackets::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+/* Global CSS (outside utilities layer) */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-mid);
+}
+
+/* Selection */
+::selection {
+  background: var(--brand);
+  color: var(--text-primary);
+}
+
+/* data-fc-rise initial state (for GSAP reveal animations) */
+[data-fc-rise] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Scroll progress bar */
+.fc-progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 2px;
+  background: var(--brand-bright);
+  z-index: 50;
+  transform-origin: left;
+  transform: scaleX(0);
+  width: 100%;
+  mix-blend-mode: difference;
 }
 
 @media (max-width: 374px) {
