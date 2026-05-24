@@ -53,6 +53,46 @@ const product: Product = {
   backgrounds: [],
 };
 
+function fillIdentity() {
+  fireEvent.change(screen.getByLabelText("Full Name"), {
+    target: { value: "Anas Altaf" },
+  });
+  fireEvent.change(screen.getByLabelText("Email"), {
+    target: { value: "anas@example.com" },
+  });
+  fireEvent.change(screen.getByLabelText("Phone"), {
+    target: { value: "123" },
+  });
+}
+
+function fillDelivery() {
+  fireEvent.change(screen.getByLabelText("Street Address"), {
+    target: { value: "address" },
+  });
+  fireEvent.change(screen.getByLabelText("City"), {
+    target: { value: "Lahore" },
+  });
+}
+
+function advanceStep() {
+  fireEvent.click(screen.getByRole("button", { name: /Next/i }));
+}
+
+async function walkToPayment() {
+  fillIdentity();
+  advanceStep();
+  // Step 2 active when Back button appears
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: /Back/i })).toBeInTheDocument();
+  });
+  fillDelivery();
+  advanceStep();
+  // Step 3 active when Next button disappears and Place Order is rendered
+  await waitFor(() => {
+    expect(screen.queryByRole("button", { name: /Next/i })).toBeNull();
+  });
+}
+
 describe("CheckoutForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -60,16 +100,14 @@ describe("CheckoutForm", () => {
     HTMLFormElement.prototype.submit = mockSubmit;
   });
 
-  it("shows validation errors for empty submit", async () => {
+  it("blocks step advance when identity fields are empty", async () => {
     render(<CheckoutForm product={product} slug="r34" background="Midnight" notes="" />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Proceed to Payment/i }));
+    advanceStep();
 
     expect(await screen.findByText("Full name is required.")).toBeInTheDocument();
     expect(screen.getByText("Enter a valid email.")).toBeInTheDocument();
     expect(screen.getByText("Phone number is required.")).toBeInTheDocument();
-    expect(screen.getByText("Delivery address is required.")).toBeInTheDocument();
-    expect(screen.getByText("City is required.")).toBeInTheDocument();
   });
 
   it("shows API error on failed create order", async () => {
@@ -84,24 +122,9 @@ describe("CheckoutForm", () => {
     );
 
     render(<CheckoutForm product={product} slug="r34" background="Midnight" notes="" />);
+    await walkToPayment();
 
-    fireEvent.change(screen.getByLabelText("Full Name"), {
-      target: { value: "Anas Altaf" },
-    });
-    fireEvent.change(screen.getByLabelText("Phone Number"), {
-      target: { value: "123" },
-    });
-    fireEvent.change(screen.getByLabelText("Email"), {
-      target: { value: "anas@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Delivery Address"), {
-      target: { value: "address" },
-    });
-    fireEvent.change(screen.getByLabelText("City"), {
-      target: { value: "Lahore" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /Proceed to Payment/i }));
+    fireEvent.click(screen.getByText(/Place Order/i));
 
     expect(await screen.findByText("Order API failed.")).toBeInTheDocument();
   });
@@ -121,24 +144,9 @@ describe("CheckoutForm", () => {
     );
 
     render(<CheckoutForm product={product} slug="r34" background="Midnight" notes="" />);
+    await walkToPayment();
 
-    fireEvent.change(screen.getByLabelText("Full Name"), {
-      target: { value: "Anas Altaf" },
-    });
-    fireEvent.change(screen.getByLabelText("Phone Number"), {
-      target: { value: "123" },
-    });
-    fireEvent.change(screen.getByLabelText("Email"), {
-      target: { value: "anas@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Delivery Address"), {
-      target: { value: "address" },
-    });
-    fireEvent.change(screen.getByLabelText("City"), {
-      target: { value: "Lahore" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /Proceed to Payment/i }));
+    fireEvent.click(screen.getByText(/Place Order/i));
 
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith("/order/order-1?token=token-123");
@@ -164,24 +172,9 @@ describe("CheckoutForm", () => {
     );
 
     render(<CheckoutForm product={product} slug="r34" background="Midnight" notes="" />);
+    await walkToPayment();
 
-    fireEvent.change(screen.getByLabelText("Full Name"), {
-      target: { value: "Anas Altaf" },
-    });
-    fireEvent.change(screen.getByLabelText("Phone Number"), {
-      target: { value: "123" },
-    });
-    fireEvent.change(screen.getByLabelText("Email"), {
-      target: { value: "anas@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Delivery Address"), {
-      target: { value: "address" },
-    });
-    fireEvent.change(screen.getByLabelText("City"), {
-      target: { value: "Lahore" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /Proceed to Payment/i }));
+    fireEvent.click(screen.getByText(/Place Order/i));
 
     await waitFor(() => {
       expect(mockSubmit).toHaveBeenCalled();

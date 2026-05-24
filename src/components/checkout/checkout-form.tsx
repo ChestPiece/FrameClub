@@ -8,6 +8,12 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/db/types";
 import { formatPkr } from "@/lib/utils";
+import {
+  useStepTransition,
+  animate,
+  stagger,
+  animeReady,
+} from "@/lib/animation";
 
 const checkoutSchema = z.object({
   customerName: z.string().trim().min(1, "Full name is required."),
@@ -63,6 +69,63 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
   const [shouldSubmit, setShouldSubmit] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Step transition: keep all steps mounted, swap via opacity/transform.
+  // activeStep is 0-indexed (0=step1, 1=step2, 2=step3).
+  const { registerStep } = useStepTransition(step - 1);
+
+  // On mount, hide non-active step containers so all three can be rendered
+  // (preserving form input state) without all being visible at once. After
+  // this initial setup, `useStepTransition` owns visibility/transform.
+  useEffect(() => {
+    const containers = document.querySelectorAll<HTMLElement>("[data-anim-step]");
+    containers.forEach((el) => {
+      const idx = Number(el.dataset.animStep);
+      const isActive = idx === step - 1;
+      if (!isActive) {
+        el.style.opacity = "0";
+        el.style.visibility = "hidden";
+        el.style.pointerEvents = "none";
+      } else {
+        el.style.opacity = "1";
+        el.style.visibility = "visible";
+        el.style.pointerEvents = "auto";
+      }
+    });
+    // Run once on mount only — step transitions handled by useStepTransition.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep pointer-events / aria-hidden in sync per step change. Opacity is
+  // owned by GSAP autoAlpha (which also toggles visibility for us).
+  useEffect(() => {
+    const containers = document.querySelectorAll<HTMLElement>("[data-anim-step]");
+    containers.forEach((el) => {
+      const idx = Number(el.dataset.animStep);
+      el.style.pointerEvents = idx === step - 1 ? "auto" : "none";
+    });
+  }, [step]);
+
+  // Per-step field reveal: when `step` changes, stagger-animate [data-field]
+  // children of the active step container. Gated on reduced motion.
+  useEffect(() => {
+    if (!animeReady()) return;
+    const root = document.querySelector<HTMLElement>(
+      `[data-anim-step="${step - 1}"]`,
+    );
+    if (!root) return;
+    const fields = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-field]"),
+    );
+    if (fields.length === 0) return;
+    animate(fields, {
+      opacity: [0, 1],
+      translateY: [10, 0],
+      duration: 360,
+      delay: stagger(40, { start: 140 }),
+      ease: "outCubic",
+    });
+  }, [step]);
 
   useEffect(() => {
     if (shouldSubmit && formRef.current) {
@@ -258,34 +321,56 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
             </p>
           ) : null}
 
-          {/* STEP 1 */}
-          {step === 1 ? (
-            <div>
+          {/*
+            Step containers: ALL steps stay mounted so form input state is
+            preserved across step transitions. `useStepTransition` swaps
+            visibility/transform via opacity + translateX. The wrapper uses
+            CSS grid stacking so inactive steps don't take layout height.
+          */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateAreas: '"stack"',
+            }}
+          >
+            {/* STEP 1 */}
+            <div
+              ref={registerStep(0)}
+              data-anim-step="0"
+              aria-hidden={step !== 1}
+              style={{ gridArea: "stack" }}
+            >
               <p className="technical-label text-[10px] text-text-muted" style={{ marginBottom: 24 }}>
                 Step 01 · Identity
               </p>
               <div className="flex flex-col" style={{ gap: 20 }}>
-                <Field
-                  label="Full Name"
-                  id="customerName"
-                  error={errors.customerName?.message}
-                  {...register("customerName")}
-                />
-                <Field
-                  label="Email"
-                  id="customerEmail"
-                  type="email"
-                  autoComplete="email"
-                  error={errors.customerEmail?.message}
-                  {...register("customerEmail")}
-                />
-                <Field
-                  label="Phone"
-                  id="customerPhone"
-                  error={errors.customerPhone?.message}
-                  {...register("customerPhone")}
-                />
-                <div>
+                <div data-field>
+                  <Field
+                    label="Full Name"
+                    id="customerName"
+                    error={errors.customerName?.message}
+                    {...register("customerName")}
+                  />
+                </div>
+                <div data-field>
+                  <Field
+                    label="Email"
+                    id="customerEmail"
+                    type="email"
+                    autoComplete="email"
+                    error={errors.customerEmail?.message}
+                    {...register("customerEmail")}
+                  />
+                </div>
+                <div data-field>
+                  <Field
+                    label="Phone"
+                    id="customerPhone"
+                    error={errors.customerPhone?.message}
+                    {...register("customerPhone")}
+                  />
+                </div>
+                <div data-field>
                   <label htmlFor="orderNote" className="fc-label">
                     Order Note (optional)
                   </label>
@@ -298,48 +383,72 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
                 </div>
               </div>
             </div>
-          ) : null}
 
-          {/* STEP 2 */}
-          {step === 2 ? (
-            <div>
+            {/* STEP 2 */}
+            <div
+              ref={registerStep(1)}
+              data-anim-step="1"
+              aria-hidden={step !== 2}
+              style={{
+                gridArea: "stack",
+                opacity: step === 2 ? 1 : 0,
+                pointerEvents: step === 2 ? "auto" : "none",
+                visibility: step === 2 ? "visible" : "hidden",
+              }}
+            >
               <p className="technical-label text-[10px] text-text-muted" style={{ marginBottom: 24 }}>
                 Step 02 · Delivery
               </p>
               <div className="flex flex-col" style={{ gap: 20 }}>
-                <Field
-                  label="Street Address"
-                  id="customerAddress"
-                  autoComplete="street-address"
-                  error={errors.customerAddress?.message}
-                  {...register("customerAddress")}
-                />
-                <Field
-                  label="City"
-                  id="customerCity"
-                  autoComplete="address-level2"
-                  error={errors.customerCity?.message}
-                  {...register("customerCity")}
-                />
-                <Field
-                  label="Province"
-                  id="customerProvince"
-                  autoComplete="address-level1"
-                  {...register("customerProvince")}
-                />
-                <Field
-                  label="Postal Code"
-                  id="customerPostal"
-                  autoComplete="postal-code"
-                  {...register("customerPostal")}
-                />
+                <div data-field>
+                  <Field
+                    label="Street Address"
+                    id="customerAddress"
+                    autoComplete="street-address"
+                    error={errors.customerAddress?.message}
+                    {...register("customerAddress")}
+                  />
+                </div>
+                <div data-field>
+                  <Field
+                    label="City"
+                    id="customerCity"
+                    autoComplete="address-level2"
+                    error={errors.customerCity?.message}
+                    {...register("customerCity")}
+                  />
+                </div>
+                <div data-field>
+                  <Field
+                    label="Province"
+                    id="customerProvince"
+                    autoComplete="address-level1"
+                    {...register("customerProvince")}
+                  />
+                </div>
+                <div data-field>
+                  <Field
+                    label="Postal Code"
+                    id="customerPostal"
+                    autoComplete="postal-code"
+                    {...register("customerPostal")}
+                  />
+                </div>
               </div>
             </div>
-          ) : null}
 
-          {/* STEP 3 */}
-          {step === 3 ? (
-            <div>
+            {/* STEP 3 */}
+            <div
+              ref={registerStep(2)}
+              data-anim-step="2"
+              aria-hidden={step !== 3}
+              style={{
+                gridArea: "stack",
+                opacity: step === 3 ? 1 : 0,
+                pointerEvents: step === 3 ? "auto" : "none",
+                visibility: step === 3 ? "visible" : "hidden",
+              }}
+            >
               <p className="technical-label text-[10px] text-text-muted" style={{ marginBottom: 24 }}>
                 Step 03 · Payment
               </p>
@@ -350,6 +459,7 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
                     <button
                       key={opt.value}
                       type="button"
+                      data-field
                       onClick={() => setValue("paymentMethod", opt.value, { shouldValidate: true })}
                       className="text-left"
                       style={{
@@ -403,27 +513,29 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
                 })}
               </div>
 
-              <Button
-                type="submit"
-                disabled={isSubmitting || !!payfastData}
-                variant="brand"
-                size="lg"
-                className="display-kicker w-full cursor-pointer transition-colors duration-200"
-                style={{ marginTop: 24 }}
-                aria-busy={isSubmitting || !!payfastData}
-              >
-                {isSubmitting || payfastData
-                  ? "Redirecting to PayFast…"
-                  : `Place Order · ${product ? formatPkr(product.price) : "Rs. 5,000"}`}
-              </Button>
-              <p
-                className="font-body text-text-muted"
-                style={{ fontSize: 11, textAlign: "center", marginTop: 12 }}
-              >
-                Secured by PayFast · No card details stored
-              </p>
+              <div data-field>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !!payfastData}
+                  variant="brand"
+                  size="lg"
+                  className="display-kicker w-full cursor-pointer transition-colors duration-200"
+                  style={{ marginTop: 24 }}
+                  aria-busy={isSubmitting || !!payfastData}
+                >
+                  {isSubmitting || payfastData
+                    ? "Redirecting to PayFast…"
+                    : `Place Order · ${product ? formatPkr(product.price) : "Rs. 5,000"}`}
+                </Button>
+                <p
+                  className="font-body text-text-muted"
+                  style={{ fontSize: 11, textAlign: "center", marginTop: 12 }}
+                >
+                  Secured by PayFast · No card details stored
+                </p>
+              </div>
             </div>
-          ) : null}
+          </div>
 
           {/* Step navigation */}
           <div
