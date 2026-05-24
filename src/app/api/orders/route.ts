@@ -67,7 +67,11 @@ export async function POST(request: Request) {
     return fail("UNKNOWN_ERROR", "Order creation failed silently.", 500);
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!siteUrl) {
+    console.error("NEXT_PUBLIC_SITE_URL is not configured.");
+    return fail("CONFIG_ERROR", "Payment gateway is not configured.", 500);
+  }
 
   const orderAccessToken = createOrderAccessToken(order.id);
 

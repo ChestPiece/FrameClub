@@ -7,6 +7,9 @@ import {
 import type { OrderRecord } from "../db/types";
 import { ORDER_STATUS_LABELS } from "../db/labels";
 
+if (process.env.NODE_ENV === "production" && !process.env.RESEND_API_KEY) {
+  throw new Error("RESEND_API_KEY must be set in production.");
+}
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM_EMAIL = "Frame Club <orders@frameclub.pk>";
 

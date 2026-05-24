@@ -14,14 +14,12 @@ function getOrderTokenSecret() {
     return explicit;
   }
 
-  const secret =
-    explicit ||
-    process.env.PAYFAST_PASSPHRASE ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Dev fallback: PAYFAST_PASSPHRASE only (never SERVICE_ROLE_KEY)
+  const secret = explicit || process.env.PAYFAST_PASSPHRASE;
 
   if (!secret) {
     throw new Error(
-      "Missing token secret. Set ORDER_ACCESS_TOKEN_SECRET, PAYFAST_PASSPHRASE, or SUPABASE_SERVICE_ROLE_KEY for local development."
+      "Missing token secret. Set ORDER_ACCESS_TOKEN_SECRET (or PAYFAST_PASSPHRASE for local development)."
     );
   }
 

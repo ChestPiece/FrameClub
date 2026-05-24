@@ -8,6 +8,11 @@ import type {
   PaymentStatus,
 } from "@/lib/db/types";
 
+export type CreateOrderError = "PRODUCT_NOT_FOUND" | "ORDER_CREATION_FAILED";
+export type WebhookError = "ORDER_NOT_FOUND" | "UPDATE_FAILED";
+export type ContactError = "CONTACT_SUBMISSION_FAILED";
+export type NotifyError = "NOTIFY_SUBSCRIPTION_FAILED";
+
 type CreateOrderInput = {
   customerName: string;
   customerEmail: string;
@@ -177,38 +182,35 @@ export async function listOrders() {
 
 export async function getAdminStats() {
   const supabase = await createServiceClient();
-  const { data: orders, error } = await supabase.from("orders").select("*");
 
-  if (error || !orders) {
-    return {
-      totalOrders: 0,
-      pendingOrders: 0,
-      paidOrders: 0,
-      inProduction: 0,
-      revenue: 0,
-    };
-  }
+  const [
+    { count: totalOrders },
+    { count: pendingOrders },
+    { count: paidOrders },
+    { count: inProduction },
+    { data: revenueData },
+  ] = await Promise.all([
+    supabase.from("orders").select("*", { count: "exact", head: true }),
+    supabase.from("orders").select("*", { count: "exact", head: true }).eq("order_status", "pending"),
+    supabase.from("orders").select("*", { count: "exact", head: true }).eq("payment_status", "paid"),
+    supabase.from("orders").select("*", { count: "exact", head: true }).eq("order_status", "in_production"),
+    supabase.from("orders").select("price").eq("payment_status", "paid"),
+  ]);
 
-  const totalOrders = orders.length;
-  const pendingOrders = orders.filter((order) => order.order_status === "pending").length;
-  const paidOrders = orders.filter((order) => order.payment_status === "paid").length;
-  const inProduction = orders.filter((order) => order.order_status === "in_production").length;
+  const revenue = revenueData?.reduce((sum, o) => sum + o.price, 0) ?? 0;
 
   return {
-    totalOrders,
-    pendingOrders,
-    paidOrders,
-    inProduction,
-    revenue: orders
-      .filter((order) => order.payment_status === "paid")
-      .reduce((sum, order) => sum + order.price, 0),
+    totalOrders: totalOrders ?? 0,
+    pendingOrders: pendingOrders ?? 0,
+    paidOrders: paidOrders ?? 0,
+    inProduction: inProduction ?? 0,
+    revenue,
   };
 }
 
 export async function applyWebhook(
   input: WebhookInput,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { supabaseClient?: any }
+  options?: { supabaseClient?: Awaited<ReturnType<typeof createServiceClient>> }
 ) {
   const supabase = options?.supabaseClient ?? (await createServiceClient());
   const { data: current, error: fetchError } = await supabase
@@ -261,7 +263,8 @@ export async function createContactSubmission(input: CreateContactInput) {
     .single();
 
   if (error || !data) {
-    throw new Error("Failed to save contact submission.");
+    console.error("Contact submission error:", error);
+    return { error: "CONTACT_SUBMISSION_FAILED" as const };
   }
 
   const submission: ContactSubmission = {
@@ -290,7 +293,8 @@ export async function createNotifySubscription(input: CreateNotifyInput) {
     .single();
 
   if (error || !data) {
-    throw new Error("Failed to save notify subscription.");
+    console.error("Notify subscription error:", error);
+    return { error: "NOTIFY_SUBSCRIPTION_FAILED" as const };
   }
 
   const subscription: NotifySubscription = {
