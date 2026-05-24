@@ -19,41 +19,71 @@ const headlineWords = ["READY", "TO", "FRAME", "YOUR", "OBSESSION?"];
 export function FinalCTASection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const buttonWrapRef = useRef<HTMLDivElement>(null);
   const scrollTriggerReady = useScrollTriggerReady();
 
   useGSAP(
     () => {
       if (!scrollTriggerReady) return;
       const words = headlineRef.current?.querySelectorAll("[data-word]");
-      if (!words || words.length === 0) return;
+      const buttonEl = buttonWrapRef.current;
 
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(Array.from(words), { opacity: 1, y: 0, clearProps: "all" });
+        if (words && words.length) {
+          gsap.set(Array.from(words), { opacity: 1, y: 0, clearProps: "all" });
+        }
+        if (buttonEl) {
+          gsap.set(buttonEl, { opacity: 1, scale: 1, clearProps: "all" });
+        }
         return () => {};
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const tween = gsap.fromTo(
-          Array.from(words),
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            ease: "power3.out",
-            stagger: 0.08,
+        const tweens: gsap.core.Tween[] = [];
+
+        if (words && words.length) {
+          const wordTween = gsap.fromTo(
+            Array.from(words),
+            { autoAlpha: 0, y: 30 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "expo.out",
+              stagger: 0.05,
+              scrollTrigger: {
+                trigger: headlineRef.current,
+                start: "top 80%",
+                once: true,
+              },
+            },
+          );
+          tweens.push(wordTween);
+        }
+
+        if (buttonEl) {
+          gsap.set(buttonEl, { autoAlpha: 0, scale: 0.96, transformOrigin: "center center" });
+          const buttonTween = gsap.to(buttonEl, {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.5,
+            ease: "back.out(1.4)",
             scrollTrigger: {
-              trigger: headlineRef.current,
-              start: "top 80%",
+              trigger: buttonEl,
+              start: "top 85%",
               once: true,
             },
-          },
-        );
+          });
+          tweens.push(buttonTween);
+        }
+
         return () => {
-          tween.scrollTrigger?.kill();
-          tween.kill();
+          tweens.forEach((t) => {
+            t.scrollTrigger?.kill();
+            t.kill();
+          });
         };
       });
 
@@ -126,21 +156,23 @@ export function FinalCTASection() {
         >
           Fully customised frames at a flat Rs. 5,000. Delivered nationwide. Two minutes to specify, seven days to build.
         </p>
-        <Button
-          render={<TransitionLink href="/shop" />}
-          variant="brand"
-          size="xl"
-          className="font-display uppercase"
-          style={{
-            padding: "26px 56px",
-            fontSize: 20,
-            letterSpacing: "0.18em",
-            border: "1px solid var(--brand-bright)",
-            background: "var(--brand-bright)",
-          }}
-        >
-          ORDER NOW →
-        </Button>
+        <div ref={buttonWrapRef} style={{ display: "inline-block" }}>
+          <Button
+            render={<TransitionLink href="/shop" />}
+            variant="brand"
+            size="xl"
+            className="font-display uppercase"
+            style={{
+              padding: "26px 56px",
+              fontSize: 20,
+              letterSpacing: "0.18em",
+              border: "1px solid var(--brand-bright)",
+              background: "var(--brand-bright)",
+            }}
+          >
+            ORDER NOW →
+          </Button>
+        </div>
       </div>
     </div>
   );

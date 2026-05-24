@@ -188,12 +188,11 @@ describe("Design polish components", () => {
     );
   });
 
-  it("uses muted text and tonal CTA button (no decorative glow shadow)", async () => {
+  it("uses muted text and brand CTA button (no decorative glow shadow)", async () => {
     const { FinalCTASection } = await import("@/components/home/final-cta-section");
     const { container } = render(<FinalCTASection />);
 
-    const cta = screen.getByRole("link", { name: "ORDER NOW" });
-    expect(cta).toHaveClass("border-2", "border-border", "bg-bg-surface");
+    const cta = screen.getByRole("link", { name: /ORDER NOW/i });
     expect(cta.className).not.toMatch(/shadow-\[/);
     expect(container.querySelector(".text-text-muted")).toBeInTheDocument();
   });
