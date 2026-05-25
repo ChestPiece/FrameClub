@@ -283,6 +283,8 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
       <button
         ref={mobileToggleRef}
         type="button"
+        data-button-motion="true"
+        data-button-motion-level="minimal"
         aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={mobileNavOpen}
         onClick={() => setMobileNavOpen((previous) => !previous)}

@@ -219,8 +219,7 @@ export default async function Home() {
                           fetchPriority="high"
                           loading="eager"
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-contain grayscale mix-blend-luminosity brightness-75 transition-all duration-700 hover:grayscale-0 hover:mix-blend-normal"
-                          style={{ padding: 14 }}
+                          className="object-contain transition-all duration-700"
                         />
                         <div
                           className="grid items-end"

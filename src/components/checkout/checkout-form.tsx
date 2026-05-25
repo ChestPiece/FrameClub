@@ -460,6 +460,8 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
                       key={opt.value}
                       type="button"
                       data-field
+                      data-button-motion="true"
+                      data-button-motion-level="subtle"
                       onClick={() => setValue("paymentMethod", opt.value, { shouldValidate: true })}
                       className="text-left"
                       style={{

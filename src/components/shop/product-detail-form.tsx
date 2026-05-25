@@ -471,6 +471,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={bg.value}
+                        data-button-motion="true"
+                        data-button-motion-level="subtle"
                         onClick={(e) => {
                           setBackground(bg.value);
                           popSwatch(e.currentTarget);
@@ -520,6 +522,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={f.value}
+                        data-button-motion="true"
+                        data-button-motion-level="subtle"
                         onClick={(e) => {
                           setFinish(f.value);
                           popSwatch(e.currentTarget);
@@ -570,6 +574,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                       <button
                         type="button"
                         key={p.value}
+                        data-button-motion="true"
+                        data-button-motion-level="subtle"
                         onClick={(e) => {
                           setPlate(p.value);
                           popSwatch(e.currentTarget);
@@ -661,6 +667,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                 >
                   <button
                     type="button"
+                    data-button-motion="true"
+                    data-button-motion-level="minimal"
                     onClick={() => setQty((q) => Math.max(1, q - 1))}
                     aria-label="Decrease quantity"
                     className="text-text-primary"
@@ -690,6 +698,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
                   </span>
                   <button
                     type="button"
+                    data-button-motion="true"
+                    data-button-motion-level="minimal"
                     onClick={() => setQty((q) => q + 1)}
                     aria-label="Increase quantity"
                     className="text-text-primary"
@@ -791,6 +801,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
               <button
                 key={k}
                 type="button"
+                data-button-motion="true"
+                data-button-motion-level="subtle"
                 onClick={() => setTab(k)}
                 className={`font-display ${active ? "text-text-primary" : "text-text-muted"}`}
                 style={{

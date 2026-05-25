@@ -139,6 +139,8 @@ export function ShopClientView({ products }: ShopClientViewProps) {
                 return (
                   <button
                     key={b}
+                    data-button-motion="true"
+                    data-button-motion-level="subtle"
                     onClick={() => setFilter(b)}
                     style={{
                       padding: "10px 16px",

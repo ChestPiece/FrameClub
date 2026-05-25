@@ -225,6 +225,8 @@ export function ContactForm({ intentIsNotify, productSlug }: ContactFormProps) {
       >
         <button
           type="submit"
+          data-button-motion="true"
+          data-button-motion-level="strong"
           disabled={isSubmitting || status === "loading"}
           className="font-display uppercase"
           style={{

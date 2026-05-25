@@ -63,14 +63,14 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
             tl.fromTo(
               '[data-animate="hero-accent"]',
               { scaleX: 0, transformOrigin: "left center", autoAlpha: 0 },
-              { scaleX: 1, autoAlpha: 1, duration: 0.8, delay: 0.2 },
+              { scaleX: 1, autoAlpha: 1, duration: 0.5 },
             );
 
             tl.fromTo(
               '[data-animate="hero-label"]',
               { y: 10, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.6 },
-              "-=0.4",
+              { y: 0, autoAlpha: 1, duration: 0.4 },
+              "-=0.3",
             );
 
             const heroLabel = root?.querySelector('[data-animate="hero-label"]') as HTMLElement | null;
@@ -80,18 +80,18 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
                 tl.to(
                   heroLabel,
                   {
-                    duration: 0.9,
+                    duration: 0.55,
                     scrambleText: {
                       text: originalText,
                       chars: "upperCase",
-                      revealDelay: 0.1,
-                      speed: 0.35,
+                      revealDelay: 0.06,
+                      speed: 0.5,
                     },
                   },
                   "-=0.2",
                 );
               } catch {
-                tl.to(heroLabel, { autoAlpha: 1, y: 0, duration: 0.3 }, "-=0.2");
+                tl.to(heroLabel, { autoAlpha: 1, y: 0, duration: 0.25 }, "-=0.2");
               }
             }
 
@@ -109,11 +109,11 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
                 tl.fromTo(
                   split.chars,
                   { y: 30, autoAlpha: 0 },
-                  { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.02 },
-                  "-=0.4",
+                  { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.015 },
+                  "-=0.35",
                 );
               } catch {
-                tl.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, "-=0.4");
+                tl.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, "-=0.35");
               }
             }
             introHasPlayedRef.current = true;
@@ -162,9 +162,7 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
           gsap.set(DRAWSVG_LINE_TARGETS, { drawSVG: "0%" });
 
           if (isDesktop) {
-            gsap.set("[data-hero-pin='image']", { x: 80, autoAlpha: 1 });
-            gsap.set("[data-hero-pin='subcopy-group']", { y: 30, autoAlpha: 1 });
-
+            // Pin targets already visible from intro — do NOT re-set position. Scroll-scrub uses fromTo from current state.
             const pinTl = gsap.timeline({
               scrollTrigger: {
                 trigger: "#hero-pin-target",
@@ -179,17 +177,15 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
             });
 
             pinTl
-              .to("[data-hero-pin='image']", { x: 0, duration: 1, ease: "power2.out" }, 0)
-              .to("[data-hero-pin='subcopy-group']", { y: 0, duration: 1, ease: "power2.out" }, 0.7)
+              .fromTo("[data-hero-pin='image']", { x: 0 }, { x: -40, duration: 1, ease: "power2.out" }, 0)
+              .fromTo("[data-hero-pin='subcopy-group']", { y: 0, autoAlpha: 1 }, { y: -20, autoAlpha: 0.85, duration: 1, ease: "power2.out" }, 0.5)
               .fromTo(
                 "[data-hero-svg-accent] line",
                 { drawSVG: "0%" },
                 { drawSVG: "100%", duration: 1, ease: "none" },
-                1.4,
+                1.2,
               );
           } else {
-            gsap.set("[data-hero-pin='image']", { x: 0, autoAlpha: 1 });
-            gsap.set("[data-hero-pin='subcopy-group']", { y: 0, autoAlpha: 1 });
             gsap.fromTo(
               "[data-hero-svg-accent] line",
               { drawSVG: "0%" },

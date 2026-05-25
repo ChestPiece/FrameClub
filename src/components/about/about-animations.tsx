@@ -52,12 +52,12 @@ export function AboutAnimations() {
               tl.to(
                 kicker,
                 {
-                  duration: 0.85,
+                  duration: 0.55,
                   scrambleText: {
                     text: originalText,
                     chars: "upperCase",
-                    revealDelay: 0.08,
-                    speed: 0.32,
+                    revealDelay: 0.05,
+                    speed: 0.5,
                   },
                 },
                 0,
@@ -91,15 +91,15 @@ export function AboutAnimations() {
               tl.fromTo(
                 split.chars,
                 { y: 40, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.04 },
-                0.1,
+                { y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.02 },
+                0.08,
               );
             } catch {
               tl.fromTo(
                 heading,
                 { y: 40, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.8 },
-                0.1,
+                { y: 0, autoAlpha: 1, duration: 0.55 },
+                0.08,
               );
             }
           }
@@ -113,7 +113,7 @@ export function AboutAnimations() {
               gsap.fromTo(
                 elements,
                 { drawSVG: "0%" },
-                { drawSVG: "100%", duration: 1.6, ease: "power2.inOut" },
+                { drawSVG: "100%", duration: 1.1, ease: "power2.inOut" },
               );
             },
           });
@@ -125,8 +125,8 @@ export function AboutAnimations() {
               gsap.to(elements, {
                 y: 0,
                 autoAlpha: 1,
-                duration: 0.65,
-                stagger: 0.15,
+                duration: 0.5,
+                stagger: 0.1,
                 ease: "power2.out",
               });
             },
