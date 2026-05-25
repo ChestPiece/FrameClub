@@ -2,10 +2,18 @@ import { describe, expect, it } from "vitest";
 import { COPY } from "@/lib/content/copy-constants";
 
 describe("locked copy contracts", () => {
-  it("matches hero sub-copy from CLAUDE.md", () => {
+  it("matches hero sub-copy (kinetic redesign)", () => {
     expect(COPY.heroSub).toBe(
-      "Custom diecast frames for the car obsessed. Nationwide delivery across Pakistan.",
+      "Handcrafted diecast frames. One workshop in Lahore. One price. Zero compromise.",
     );
+  });
+
+  it("matches hero eyebrow", () => {
+    expect(COPY.heroEyebrow).toBe("EST. LAHORE · MADE TO ORDER");
+  });
+
+  it("matches hero heading lines", () => {
+    expect(COPY.heroHeadingLines).toEqual(["BUILT ONCE.", "FRAMED FOREVER."]);
   });
 
   it("matches trust line from CLAUDE.md", () => {

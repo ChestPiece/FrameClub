@@ -1,4 +1,5 @@
 export { CustomizationSection } from './customization-section'
+export { HeroSection } from './hero-section'
 export { FeaturedCollectionSection } from './featured-collection-section'
 export { FinalCTASection } from './final-cta-section'
 export { HowItWorksSection } from './how-it-works-section'

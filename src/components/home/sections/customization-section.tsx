@@ -100,7 +100,8 @@ export function CustomizationSection() {
     <div ref={sectionRef}>
       <h2
         ref={headlineRef}
-        className="display-kicker text-center display-fluid mb-10 md:mb-14 flex flex-col items-center leading-none px-1"
+        className="display-kicker text-center mb-6 md:mb-8 flex flex-col items-center leading-none px-1"
+        style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.75rem)" }}
       >
         <span>BUILT AROUND YOUR</span>
         <span ref={obsessionRef} className="w-full text-brand">
@@ -126,12 +127,12 @@ export function CustomizationSection() {
             data-reveal
             className="border-b md:border-b-0 md:border-r border-border/40"
           >
-            <CardContent className="p-6 md:p-8">
-              <h4 className="display-kicker flex items-center gap-3 text-xl sm:text-2xl mb-6">
-                <Layers className="h-6 w-6 shrink-0 text-brand-bright" strokeWidth={1.5} />
+            <CardContent className="p-4 md:p-5">
+              <h4 className="display-kicker flex items-center gap-2 text-base sm:text-lg mb-3">
+                <Layers className="h-5 w-5 shrink-0 text-brand-bright" strokeWidth={1.5} />
                 BACKGROUND DESIGN
               </h4>
-              <ul className="space-y-4 technical-label text-sm uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
+              <ul className="space-y-2 technical-label text-xs uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
                 <li>
                   <span className="text-brand mr-2">●</span>Carbon Grid
                 </li>
@@ -152,12 +153,12 @@ export function CustomizationSection() {
             data-reveal
             className="border-b md:border-b-0 md:border-r border-border/40 bg-brand/10"
           >
-            <CardContent className="p-6 md:p-8">
-              <h4 className="display-kicker flex items-center gap-3 text-xl sm:text-2xl mb-6">
-                <CarFront className="h-6 w-6 shrink-0 text-brand-bright" strokeWidth={1.5} />
+            <CardContent className="p-4 md:p-5">
+              <h4 className="display-kicker flex items-center gap-2 text-base sm:text-lg mb-3">
+                <CarFront className="h-5 w-5 shrink-0 text-brand-bright" strokeWidth={1.5} />
                 CAR MODEL
               </h4>
-              <ul className="space-y-4 technical-label text-sm uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
+              <ul className="space-y-2 technical-label text-xs uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
                 <li>
                   <span className="text-brand mr-2">●</span>1:64 Scale Focus
                 </li>
@@ -175,12 +176,12 @@ export function CustomizationSection() {
           </Card>
 
           <Card data-reveal className="border-0">
-            <CardContent className="p-6 md:p-8">
-              <h4 className="display-kicker flex items-center gap-3 text-xl sm:text-2xl mb-6">
-                <FileText className="h-6 w-6 shrink-0 text-brand-bright" strokeWidth={1.5} />
+            <CardContent className="p-4 md:p-5">
+              <h4 className="display-kicker flex items-center gap-2 text-base sm:text-lg mb-3">
+                <FileText className="h-5 w-5 shrink-0 text-brand-bright" strokeWidth={1.5} />
                 PRINTED SPECS
               </h4>
-              <ul className="space-y-4 technical-label text-sm uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
+              <ul className="space-y-2 technical-label text-xs uppercase tracking-[0.12em] sm:tracking-[0.16em] text-text-muted">
                 <li>
                   <span className="text-brand mr-2">●</span>Performance Data
                 </li>

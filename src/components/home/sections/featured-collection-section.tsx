@@ -14,7 +14,7 @@ import type { Product } from "@/lib/db/types";
 import { FCHairline } from "@/components/home/fc-hairline";
 
 const KICKER: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
   letterSpacing: "0.28em",
   textTransform: "uppercase",
@@ -85,21 +85,21 @@ export function FeaturedCollectionSection({
         style={{
           gridTemplateColumns: "1fr auto",
           alignItems: "end",
-          marginBottom: 48,
+          marginBottom: 24,
           gap: 16,
         }}
       >
         <div>
           <p
             className="font-body text-text-muted"
-            style={{ ...KICKER, marginBottom: 16 }}
+            style={{ ...KICKER, marginBottom: 10 }}
           >
             Chapter Four · The Collection
           </p>
           <h2
             className="font-display uppercase text-text-primary"
             style={{
-              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              fontSize: "clamp(1.5rem, 3.2vw, 2.75rem)",
               lineHeight: 1,
               letterSpacing: "0.04em",
               margin: 0,
@@ -114,8 +114,8 @@ export function FeaturedCollectionSection({
           variant="outline"
           className="font-display uppercase"
           style={{
-            padding: "14px 22px",
-            fontSize: 12,
+            padding: "10px 16px",
+            fontSize: 11,
             letterSpacing: "0.14em",
           }}
         >
@@ -140,8 +140,8 @@ export function FeaturedCollectionSection({
           className="grid"
           style={{
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 24,
-            marginTop: 32,
+            gap: 20,
+            marginTop: 20,
           }}
         >
           {products.map((product) => (
@@ -158,27 +158,27 @@ export function FeaturedCollectionSection({
               >
                 <div
                   className="relative w-full overflow-hidden bg-bg-deep"
-                  style={{ aspectRatio: "4/5", border: "0.5px solid var(--border-subtle)" }}
+                  style={{ aspectRatio: "1/1", border: "0.5px solid var(--border-subtle)" }}
                 >
                   <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain p-6 grayscale transition-all duration-500 group-hover:grayscale-0"
+                    className="object-contain p-4 grayscale transition-all duration-500 group-hover:grayscale-0"
                   />
                 </div>
-                <div style={{ paddingTop: 20 }}>
+                <div style={{ paddingTop: 12 }}>
                   <div
                     className="flex items-start justify-between"
-                    style={{ gap: 12, marginBottom: 8 }}
+                    style={{ gap: 10, marginBottom: 6 }}
                   >
                     <h3
                       className="font-display uppercase text-text-primary"
                       style={{
-                        fontSize: 20,
+                        fontSize: 16,
                         letterSpacing: "0.06em",
-                        lineHeight: 1,
+                        lineHeight: 1.05,
                         margin: 0,
                         fontWeight: 400,
                       }}
@@ -188,7 +188,7 @@ export function FeaturedCollectionSection({
                     <span
                       className="font-display text-brand-bright shrink-0"
                       style={{
-                        fontSize: 13,
+                        fontSize: 12,
                         letterSpacing: "0.14em",
                       }}
                     >
@@ -197,7 +197,7 @@ export function FeaturedCollectionSection({
                   </div>
                   <p
                     className="font-body uppercase text-text-muted"
-                    style={{ ...KICKER, marginBottom: 12 }}
+                    style={{ ...KICKER, marginBottom: 8 }}
                   >
                     {product.brand}
                   </p>

@@ -1,7 +1,11 @@
 export const COPY = {
+  heroEyebrow: "EST. LAHORE · MADE TO ORDER",
+  heroHeadingLines: ["BUILT ONCE.", "FRAMED FOREVER."] as const,
   heroSub:
-    "Custom diecast frames for the car obsessed. Nationwide delivery across Pakistan.",
+    "Handcrafted diecast frames. One workshop in Lahore. One price. Zero compromise.",
   heroCta: "ORDER YOUR FRAME",
+  heroCtaSecondary: "READ THE STORY",
+  heroHandoff: "PICK YOURS",
   trustLine: "Nationwide Delivery 🇵🇰 | Secure Payment | Handcrafted to Order",
   finalCtaHeading: "READY TO FRAME YOUR OBSESSION?",
 } as const;

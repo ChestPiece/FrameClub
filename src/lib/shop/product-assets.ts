@@ -37,3 +37,17 @@ export function productImages(slug: string, category: ProductCategory = "diecast
 }
 
 export const HOME_HERO_IMAGE = "/Assets/Cars/frame_club intro image.jpg";
+
+/**
+ * Kinetic hero marquee imagery — used in the scroll-pinned Act 2 of the home hero.
+ * Order is the on-screen scrub order; labels feed the vertical Bebas marquee.
+ */
+export const HERO_MARQUEE_IMAGES: ReadonlyArray<{ src: string; label: string; alt: string }> = [
+  { src: "/Assets/Cars/bugatti.jpg",     label: "BUGATTI",     alt: "Bugatti diecast frame" },
+  { src: "/Assets/Cars/gtr.jpg",         label: "GTR",         alt: "Nissan GTR diecast frame" },
+  { src: "/Assets/Cars/lamborghini.jpg", label: "LAMBORGHINI", alt: "Lamborghini diecast frame" },
+  { src: "/Assets/Cars/pagani.jpg",      label: "PAGANI",      alt: "Pagani diecast frame" },
+  { src: "/Assets/Cars/porsche.jpg",     label: "PORSCHE",     alt: "Porsche diecast frame" },
+] as const;
+
+export const HERO_HANDOFF_IMAGE = "/Assets/Cars/lamborghini.jpg";

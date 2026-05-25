@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { FCHairline } from "@/components/home/fc-hairline";
 
 const KICKER: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
   letterSpacing: "0.28em",
   textTransform: "uppercase",
@@ -81,7 +81,7 @@ export function HowItWorksSection() {
     <div
       ref={sectionRef}
       className="bg-bg-surface"
-      style={{ padding: "90px 0 100px" }}
+      style={{ padding: "56px 0" }}
     >
       <div
         className="mx-auto"
@@ -92,21 +92,21 @@ export function HowItWorksSection() {
           className="grid items-end"
           style={{
             gridTemplateColumns: "1fr auto",
-            marginBottom: 48,
-            gap: 32,
+            marginBottom: 24,
+            gap: 20,
           }}
         >
-          <div style={{ maxWidth: 800 }}>
+          <div style={{ maxWidth: 720 }}>
             <p
               className="font-body text-text-muted"
-              style={{ ...KICKER, marginBottom: 24 }}
+              style={{ ...KICKER, marginBottom: 10 }}
             >
               Chapter Three · The Process
             </p>
             <h2
               className="font-display uppercase text-text-primary"
               style={{
-                fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                fontSize: "clamp(1.5rem, 3.2vw, 2.75rem)",
                 lineHeight: 1,
                 letterSpacing: "0.04em",
                 margin: 0,
@@ -137,22 +137,22 @@ export function HowItWorksSection() {
               data-motion-reveal
               className="flex flex-col"
               style={{
-                padding: "40px 32px 40px 0",
-                paddingLeft: i > 0 ? 32 : 0,
+                padding: "24px 20px 24px 0",
+                paddingLeft: i > 0 ? 20 : 0,
                 borderRight:
                   i < 2 ? "0.5px solid var(--border-subtle)" : "none",
-                gap: 24,
+                gap: 14,
                 opacity: 0,
               }}
             >
               <div
                 className="flex items-baseline"
-                style={{ gap: 16 }}
+                style={{ gap: 12 }}
               >
                 <span
                   className="font-display text-brand-bright"
                   style={{
-                    fontSize: 40,
+                    fontSize: 26,
                     letterSpacing: "0.04em",
                     lineHeight: 1,
                   }}
@@ -170,10 +170,10 @@ export function HowItWorksSection() {
               <h3
                 className="font-display uppercase text-text-primary"
                 style={{
-                  fontSize: 30,
+                  fontSize: 18,
                   letterSpacing: "0.04em",
                   fontWeight: 400,
-                  lineHeight: 1,
+                  lineHeight: 1.1,
                   margin: 0,
                 }}
               >
@@ -181,7 +181,7 @@ export function HowItWorksSection() {
               </h3>
               <p
                 className="text-text-muted"
-                style={{ fontSize: 15, lineHeight: 1.75, margin: 0 }}
+                style={{ fontSize: 13, lineHeight: 1.55, margin: 0 }}
               >
                 {step.body}
               </p>
@@ -190,16 +190,16 @@ export function HowItWorksSection() {
         </div>
 
         {/* CTA */}
-        <div style={{ marginTop: 56 }}>
+        <div style={{ marginTop: 28 }}>
           <Button
             render={<TransitionLink href="/shop" />}
             variant="outline"
             className="font-display uppercase inline-flex"
             style={{
-              padding: "16px 28px",
-              fontSize: 14,
+              padding: "10px 18px",
+              fontSize: 11,
               letterSpacing: "0.14em",
-              gap: 10,
+              gap: 8,
               minHeight: 44,
               border: "1px solid var(--border)",
               background: "transparent",

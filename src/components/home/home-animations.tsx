@@ -14,7 +14,6 @@ const HIDE_TARGETS = "[data-animate-section]:not([data-animate-section='hero']),
 const REVEAL_TARGETS = "[data-animate-section], [data-animate-item]";
 const HERO_REVEAL_TARGETS =
   "[data-animate='hero-accent'], [data-animate='hero-label'], [data-animate='hero-heading']";
-const HERO_PIN_TARGETS = "[data-hero-pin='image'], [data-hero-pin='subcopy-group']";
 /** Section-local reveals that start hidden; must be unhidden if GSAP fails or motion is reduced. */
 const MOTION_REVEAL_LOCAL = "[data-motion-reveal]";
 const DRAWSVG_LINE_TARGETS =
@@ -35,7 +34,7 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
       const mm = gsap.matchMedia();
       const splitInstances: SplitText[] = [];
       const revealAllTargets = (
-        targets: string = `${REVEAL_TARGETS}, ${HERO_REVEAL_TARGETS}, ${HERO_PIN_TARGETS}`,
+        targets: string = `${REVEAL_TARGETS}, ${HERO_REVEAL_TARGETS}`,
       ) => {
         gsap.set(targets, { autoAlpha: 1, y: 0, clearProps: "opacity,visibility,transform" });
       };
@@ -51,7 +50,6 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
           if (reduceMotion) {
             revealAllTargets();
             gsap.set(MOTION_REVEAL_LOCAL, { autoAlpha: 1, y: 0, x: 0, clipPath: "none", clearProps: "all" });
-            gsap.set(HERO_PIN_TARGETS, { autoAlpha: 1, y: 0, x: 0, clearProps: "all" });
             gsap.set(DRAWSVG_LINE_TARGETS, { drawSVG: "100%", autoAlpha: 1 });
             introHasPlayedRef.current = true;
             return;
@@ -153,7 +151,6 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
             gsap.set(HIDE_TARGETS, { autoAlpha: 1, y: 0, clearProps: "all" });
             gsap.set(HERO_REVEAL_TARGETS, { autoAlpha: 1, y: 0, clearProps: "all" });
             gsap.set(MOTION_REVEAL_LOCAL, { autoAlpha: 1, y: 0, x: 0, clipPath: "none", clearProps: "all" });
-            gsap.set(HERO_PIN_TARGETS, { autoAlpha: 1, y: 0, x: 0, clearProps: "all" });
             gsap.set(DRAWSVG_LINE_TARGETS, { drawSVG: "100%", autoAlpha: 1 });
             return;
           }
@@ -161,46 +158,23 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
           gsap.set(HIDE_TARGETS, { autoAlpha: 0, y: 40 });
           gsap.set(DRAWSVG_LINE_TARGETS, { drawSVG: "0%" });
 
-          if (isDesktop) {
-            // Pin targets already visible from intro — do NOT re-set position. Scroll-scrub uses fromTo from current state.
-            const pinTl = gsap.timeline({
+          // Hero kinetic pin/scrub is owned by HeroSectionAnimations.
+          // Here we only draw the hero accent rule on scroll.
+          gsap.fromTo(
+            "[data-hero-svg-accent] line",
+            { drawSVG: "0%" },
+            {
+              drawSVG: "100%",
+              ease: "none",
               scrollTrigger: {
-                trigger: "#hero-pin-target",
-                start: "top top",
-                end: "+=120%",
+                trigger: "#hero-section",
+                start: "top 85%",
+                end: "bottom 40%",
                 scrub: 1,
-                pin: "#hero-pin-target",
-                pinType: "transform",
-                anticipatePin: 1,
-                invalidateOnRefresh: true,
               },
-            });
-
-            pinTl
-              .fromTo("[data-hero-pin='image']", { x: 0 }, { x: -40, duration: 1, ease: "power2.out" }, 0)
-              .fromTo("[data-hero-pin='subcopy-group']", { y: 0, autoAlpha: 1 }, { y: -20, autoAlpha: 0.85, duration: 1, ease: "power2.out" }, 0.5)
-              .fromTo(
-                "[data-hero-svg-accent] line",
-                { drawSVG: "0%" },
-                { drawSVG: "100%", duration: 1, ease: "none" },
-                1.2,
-              );
-          } else {
-            gsap.fromTo(
-              "[data-hero-svg-accent] line",
-              { drawSVG: "0%" },
-              {
-                drawSVG: "100%",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: "#hero-section",
-                  start: "top 85%",
-                  end: "bottom 40%",
-                  scrub: 1,
-                },
-              },
-            );
-          }
+            },
+          );
+          void isDesktop;
 
           ScrollTrigger.batch("[data-animate-section]:not([data-animate-section='hero'])", {
             start: "top 92%",

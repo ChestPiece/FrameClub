@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useStaggerReveal } from "@/lib/animation";
 
 const KICKER: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
   letterSpacing: "0.28em",
   textTransform: "uppercase",
@@ -19,7 +19,7 @@ export function SocialProofSection() {
       {/* Testimonial */}
       <div
         className="bg-bg-surface"
-        style={{ padding: "clamp(48px, 7vw, 110px) 0" }}
+        style={{ padding: "clamp(40px, 5vw, 64px) 0" }}
       >
         <div
           className="mx-auto"
@@ -30,14 +30,14 @@ export function SocialProofSection() {
             style={{
               display: "grid",
               gridTemplateColumns: "auto 1fr",
-              gap: 80,
+              gap: 40,
               alignItems: "start",
             }}
           >
             <p
               data-reveal
               className="font-body text-text-muted"
-              style={{ ...KICKER, paddingTop: 16 }}
+              style={{ ...KICKER, paddingTop: 8 }}
             >
               Customer · Karachi
             </p>
@@ -45,26 +45,26 @@ export function SocialProofSection() {
               <p
                 className="font-display uppercase text-text-primary"
                 style={{
-                  fontSize: "clamp(1rem, 3vw, 2.6rem)",
+                  fontSize: "clamp(0.95rem, 2.2vw, 1.75rem)",
                   letterSpacing: "0.02em",
-                  lineHeight: 1.15,
-                  margin: "0 0 48px",
+                  lineHeight: 1.2,
+                  margin: "0 0 24px",
                   fontWeight: 400,
                 }}
               >
                 &ldquo;I bought one for myself, then three more before the year was out — one for my brother, one for my father, one for the office.
                 <span className="text-brand-bright"> Nothing else on my wall feels this finished.&rdquo;</span>
               </p>
-              <div data-reveal className="flex items-center" style={{ gap: 24 }}>
+              <div data-reveal className="flex items-center" style={{ gap: 16 }}>
                 <div
                   className="font-display text-text-primary"
                   style={{
-                    width: 56,
-                    height: 56,
+                    width: 44,
+                    height: 44,
                     border: "0.5px solid var(--border)",
                     display: "grid",
                     placeItems: "center",
-                    fontSize: 18,
+                    fontSize: 14,
                   }}
                 >
                   AK
@@ -72,7 +72,7 @@ export function SocialProofSection() {
                 <div>
                   <div
                     className="font-display uppercase text-text-primary"
-                    style={{ fontSize: 18, letterSpacing: "0.06em" }}
+                    style={{ fontSize: 14, letterSpacing: "0.06em" }}
                   >
                     Ahmed Kaleem
                   </div>

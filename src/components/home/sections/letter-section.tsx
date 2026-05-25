@@ -6,7 +6,7 @@ import { gsap } from "@/lib/animation/gsap-config";
 import { useScrollTriggerReady } from "@/components/providers/scroll-trigger-environment";
 
 const KICKER: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
   letterSpacing: "0.28em",
   textTransform: "uppercase",
@@ -75,7 +75,7 @@ export function LetterSection() {
       ref={sectionRef}
       className="bg-bg-deep"
       style={{
-        padding: "90px 0",
+        padding: "56px 0",
         borderTop: "0.5px solid var(--border)",
         borderBottom: "0.5px solid var(--border)",
       }}
@@ -87,7 +87,7 @@ export function LetterSection() {
         {/* Header rail */}
         <div
           className="flex flex-wrap items-baseline justify-between"
-          style={{ marginBottom: 40, gap: 16 }}
+          style={{ marginBottom: 24, gap: 12 }}
         >
           <p className="font-body text-text-muted" style={KICKER}>
             Chapter Two · From the Workshop
@@ -102,12 +102,12 @@ export function LetterSection() {
           ref={quoteRef}
           className="font-display uppercase text-text-primary"
           style={{
-            fontSize: "clamp(1rem, 2.8vw, 2.4rem)",
-            lineHeight: 1.2,
+            fontSize: "clamp(0.95rem, 2vw, 1.625rem)",
+            lineHeight: 1.25,
             letterSpacing: "0.02em",
             margin: 0,
             fontWeight: 400,
-            maxWidth: "60rem",
+            maxWidth: "56rem",
           }}
         >
           {QUOTE_WORDS.map((w, i) => (
@@ -133,21 +133,21 @@ export function LetterSection() {
         <div
           className="grid letter-body-grid"
           style={{
-            marginTop: 56,
-            gap: 80,
+            marginTop: 32,
+            gap: 40,
             alignItems: "start",
           }}
         >
           <p
             className="font-body text-text-muted"
-            style={{ ...KICKER, paddingTop: 12 }}
+            style={{ ...KICKER, paddingTop: 6 }}
           >
             Lahore · 2026
           </p>
-          <div className="flex flex-col" style={{ gap: 28 }}>
+          <div className="flex flex-col" style={{ gap: 14 }}>
             <p
               className="text-text-primary"
-              style={{ fontSize: 17, lineHeight: 1.75, margin: 0 }}
+              style={{ fontSize: 14, lineHeight: 1.6, margin: 0 }}
             >
               Frame Club is not a brand. It is a workshop with a waiting list. Every order
               is the same conversation we had the first time — what car, what backdrop,
@@ -155,7 +155,7 @@ export function LetterSection() {
             </p>
             <p
               className="text-text-muted"
-              style={{ fontSize: 17, lineHeight: 1.75, margin: 0 }}
+              style={{ fontSize: 13, lineHeight: 1.6, margin: 0 }}
             >
               Same flat price for every car in the collection. No upsells, no variants, no
               warehouse. Seven days from confirmed payment to your door. Sealed glass,
@@ -166,8 +166,8 @@ export function LetterSection() {
             <p
               className="font-display uppercase text-text-primary"
               style={{
-                marginTop: 24,
-                fontSize: 14,
+                marginTop: 12,
+                fontSize: 12,
                 letterSpacing: "0.18em",
               }}
             >

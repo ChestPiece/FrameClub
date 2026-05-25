@@ -8,7 +8,7 @@ import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 
 const KICKER: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   fontWeight: 500,
   letterSpacing: "0.28em",
   textTransform: "uppercase",
@@ -113,7 +113,7 @@ export function FinalCTASection() {
       >
         <p
           className="font-body text-text-muted"
-          style={{ ...KICKER, marginBottom: 32 }}
+          style={{ ...KICKER, marginBottom: 16 }}
         >
           Chapter Six · The Question
         </p>
@@ -121,10 +121,10 @@ export function FinalCTASection() {
           ref={headlineRef}
           className="font-display uppercase text-text-primary"
           style={{
-            fontSize: "clamp(2.25rem, 6vw, 5.5rem)",
+            fontSize: "clamp(1.5rem, 3.5vw, 3rem)",
             letterSpacing: "0.03em",
-            lineHeight: 0.95,
-            margin: "0 0 32px",
+            lineHeight: 1,
+            margin: "0 0 16px",
             fontWeight: 400,
           }}
         >
@@ -148,10 +148,10 @@ export function FinalCTASection() {
         <p
           className="text-text-muted"
           style={{
-            maxWidth: 540,
-            margin: "0 auto 48px",
-            fontSize: 16,
-            lineHeight: 1.7,
+            maxWidth: 460,
+            margin: "0 auto 24px",
+            fontSize: 14,
+            lineHeight: 1.6,
           }}
         >
           Fully customised frames at a flat Rs. 5,000. Delivered nationwide. Two minutes to specify, seven days to build.
@@ -163,8 +163,8 @@ export function FinalCTASection() {
             size="xl"
             className="font-display uppercase"
             style={{
-              padding: "18px 40px",
-              fontSize: 17,
+              padding: "12px 28px",
+              fontSize: 12,
               letterSpacing: "0.18em",
               border: "1px solid var(--brand-bright)",
               background: "var(--brand-bright)",
