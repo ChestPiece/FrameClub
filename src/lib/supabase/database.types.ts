@@ -17,21 +17,27 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          intent: string
           message: string
+          meta: Json | null
           name: string
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          intent?: string
           message: string
+          meta?: Json | null
           name: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          intent?: string
           message?: string
+          meta?: Json | null
           name?: string
         }
         Relationships: []
@@ -163,6 +169,7 @@ export type Database = {
       products: {
         Row: {
           brand: string
+          category: string
           created_at: string | null
           delivery_days: number | null
           description: string | null
@@ -177,6 +184,7 @@ export type Database = {
         }
         Insert: {
           brand: string
+          category?: string
           created_at?: string | null
           delivery_days?: number | null
           description?: string | null
@@ -191,6 +199,7 @@ export type Database = {
         }
         Update: {
           brand?: string
+          category?: string
           created_at?: string | null
           delivery_days?: number | null
           description?: string | null

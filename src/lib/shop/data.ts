@@ -1,20 +1,21 @@
 import { createPublicClient } from "@/lib/supabase/server";
-import { productDiecastImages } from "@/lib/shop/diecast-assets";
+import { productImages } from "@/lib/shop/product-assets";
 import type { Tables } from "@/lib/supabase/database.types";
-import type { Product, ProductStatus } from "@/lib/db/types";
+import type { Product, ProductCategory, ProductStatus } from "@/lib/db/types";
 
 type ProductRow = Tables<"products">;
 type CustomizationRow = Tables<"customization_options">;
 
 function toProduct(row: ProductRow, backgrounds: CustomizationRow[] = []): Product {
+  const category: ProductCategory = row.category === "football" ? "football" : "diecast";
+  const dbImages = (row.images ?? []).filter((img): img is string => typeof img === "string" && img.length > 0);
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
     brand: row.brand,
     description: row.description ?? "",
-    // Temporary: local diecast shots until per-product media is in Supabase
-    images: productDiecastImages(),
+    images: dbImages.length > 0 ? dbImages : productImages(row.slug, category),
     price: row.price,
     status: (row.status as ProductStatus) ?? "available",
     deliveryDays: row.delivery_days ?? 7,
@@ -25,6 +26,7 @@ function toProduct(row: ProductRow, backgrounds: CustomizationRow[] = []): Produ
       value: bg.value,
       swatch: bg.swatch ?? bg.value,
     })),
+    category,
   };
 }
 
@@ -45,6 +47,25 @@ export async function getProducts(status?: ProductStatus): Promise<Product[]> {
     return (data ?? []).map((row) => toProduct(row));
   } catch (err) {
     console.error(`[getProducts] network failure:`, err);
+    return [];
+  }
+}
+
+export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
+  const supabase = createPublicClient();
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("category", category)
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error(`[getProductsByCategory] supabase error: ${error.message}`);
+      return [];
+    }
+    return (data ?? []).map((row) => toProduct(row));
+  } catch (err) {
+    console.error(`[getProductsByCategory] network failure:`, err);
     return [];
   }
 }

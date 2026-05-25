@@ -14,7 +14,7 @@ import {
   FinalCTASection,
 } from "@/components/home/sections";
 import { Button } from "@/components/ui/button";
-import { DIECAST_PRODUCT_IMAGES } from "@/lib/shop/diecast-assets";
+import { HOME_HERO_IMAGE } from "@/lib/shop/product-assets";
 import { getProducts } from "@/lib/shop/data";
 
 const HERO_STATS = [
@@ -27,10 +27,9 @@ export default async function Home() {
   const allProducts = await getProducts();
   const featuredProducts = allProducts.slice(0, 3);
   const totalProductCount = allProducts.length;
-  const heroProduct = featuredProducts[0];
-  const heroImage = heroProduct?.images[0] ?? DIECAST_PRODUCT_IMAGES[0];
-  const heroBrand = heroProduct?.brand ?? "Frame Club";
-  const heroName = heroProduct?.name ?? "Featured Build";
+  const heroImage = HOME_HERO_IMAGE;
+  const heroBrand = "Frame Club";
+  const heroName = "Vol. 04 Edition";
   const heroSku = "FC-001";
 
   return (

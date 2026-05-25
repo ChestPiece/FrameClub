@@ -3,8 +3,9 @@ import {
   orderConfirmationTemplate,
   statusUpdateTemplate,
   adminNewOrderTemplate,
+  customFrameInquiryTemplate,
 } from "./templates";
-import type { OrderRecord } from "../db/types";
+import type { ContactSubmission, OrderRecord } from "../db/types";
 import { ORDER_STATUS_LABELS } from "../db/labels";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -60,6 +61,28 @@ export async function sendStatusUpdate(order: OrderRecord, productName: string) 
     return { success: true, data };
   } catch (error) {
     console.error("Failed to send status update:", error);
+    return { success: false, error };
+  }
+}
+
+export async function sendCustomFrameInquiry(submission: ContactSubmission) {
+  if (!resend) {
+    console.log("Mock sending custom-frame inquiry for:", submission.email);
+    return { success: true };
+  }
+  try {
+    const adminEmail = requireAdminEmail();
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: adminEmail,
+      replyTo: submission.email,
+      subject: `Football Frame Brief: ${submission.name}`,
+      html: customFrameInquiryTemplate(submission),
+    });
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error) {
+    console.error("Failed to send custom-frame inquiry:", error);
     return { success: false, error };
   }
 }

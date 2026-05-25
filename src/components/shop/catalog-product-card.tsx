@@ -3,6 +3,7 @@ import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/shared/status-badge";
 import type { Product } from "@/lib/db/types";
+import { FOOTBALL_FRAME_COPY } from "@/lib/content/copy-constants";
 import { formatPkr } from "@/lib/utils";
 
 type CatalogProductCardProps = {
@@ -12,6 +13,8 @@ type CatalogProductCardProps = {
 export function CatalogProductCard({ product }: CatalogProductCardProps) {
   const defaultBackground = product.backgrounds[0]?.value ?? "carbon-grid";
   const quickAddHref = `/checkout?slug=${encodeURIComponent(product.slug)}&background=${encodeURIComponent(defaultBackground)}`;
+  const isFootball = product.category === "football";
+  const quoteHref = `/contact?intent=custom-frame&product=${encodeURIComponent(product.slug)}`;
 
   return (
     <article
@@ -53,7 +56,9 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
       <div className="mt-auto space-y-4 px-8 pb-8">
         <div className="flex items-center justify-between bg-bg-deep px-3 py-2.5">
           <span className="technical-label text-[10px] text-text-muted">Price</span>
-          <span className="display-kicker text-sm text-text-primary">{formatPkr(product.price)}</span>
+          <span className="display-kicker text-sm text-text-primary">
+            {isFootball ? FOOTBALL_FRAME_COPY.priceLine : formatPkr(product.price)}
+          </span>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -65,7 +70,15 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
             View Specs
           </Button>
 
-          {product.status === "unavailable" ? (
+          {isFootball ? (
+            <Button
+              render={<TransitionLink href={quoteHref} />}
+              variant="brand"
+              className="display-kicker min-touch-target w-full justify-center"
+            >
+              {FOOTBALL_FRAME_COPY.cardCta}
+            </Button>
+          ) : product.status === "unavailable" ? (
             <Button
               render={<TransitionLink href={`/contact?product=${encodeURIComponent(product.slug)}`} />}
               variant="muted"

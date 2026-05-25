@@ -1,14 +1,19 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import type { Json, Tables } from "@/lib/supabase/database.types";
 import type {
+  ContactIntent,
   ContactSubmission,
+  CustomFrameBrief,
   NotifySubscription,
   OrderRecord,
   OrderStatus,
   PaymentStatus,
 } from "@/lib/db/types";
 
-export type CreateOrderError = "PRODUCT_NOT_FOUND" | "ORDER_CREATION_FAILED";
+export type CreateOrderError =
+  | "PRODUCT_NOT_FOUND"
+  | "ORDER_CREATION_FAILED"
+  | "CATEGORY_NOT_ORDERABLE";
 export type WebhookError = "ORDER_NOT_FOUND" | "UPDATE_FAILED";
 export type ContactError = "CONTACT_SUBMISSION_FAILED";
 export type NotifyError = "NOTIFY_SUBSCRIPTION_FAILED";
@@ -34,7 +39,28 @@ type CreateContactInput = {
   name: string;
   email: string;
   message: string;
+  intent?: ContactIntent;
+  meta?: CustomFrameBrief | null;
 };
+
+function parseContactIntent(value: string | null | undefined): ContactIntent {
+  if (value === "notify" || value === "custom-frame" || value === "general") return value;
+  return "general";
+}
+
+function parseCustomFrameBrief(value: Json | null): CustomFrameBrief | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const v = value as Record<string, Json | undefined>;
+  const out: CustomFrameBrief = {};
+  if (typeof v.team === "string") out.team = v.team;
+  if (typeof v.playerName === "string") out.playerName = v.playerName;
+  if (typeof v.jerseyNumber === "string") out.jerseyNumber = v.jerseyNumber;
+  if (v.frameSize === "small" || v.frameSize === "medium" || v.frameSize === "large") {
+    out.frameSize = v.frameSize;
+  }
+  if (typeof v.referenceUrl === "string") out.referenceUrl = v.referenceUrl;
+  return out;
+}
 
 type CreateNotifyInput = {
   email: string;
@@ -105,13 +131,17 @@ export async function createOrder(input: CreateOrderInput) {
   // Get product
   const { data: product, error: productError } = await supabase
     .from("products")
-    .select("id, price, slug")
+    .select("id, price, slug, category")
     .eq("slug", input.productSlug)
     .single();
 
   if (productError || !product) {
     console.error("Product fetch error:", productError);
     return { error: "PRODUCT_NOT_FOUND" as const };
+  }
+
+  if (product.category && product.category !== "diecast") {
+    return { error: "CATEGORY_NOT_ORDERABLE" as const };
   }
 
   const maxAttempts = 6;
@@ -258,6 +288,8 @@ export async function createContactSubmission(input: CreateContactInput) {
       name: input.name,
       email: input.email,
       message: input.message,
+      intent: input.intent ?? "general",
+      meta: (input.meta ?? null) as Json | null,
     })
     .select("*")
     .single();
@@ -272,6 +304,8 @@ export async function createContactSubmission(input: CreateContactInput) {
     name: data.name,
     email: data.email,
     message: data.message,
+    intent: parseContactIntent(data.intent),
+    meta: parseCustomFrameBrief(data.meta),
     createdAt: data.created_at ?? new Date().toISOString(),
   };
 

@@ -9,17 +9,38 @@ type ShopClientViewProps = {
   products: Product[];
 };
 
+const CATEGORY_TABS = [
+  { value: "all", label: "All" },
+  { value: "diecast", label: "Cars" },
+  { value: "football", label: "Football" },
+] as const;
+
+type CategoryTab = (typeof CATEGORY_TABS)[number]["value"];
+
 export function ShopClientView({ products }: ShopClientViewProps) {
+  const [category, setCategory] = React.useState<CategoryTab>("all");
   const [filter, setFilter] = React.useState<string>("all");
   const [sort, setSort] = React.useState<"featured" | "lead" | "year">("featured");
 
-  const brands = React.useMemo(
-    () => ["all", ...Array.from(new Set(products.map((p) => p.brand?.toLowerCase()).filter(Boolean)))],
-    [products],
+  const categoryProducts = React.useMemo(
+    () =>
+      category === "all"
+        ? products
+        : products.filter((p) => p.category === category),
+    [products, category],
   );
 
+  const brands = React.useMemo(
+    () => ["all", ...Array.from(new Set(categoryProducts.map((p) => p.brand?.toLowerCase()).filter(Boolean)))],
+    [categoryProducts],
+  );
+
+  React.useEffect(() => {
+    setFilter("all");
+  }, [category]);
+
   const filtered = React.useMemo(() => {
-    const base = products.filter(
+    const base = categoryProducts.filter(
       (p) => filter === "all" || p.brand?.toLowerCase() === filter,
     );
     if (sort === "lead") {
@@ -33,7 +54,7 @@ export function ShopClientView({ products }: ShopClientViewProps) {
       });
     }
     return base;
-  }, [products, filter, sort]);
+  }, [categoryProducts, filter, sort]);
 
   return (
     <div style={{ paddingTop: "calc(7.5rem + 36px)" }}>
@@ -106,11 +127,65 @@ export function ShopClientView({ products }: ShopClientViewProps) {
 
           <div
             style={{
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+              flexWrap: "wrap",
+              paddingTop: 32,
+              borderTop: "0.5px solid var(--border)",
+              marginBottom: 16,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body, Inter, sans-serif)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+                marginRight: 16,
+              }}
+            >
+              Category ▸
+            </span>
+            {CATEGORY_TABS.map((tab) => {
+              const active = category === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  data-button-motion="true"
+                  data-button-motion-level="subtle"
+                  onClick={() => setCategory(tab.value)}
+                  style={{
+                    padding: "10px 16px",
+                    fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                    fontSize: 11,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    border: active
+                      ? "1px solid var(--brand-bright)"
+                      : "1px solid var(--border)",
+                    background: active
+                      ? "color-mix(in srgb, var(--brand) 16%, transparent)"
+                      : "transparent",
+                    color: active ? "var(--text-primary)" : "var(--text-muted)",
+                    cursor: "pointer",
+                    transition: "all 0.25s ease",
+                    borderRadius: 0,
+                  }}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
               display: "grid",
               gridTemplateColumns: "1fr auto",
               gap: 24,
-              paddingTop: 32,
-              borderTop: "0.5px solid var(--border)",
             }}
           >
             <div

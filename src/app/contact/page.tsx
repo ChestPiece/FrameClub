@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ContactForm } from "@/components/contact/contact-form";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ContactHero } from "@/components/contact/contact-hero";
-import { WHATSAPP_LINK } from "@/lib/content/copy-constants";
+import { FOOTBALL_FRAME_COPY, WHATSAPP_LINK } from "@/lib/content/copy-constants";
 
 const KICKER: React.CSSProperties = {
   fontSize: 11,
@@ -18,13 +18,22 @@ type ContactPageProps = {
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const params = await searchParams;
   const intentIsNotify = params.intent === "notify";
-  const pageTitle = intentIsNotify ? "GET NOTIFIED" : "OPEN A CONVERSATION";
+  const intentIsCustomFrame = params.intent === "custom-frame";
+  const pageTitle = intentIsNotify
+    ? "GET NOTIFIED"
+    : intentIsCustomFrame
+      ? FOOTBALL_FRAME_COPY.contactTitle
+      : "OPEN A CONVERSATION";
   const chapterLabel = intentIsNotify
     ? "Notification · Restock alert"
-    : "Chapter One · Reach the Workshop";
+    : intentIsCustomFrame
+      ? "Brief · Football Frame Commission"
+      : "Chapter One · Reach the Workshop";
   const subtitle = intentIsNotify
     ? `You requested updates for ${params.product ?? "an unavailable model"}. Drop your email and we will notify you the moment it returns to the bench.`
-    : "Commission a build, ask about a model, or send a brief. The workshop reads every message and replies within one working day.";
+    : intentIsCustomFrame
+      ? FOOTBALL_FRAME_COPY.contactSubtitle
+      : "Commission a build, ask about a model, or send a brief. The workshop reads every message and replies within one working day.";
 
   return (
     <>
@@ -52,11 +61,16 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   }}
                 >
                   <p className="font-body text-text-muted" style={KICKER}>
-                    {intentIsNotify ? "Notify form" : "Send a message"}
+                    {intentIsNotify
+                      ? "Notify form"
+                      : intentIsCustomFrame
+                        ? "Football brief"
+                        : "Send a message"}
                   </p>
                 </div>
                 <ContactForm
                   intentIsNotify={intentIsNotify}
+                  intentIsCustomFrame={intentIsCustomFrame}
                   productSlug={params.product}
                 />
               </div>

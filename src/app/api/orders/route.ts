@@ -58,6 +58,13 @@ export async function POST(request: Request) {
   });
 
   if ("error" in result && result.error) {
+    if (result.error === "CATEGORY_NOT_ORDERABLE") {
+      return fail(
+        result.error,
+        "This product is custom-built and requires a quote. Submit a brief via the contact form.",
+        422,
+      );
+    }
     return fail(result.error, "The selected product could not be found or order creation failed.", 400);
   }
 

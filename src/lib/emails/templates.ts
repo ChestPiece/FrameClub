@@ -1,4 +1,4 @@
-import type { OrderRecord } from "../db/types";
+import type { ContactSubmission, OrderRecord } from "../db/types";
 
 const baseStyles = `
   body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0F0D0D; color: #F0EDED; margin: 0; padding: 20px; }
@@ -89,6 +89,34 @@ export function statusUpdateTemplate(order: OrderRecord, productName: string, st
     </div>
 
     <p style="margin-top: 30px;">If you have any questions, you can reply directly to this email.</p>
+  `;
+  return wrapEmail(content);
+}
+
+export function customFrameInquiryTemplate(submission: ContactSubmission) {
+  const meta = submission.meta ?? {};
+  const row = (label: string, value: string | undefined | null) =>
+    value
+      ? `<div class="detail-row"><span class="detail-label">${label}</span><span class="detail-value">${value}</span></div>`
+      : "";
+  const content = `
+    <p class="detail-label" style="margin-bottom: 20px;">Football Frame Inquiry</p>
+    <h1>New Custom Brief</h1>
+    <div class="details-box">
+      <div class="detail-row">
+        <span class="detail-label">From</span>
+        <span class="detail-value">${submission.name} &lt;${submission.email}&gt;</span>
+      </div>
+      ${row("Team", meta.team ?? null)}
+      ${row("Player", meta.playerName ?? null)}
+      ${row("Jersey #", meta.jerseyNumber ?? null)}
+      ${row("Frame size", meta.frameSize ?? null)}
+      ${row("Reference", meta.referenceUrl ?? null)}
+    </div>
+    <h2>Brief</h2>
+    <div class="details-box">
+      <pre class="detail-value" style="white-space: pre-wrap; font-family: inherit; margin: 0;">${submission.message}</pre>
+    </div>
   `;
   return wrapEmail(content);
 }

@@ -196,6 +196,19 @@ describe("createOrder", () => {
     expect(result).toEqual({ error: "ORDER_CREATION_FAILED" });
   });
 
+  it("returns CATEGORY_NOT_ORDERABLE for non-diecast products", async () => {
+    const product = { id: "product-2", price: 0, slug: "custom-football-frame-classic", category: "football" };
+    const productSingle = vi.fn().mockResolvedValue({ data: product, error: null });
+    const productEq = vi.fn().mockReturnValue({ single: productSingle });
+    const productSelect = vi.fn().mockReturnValue({ eq: productEq });
+    const from = vi.fn(() => ({ select: productSelect }));
+    createClientMock.mockResolvedValue({ from });
+
+    const result = await createOrder(validInput);
+
+    expect(result).toEqual({ error: "CATEGORY_NOT_ORDERABLE" });
+  });
+
   it("retries on 23505 (unique violation) and succeeds on second attempt", async () => {
     const product = { id: "product-1", price: 5000, slug: "r34" };
     const orderRow = makeOrderRow();
@@ -369,6 +382,8 @@ describe("createContactSubmission", () => {
       name: "Anas Altaf",
       email: "anas@example.com",
       message: "Hello there",
+      intent: "general",
+      meta: null,
       created_at: "2026-01-01T00:00:00Z",
     };
 
@@ -385,8 +400,61 @@ describe("createContactSubmission", () => {
       name: "Anas Altaf",
       email: "anas@example.com",
       message: "Hello there",
+      intent: "general",
+      meta: null,
       createdAt: "2026-01-01T00:00:00Z",
     });
+  });
+
+  it("persists custom-frame intent + meta", async () => {
+    const row = {
+      id: "contact-2",
+      name: "Anas Altaf",
+      email: "anas@example.com",
+      message: "Team brief",
+      intent: "custom-frame",
+      meta: {
+        team: "Real Madrid",
+        playerName: "Vinicius",
+        jerseyNumber: "07",
+        frameSize: "medium",
+        referenceUrl: "https://example.com/jersey.jpg",
+      },
+      created_at: "2026-01-01T00:00:00Z",
+    };
+
+    const single = vi.fn().mockResolvedValue({ data: row, error: null });
+    const select = vi.fn().mockReturnValue({ single });
+    const insert = vi.fn().mockReturnValue({ select });
+    const from = vi.fn(() => ({ insert }));
+    createClientMock.mockResolvedValue({ from });
+
+    const result = await createContactSubmission({
+      ...validInput,
+      message: "Team brief",
+      intent: "custom-frame",
+      meta: {
+        team: "Real Madrid",
+        playerName: "Vinicius",
+        jerseyNumber: "07",
+        frameSize: "medium",
+        referenceUrl: "https://example.com/jersey.jpg",
+      },
+    });
+
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        intent: "custom-frame",
+        meta: expect.objectContaining({ team: "Real Madrid", frameSize: "medium" }),
+      }),
+    );
+    expect(result).toEqual(
+      expect.objectContaining({
+        id: "contact-2",
+        intent: "custom-frame",
+        meta: expect.objectContaining({ team: "Real Madrid" }),
+      }),
+    );
   });
 
   it("returns CONTACT_SUBMISSION_FAILED on DB error (does not throw)", async () => {

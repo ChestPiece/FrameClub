@@ -9,7 +9,7 @@ import {
 } from "@/components/product/product-animations";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
-import { WHATSAPP_LINK } from "@/lib/content/copy-constants";
+import { FOOTBALL_FRAME_COPY, WHATSAPP_LINK } from "@/lib/content/copy-constants";
 import { formatPkr } from "@/lib/utils";
 import type { Product } from "@/lib/db/types";
 
@@ -133,6 +133,10 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
       : product.status === "preorder"
         ? `Reserve · ${formatPkr(product.price)}`
         : `Add to Order · ${formatPkr(product.price)}`;
+
+  if (product.category === "football") {
+    return <FootballFrameDetail product={product} />;
+  }
 
   return (
     <>
@@ -956,6 +960,253 @@ function ConfigSection({
       </div>
       {children}
     </div>
+  );
+}
+
+function FootballFrameDetail({ product }: { product: Product }) {
+  const quoteHref = `/contact?intent=custom-frame&product=${encodeURIComponent(product.slug)}`;
+  const heroImage = product.images[0];
+
+  return (
+    <>
+      <div
+        style={{
+          margin: "0 auto",
+          width: "min(calc(100% - 2rem), 80rem)",
+          paddingTop: 24,
+        }}
+      >
+        <div
+          className="font-body text-text-muted"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingBottom: 24,
+            borderBottom: "0.5px solid var(--border-subtle)",
+            fontSize: 10,
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+          }}
+        >
+          <div>
+            <TransitionLink href="/" className="hover:text-text-primary">
+              Home
+            </TransitionLink>
+            {" › "}
+            <TransitionLink href="/shop" className="hover:text-text-primary">
+              Collection
+            </TransitionLink>
+            {" › "}
+            <span className="text-text-primary">{product.name}</span>
+          </div>
+          <div>{product.id.slice(0, 8).toUpperCase()}</div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          margin: "0 auto",
+          width: "min(calc(100% - 2rem), 80rem)",
+          padding: "40px 0 80px",
+        }}
+      >
+        <div className="football-detail-grid">
+          <div
+            style={{
+              position: "relative",
+              aspectRatio: "4/5",
+              background: "var(--bg-deep)",
+              padding: 14,
+              border: "0.5px solid var(--border)",
+              overflow: "hidden",
+            }}
+          >
+            {heroImage ? (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 14,
+                  backgroundImage: `url(${heroImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+            ) : null}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+            <div data-reveal>
+              <StatusBadge status={product.status} />
+            </div>
+
+            <div data-reveal>
+              <div
+                className="font-body text-text-muted"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  marginBottom: 16,
+                }}
+              >
+                {product.brand} · Football Frames
+              </div>
+              <h1
+                className="font-display text-text-primary"
+                style={{
+                  fontSize: "clamp(3rem, 6vw, 5.5rem)",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  lineHeight: 0.95,
+                  fontWeight: 400,
+                  margin: 0,
+                }}
+              >
+                {product.name}
+              </h1>
+            </div>
+
+            <p
+              data-reveal
+              className="text-text-muted"
+              style={{ fontSize: 15, lineHeight: 1.75, maxWidth: 540, margin: 0 }}
+            >
+              {product.description || FOOTBALL_FRAME_COPY.detailLede}
+            </p>
+
+            <div
+              data-reveal
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                paddingTop: 24,
+                borderTop: "0.5px solid var(--border-subtle)",
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <span
+                  className="font-body text-text-muted"
+                  style={{
+                    fontSize: 10,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Price · Pakistan
+                </span>
+                <span
+                  className="font-display text-text-primary"
+                  style={{ fontSize: 32, letterSpacing: "0.04em", lineHeight: 1 }}
+                >
+                  {FOOTBALL_FRAME_COPY.priceLine.toUpperCase()}
+                </span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  gap: 4,
+                }}
+              >
+                <span
+                  className="font-body text-text-muted"
+                  style={{
+                    fontSize: 10,
+                    letterSpacing: "0.28em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Reply Time
+                </span>
+                <span
+                  className="font-display text-brand-bright"
+                  style={{ fontSize: 24, letterSpacing: "0.08em" }}
+                >
+                  1 DAY
+                </span>
+              </div>
+            </div>
+
+            <div
+              data-reveal
+              style={{
+                display: "grid",
+                gap: 12,
+                padding: "20px",
+                border: "0.5px solid var(--border)",
+              }}
+            >
+              <span
+                className="font-body text-text-muted"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Brief covers
+              </span>
+              <ul
+                className="font-body text-text-primary"
+                style={{
+                  margin: 0,
+                  padding: 0,
+                  listStyle: "none",
+                  fontSize: 13,
+                  lineHeight: 1.9,
+                }}
+              >
+                <li>· Team / club</li>
+                <li>· Player name &amp; jersey number</li>
+                <li>· Frame size (S · M · L)</li>
+                <li>· Reference image (optional)</li>
+              </ul>
+            </div>
+
+            <div data-reveal>
+              <Button
+                render={<TransitionLink href={quoteHref} />}
+                variant="brand"
+                size="lg"
+                className="display-kicker w-full justify-center"
+              >
+                {FOOTBALL_FRAME_COPY.detailCta}
+              </Button>
+            </div>
+
+            <Link
+              href={WHATSAPP_LINK}
+              className="font-body text-text-muted hover:text-text-primary"
+              style={{
+                fontSize: 10,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+              }}
+            >
+              Or talk to the workshop on WhatsApp →
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .football-detail-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 48px;
+          align-items: start;
+        }
+        @media (min-width: 1024px) {
+          .football-detail-grid {
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 64px;
+          }
+        }
+      `}</style>
+    </>
   );
 }
 

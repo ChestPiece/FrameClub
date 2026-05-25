@@ -44,6 +44,7 @@ yarn-error.log*
 # local planning/spec artifacts
 docs/restructuring-plan.md
 docs/superpowers/specs/
+claude design/
 
 # ruflo / claude-flow generated local files
 .claude-flow/
