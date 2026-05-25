@@ -43,6 +43,7 @@ export function ProductStatusToggle({
         onClick={toggleStatus}
         disabled={isPending}
         data-button-motion="true"
+        data-button-motion-level="subtle"
         className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] outline-none"
       >
         <span className="relative block h-4 w-8 border border-border bg-bg-deep opacity-80 group-hover:opacity-100">

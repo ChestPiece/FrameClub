@@ -1,193 +1,167 @@
-import { AnimatedCTALink } from "@/components/shared/animated-cta-link";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { AboutAnimations } from "@/components/about/about-animations";
-import { PageScrollAnimations } from "@/components/shared/page-scroll-animations";
+import { TransitionLink } from "@/components/layout/page-transition";
+import { Button } from "@/components/ui/button";
+import { AboutHero } from "@/components/about/about-hero";
+import { AboutTimeline } from "@/components/about/about-timeline";
+import { AboutPullQuote } from "@/components/about/about-pull-quote";
+
+const KICKER: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: "0.28em",
+  textTransform: "uppercase",
+};
 
 export default function AboutPage() {
   return (
     <>
-      <main id="main-content" className="pb-24 pt-30">
-        <PageScrollAnimations config="about">
-          <AboutAnimations />
-          <section className="border-t border-border/20" />
-          <section
-            data-animate-page="about"
-            className="relative overflow-hidden border-b border-border bg-bg-surface py-28 sm:py-36"
-          >
-            <div className="pointer-events-none absolute -right-28 top-0 h-80 w-80 bg-[radial-gradient(circle_at_top_right,rgba(53,4,7,0.35),transparent_70%)]" />
+      <main id="main-content" className="scroll-margin-site-header pb-0">
+        {/* Hero */}
+        <AboutHero />
 
-            <div className="frame-container relative max-w-6xl md:grid md:grid-cols-2 md:gap-10">
-              <div className="min-inline-safe">
-                <p
-                  data-about-kicker
-                  className="technical-label text-[10px] text-text-muted"
-                >
-                  About Frame Club
-                </p>
-                <svg
-                  aria-hidden="true"
-                  data-drawsvg-about-kicker
-                  className="mt-3 mb-4 h-px w-32 max-w-full block text-brand"
-                  viewBox="0 0 128 1"
-                  preserveAspectRatio="none"
-                >
-                  <line
-                    x1="0"
-                    y1="0.5"
-                    x2="128"
-                    y2="0.5"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                  />
-                </svg>
-                <h2
-                  data-about-heading
-                  className="display-kicker mt-4 text-4xl leading-none sm:text-5xl md:text-7xl"
-                >
-                  WHERE SPEED MEETS ART
-                </h2>
-              </div>
-              <div className="min-inline-safe">
-                <p
-                  data-animate-item
-                  className="mt-8 md:mt-0 text-base leading-relaxed text-text-muted"
-                >
-                  Frame Club started through Instagram DMs and has already
-                  delivered over 50 made-to-order frames across Pakistan. Each
-                  customer chooses a car model and a background design, then
-                  production starts manually.
-                </p>
-                <p className="mt-8 text-2xl leading-snug text-text-muted">
-                  Started in Instagram DMs. 50+ frames later, we built this.
-                </p>
-              </div>
-            </div>
-          </section>
-          <section className="bg-bg-deep py-20 sm:py-24">
-            <div className="frame-container">
-              <p className="technical-label mb-10 text-[10px] text-text-muted sm:mb-12">
-                The Journey
+        {/* The Premise — workshop voice */}
+        <section
+          className="bg-bg-surface"
+          style={{ padding: "100px 0 90px" }}
+        >
+          <div className="mx-auto" style={{ width: "min(calc(100% - 2rem), 80rem)" }}>
+            <div style={{ maxWidth: 920, marginBottom: 56 }}>
+              <p className="font-body text-text-muted" style={{ ...KICKER, marginBottom: 24 }}>
+                Chapter One · The Origin
               </p>
-              <div className="relative">
-                <svg
-                  aria-hidden="true"
-                  data-drawsvg-timeline
-                  className="pointer-events-none absolute left-0 top-5 hidden h-px w-full md:block"
-                  viewBox="0 0 1000 1"
-                  preserveAspectRatio="none"
-                >
-                  <line
-                    x1="0"
-                    y1="0.5"
-                    x2="1000"
-                    y2="0.5"
-                    stroke="var(--brand)"
-                    strokeWidth="1"
-                  />
-                </svg>
-                <div className="grid gap-10 md:grid-cols-3 md:gap-10">
-                  <article
-                    data-timeline-node="1"
-                    className="relative border-l border-border/20 pl-6 md:border-l-0 md:pl-0"
-                  >
-                    <div
-                      className="mb-6 hidden h-2.5 w-2.5 bg-brand md:mb-8 md:block"
-                      aria-hidden
-                    />
-                    <p className="technical-label text-[10px] text-text-muted">
-                      1 / Phase 01
-                    </p>
-                    <p
-                      data-timeline-heading
-                      className="display-kicker mt-4 text-5xl sm:text-6xl leading-none"
-                    >
-                      DM ERA
-                    </p>
-                    <p
-                      data-animate-item
-                      className="mt-4 py-2 text-sm text-text-muted"
-                    >
-                      Orders were captured manually through Instagram messages
-                      and tracked one by one.
-                    </p>
-                  </article>
-
-                  <article
-                    data-timeline-node="2"
-                    className="relative border-l border-border/20 pl-6 md:border-l-0 md:pl-0"
-                  >
-                    <div
-                      className="mb-6 hidden h-2.5 w-2.5 bg-brand md:mb-8 md:block"
-                      aria-hidden
-                    />
-                    <p className="technical-label text-[10px] text-text-muted">
-                      2 / Phase 02
-                    </p>
-                    <p
-                      data-timeline-heading
-                      className="display-kicker mt-4 text-5xl sm:text-6xl leading-none"
-                    >
-                      WORKSHOP FLOW
-                    </p>
-                    <p
-                      data-animate-item
-                      className="mt-4 py-2 text-sm text-text-muted"
-                    >
-                      Every frame is sourced, assembled, and finished by a
-                      single production workflow.
-                    </p>
-                  </article>
-
-                  <article
-                    data-timeline-node="3"
-                    className="relative border-l border-border/20 pl-6 md:border-l-0 md:pl-0"
-                  >
-                    <div
-                      className="mb-6 hidden h-2.5 w-2.5 bg-brand md:mb-8 md:block"
-                      aria-hidden
-                    />
-                    <p className="technical-label text-[10px] text-text-muted">
-                      3 / Phase 03
-                    </p>
-                    <p
-                      data-timeline-heading
-                      className="display-kicker mt-4 text-5xl sm:text-6xl leading-none"
-                    >
-                      DIGITAL STOREFRONT
-                    </p>
-                    <p
-                      data-animate-item
-                      className="mt-4 py-2 text-sm text-text-muted"
-                    >
-                      This site now captures demand cleanly while preserving a
-                      handcrafted fulfillment process.
-                    </p>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="bg-bg-recessed py-24">
-            <div className="frame-container text-center">
-              <h2 className="display-kicker display-massive-fluid leading-none">
-                WHERE SPEED MEETS ART
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-text-muted">
-                Built for people who collect stories as seriously as they
-                collect cars.
-              </p>
-              <AnimatedCTALink
-                href="/shop"
-                className="display-kicker min-touch-target mt-10 inline-flex items-center justify-center border border-brand bg-brand px-8 py-4 text-sm tracking-[0.18em] text-text-primary transition-colors hover:bg-brand-mid"
+              <h2
+                className="font-display uppercase text-text-primary"
+                style={{
+                  fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                  lineHeight: 1.02,
+                  letterSpacing: "0.04em",
+                  margin: 0,
+                  fontWeight: 400,
+                }}
               >
-                ORDER NOW
-              </AnimatedCTALink>
+                STARTED IN INSTAGRAM DMS.
+                <br />
+                <span className="text-brand-bright">50+ FRAMES LATER.</span>
+              </h2>
             </div>
-          </section>
-        </PageScrollAnimations>
+
+            <div
+              className="grid about-body-grid"
+              style={{ gap: 80, alignItems: "start" }}
+            >
+              <p className="font-body text-text-muted" style={{ ...KICKER, paddingTop: 12 }}>
+                Lahore, Pakistan
+              </p>
+              <div className="flex flex-col" style={{ gap: 28 }}>
+                <p
+                  className="text-text-primary"
+                  style={{ fontSize: 18, lineHeight: 1.75, margin: 0 }}
+                >
+                  Frame Club began as a single piece on a single shelf — a Carrera GT
+                  on a carbon backdrop, built for ourselves. A friend asked where to
+                  buy one. There was nowhere. So we built him one. Then another. Then fifty.
+                </p>
+                <p
+                  className="text-text-muted"
+                  style={{ fontSize: 18, lineHeight: 1.75, margin: 0 }}
+                >
+                  Today every order is the same conversation: what car, what backdrop,
+                  what should the plate say. The workshop in Lahore handles the rest —
+                  sourcing the diecast, finishing the wood, mounting the spec plate,
+                  sealing the glass. Seven days from confirmed payment to your door.
+                  No warehouse, no inventory, no compromise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Timeline — three phases */}
+        <AboutTimeline />
+
+        {/* Pull-quote — workshop voice */}
+        <AboutPullQuote />
+
+        {/* Final CTA */}
+        <section
+          className="bg-bg-deep relative overflow-hidden"
+          style={{ padding: "110px 0" }}
+        >
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              pointerEvents: "none",
+              background:
+                "radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--brand) 28%, transparent), transparent 65%)",
+            }}
+          />
+          <div
+            className="mx-auto text-center"
+            style={{
+              position: "relative",
+              width: "min(calc(100% - 2rem), 80rem)",
+            }}
+          >
+            <p className="font-body text-text-muted" style={{ ...KICKER, marginBottom: 32 }}>
+              Chapter Four · The Invitation
+            </p>
+            <h2
+              className="font-display uppercase text-text-primary"
+              style={{
+                fontSize: "clamp(2rem, 4.5vw, 4.5rem)",
+                letterSpacing: "0.03em",
+                lineHeight: 0.95,
+                margin: "0 0 32px",
+                fontWeight: 400,
+              }}
+            >
+              WHERE SPEED <span className="text-brand-bright">MEETS ART.</span>
+            </h2>
+            <p
+              className="text-text-muted"
+              style={{
+                maxWidth: 540,
+                margin: "0 auto 48px",
+                fontSize: 16,
+                lineHeight: 1.7,
+              }}
+            >
+              Built for people who collect stories as seriously as they collect cars.
+              Pick a model. Specify a build. Receive a frame, made one at a time.
+            </p>
+            <Button
+              render={<TransitionLink href="/shop" />}
+              variant="brand"
+              size="xl"
+              className="font-display uppercase"
+              style={{
+                padding: "18px 40px",
+                fontSize: 17,
+                letterSpacing: "0.18em",
+                border: "1px solid var(--brand-bright)",
+                background: "var(--brand-bright)",
+              }}
+            >
+              ORDER NOW →
+            </Button>
+          </div>
+        </section>
       </main>
+
       <SiteFooter />
+
+      <style>{`
+        .about-body-grid {
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .about-body-grid {
+            grid-template-columns: 1fr 1.6fr;
+          }
+        }
+      `}</style>
     </>
   );
 }

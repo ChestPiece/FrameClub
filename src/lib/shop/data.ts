@@ -1,20 +1,21 @@
 import { createPublicClient } from "@/lib/supabase/server";
-import { productDiecastImages } from "@/lib/shop/diecast-assets";
+import { productImages } from "@/lib/shop/product-assets";
 import type { Tables } from "@/lib/supabase/database.types";
-import type { Product, ProductStatus } from "@/lib/db/types";
+import type { Product, ProductCategory, ProductStatus } from "@/lib/db/types";
 
 type ProductRow = Tables<"products">;
 type CustomizationRow = Tables<"customization_options">;
 
 function toProduct(row: ProductRow, backgrounds: CustomizationRow[] = []): Product {
+  const category: ProductCategory = row.category === "football" ? "football" : "diecast";
+  const dbImages = (row.images ?? []).filter((img): img is string => typeof img === "string" && img.length > 0);
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
     brand: row.brand,
     description: row.description ?? "",
-    // Temporary: local diecast shots until per-product media is in Supabase
-    images: productDiecastImages(),
+    images: dbImages.length > 0 ? dbImages : productImages(row.slug, category),
     price: row.price,
     status: (row.status as ProductStatus) ?? "available",
     deliveryDays: row.delivery_days ?? 7,
@@ -25,6 +26,7 @@ function toProduct(row: ProductRow, backgrounds: CustomizationRow[] = []): Produ
       value: bg.value,
       swatch: bg.swatch ?? bg.value,
     })),
+    category,
   };
 }
 
@@ -36,43 +38,79 @@ export async function getProducts(status?: ProductStatus): Promise<Product[]> {
     query = query.eq("status", status);
   }
 
-  const { data, error } = await query;
-  if (error) {
-    throw new Error(`Failed to fetch products: ${error.message}`);
+  try {
+    const { data, error } = await query;
+    if (error) {
+      console.error(`[getProducts] supabase error: ${error.message}`);
+      return [];
+    }
+    return (data ?? []).map((row) => toProduct(row));
+  } catch (err) {
+    console.error(`[getProducts] network failure:`, err);
+    return [];
   }
+}
 
-  return (data ?? []).map((row) => toProduct(row));
+export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
+  const supabase = createPublicClient();
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("category", category)
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error(`[getProductsByCategory] supabase error: ${error.message}`);
+      return [];
+    }
+    return (data ?? []).map((row) => toProduct(row));
+  } catch (err) {
+    console.error(`[getProductsByCategory] network failure:`, err);
+    return [];
+  }
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
   const supabase = createPublicClient();
-  const { data, error } = await supabase.from("products").select("*").eq("slug", slug).single();
+  try {
+    const { data, error } = await supabase.from("products").select("*").eq("slug", slug).single();
 
-  if (error) {
-    if (error.code === "PGRST116") return undefined;
-    throw new Error(`Failed to fetch product ${slug}: ${error.message}`);
+    if (error) {
+      if (error.code === "PGRST116") return undefined;
+      console.error(`[getProductBySlug] supabase error: ${error.message}`);
+      return undefined;
+    }
+
+    const { data: backgrounds, error: backgroundError } = await supabase
+      .from("customization_options")
+      .select("*")
+      .eq("product_id", data.id)
+      .eq("type", "background_design");
+
+    if (backgroundError) {
+      console.error(`[getProductBySlug] backgrounds error: ${backgroundError.message}`);
+      return toProduct(data, []);
+    }
+
+    return toProduct(data, backgrounds ?? []);
+  } catch (err) {
+    console.error(`[getProductBySlug] network failure:`, err);
+    return undefined;
   }
-
-  const { data: backgrounds, error: backgroundError } = await supabase
-    .from("customization_options")
-    .select("*")
-    .eq("product_id", data.id)
-    .eq("type", "background_design");
-
-  if (backgroundError) {
-    throw new Error(`Failed to fetch backgrounds for ${slug}: ${backgroundError.message}`);
-  }
-
-  return toProduct(data, backgrounds ?? []);
 }
 
 export async function getRelatedProducts(slug: string): Promise<Product[]> {
   const supabase = createPublicClient();
-  const { data, error } = await supabase.from("products").select("*").neq("slug", slug).limit(3);
+  try {
+    const { data, error } = await supabase.from("products").select("*").neq("slug", slug).limit(3);
 
-  if (error) {
-    throw new Error(`Failed to fetch related products for ${slug}: ${error.message}`);
+    if (error) {
+      console.error(`[getRelatedProducts] supabase error: ${error.message}`);
+      return [];
+    }
+    return (data ?? []).map((row) => toProduct(row));
+  } catch (err) {
+    console.error(`[getRelatedProducts] network failure:`, err);
+    return [];
   }
-
-  return (data ?? []).map((row) => toProduct(row));
 }

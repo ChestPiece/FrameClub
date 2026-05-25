@@ -47,6 +47,8 @@ export default async function AdminLoginPage({
 
             <button
               type="submit"
+              data-button-motion="true"
+              data-button-motion-level="strong"
               className="display-kicker inline-flex w-full items-center justify-center border border-brand bg-brand px-5 py-4 text-sm text-text-primary transition-colors hover:bg-brand-mid"
             >
               ENTER ADMIN

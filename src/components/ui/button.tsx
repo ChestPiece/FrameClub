@@ -1,10 +1,11 @@
+import * as React from "react"
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center whitespace-nowrap border transition-colors outline-none select-none focus-visible:border-brand-bright disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-70 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap border transition-colors outline-none select-none focus-visible:border-brand-bright disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-70 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -29,22 +30,67 @@ const buttonVariants = cva(
   }
 )
 
+type ButtonOwnProps = {
+  /**
+   * Opt-in split-flip label (primary slides up, ghost slides in).
+   * Only honored when children is a plain string. Off by default.
+   */
+  splitLabel?: boolean
+}
+
+function isIconSize(size: string | null | undefined) {
+  return size === "icon" || size === "icon-sm"
+}
+
 function Button({
   className,
   variant = "brand",
   size = "default",
   render,
   nativeButton,
+  children,
+  splitLabel = false,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
-  const motionLevel =
-    size === "icon" || size === "icon-sm"
-      ? "minimal"
-      : variant === "brand" && (size === "lg" || size === "xl")
-        ? "strong"
-        : variant === "ghost" || variant === "muted"
-          ? "subtle"
-          : "default";
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> &
+  ButtonOwnProps) {
+  const iconOnly = isIconSize(size)
+
+  const motionLevel = iconOnly
+    ? "minimal"
+    : variant === "brand" && (size === "lg" || size === "xl")
+      ? "strong"
+      : variant === "ghost" || variant === "muted"
+        ? "subtle"
+        : "default"
+
+  const showSheen = !iconOnly && (variant === "brand" || variant === "outline")
+  const useSplit = splitLabel && !iconOnly && typeof children === "string"
+
+  const labelContent = useSplit ? (
+    <span
+      className="relative inline-flex items-center justify-center overflow-hidden"
+      style={{ lineHeight: 1.2 }}
+    >
+      <span
+        data-button-label="true"
+        className="inline-block"
+        style={{ willChange: "transform" }}
+      >
+        {children}
+      </span>
+      <span
+        data-button-label-ghost="true"
+        aria-hidden="true"
+        className="absolute inset-0 inline-flex items-center justify-center"
+        style={{ transform: "translateY(110%)", willChange: "transform" }}
+      >
+        {children}
+      </span>
+    </span>
+  ) : (
+    children
+  )
 
   return (
     <ButtonPrimitive
@@ -55,7 +101,31 @@ function Button({
       render={render}
       nativeButton={render ? false : nativeButton}
       {...props}
-    />
+    >
+      {showSheen ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+          style={{ transform: "skewX(-18deg)" }}
+        >
+          <span
+            data-button-sheen="true"
+            className="absolute inset-y-0"
+            style={{
+              left: 0,
+              width: "40%",
+              transform: "translateX(-120%)",
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)",
+              opacity: 0,
+              mixBlendMode: "screen",
+              willChange: "transform, opacity",
+            }}
+          />
+        </span>
+      ) : null}
+      {labelContent}
+    </ButtonPrimitive>
   )
 }
 

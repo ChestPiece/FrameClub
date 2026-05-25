@@ -1,0 +1,160 @@
+/* ============================================================
+   The Frame Club — Colors & Type
+   The Machined Monolith design system. Dark-only. Zero-radius.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap");
+
+:root {
+  /* --- Surfaces (tonal stack — depth via color, not shadow) --- */
+  --bg-deep: #0e0e0e;        /* recessed: inputs, footers, hero panel */
+  --bg-base: #141313;        /* primary canvas — every page */
+  --bg-surface: #1c1b1b;     /* cards, panels, modals */
+  --bg-elevated: #2a2a2a;    /* hover states, active surfaces */
+  --bg-highest: #353434;     /* floating elements, tooltips */
+  --bg-nav: rgba(58, 57, 57, 0.6); /* frosted carbon nav */
+
+  /* --- Brand (the heartbeat red) --- */
+  --brand: #380306;          /* deep accent, pressed state */
+  --brand-mid: #8e130c;      /* hover state on red elements */
+  --brand-bright: #c0392b;   /* CTAs, accent lines, active indicators */
+
+  /* --- Text --- */
+  --text-primary: #f5f5f5;   /* never #fff */
+  --text-muted: #888888;     /* secondary, captions, labels */
+  --text-accent: #d4b8b8;    /* on-brand body */
+  --text-error: #f1a39d;
+  --text-success: #9bf0ba;
+
+  /* --- Status --- */
+  --status-success-bg: #173628;
+  --status-success-border: #2e6f4f;
+
+  /* --- Borders & edges --- */
+  --border: #494542;
+  --border-subtle: rgba(84, 67, 66, 0.15);
+  --shadow-ambient: rgba(56, 3, 6, 0.15);
+
+  /* --- Type families --- */
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+
+  /* --- Radius — zero. always. --- */
+  --radius: 0px;
+
+  /* --- Spacing (4px base) --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* --- Type scale --- */
+  --display-xl: clamp(4rem, 10vw, 9rem);    /* hero — 64–144px */
+  --display-lg: clamp(2.75rem, 9vw, 8rem);  /* big section — 44–128px */
+  --display-md: clamp(2rem, 6vw, 6rem);     /* section — 32–96px */
+  --display-sm: clamp(1.75rem, 4vw, 4rem);  /* subsection — 28–64px */
+  --heading: 1.5rem;        /* 24px */
+  --subheading: 0.8125rem;  /* 13px */
+  --body: 1rem;             /* 16px */
+  --body-sm: 0.875rem;      /* 14px */
+  --caption: 0.6875rem;     /* 11px */
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* { border-radius: 0 !important; }
+
+html, body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   Semantic type — match production globals.css helpers
+   ============================================================ */
+
+/* display-kicker — Bebas Neue, uppercase, tight tracking, used for headlines + nav + buttons */
+.display-kicker,
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  font-weight: 400;
+}
+
+/* technical-label — Inter, uppercase, very wide tracking (the spec-plate look) */
+.technical-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: var(--caption);
+  color: var(--text-muted);
+}
+
+/* Display scale */
+h1, .h1 { font-size: var(--display-lg); line-height: 0.9; }
+h2, .h2 { font-size: var(--display-md); line-height: 0.95; }
+h3, .h3 { font-size: var(--display-sm); line-height: 1; }
+h4, .h4 { font-size: var(--heading); line-height: 1.1; letter-spacing: 0.02em; }
+
+/* Body */
+p, .body {
+  font-family: var(--font-body);
+  font-size: var(--body);
+  line-height: 1.65;
+  color: var(--text-muted);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.body-primary { color: var(--text-primary); }
+
+small, .caption {
+  font-family: var(--font-body);
+  font-size: var(--caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+}
+
+/* The hero-style "fluid" headline */
+.display-hero {
+  font-family: var(--font-display);
+  font-size: var(--display-xl);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Utility — match production frame-container
+   ============================================================ */
+.frame-container {
+  margin-inline: auto;
+  width: min(100% - 2rem, 80rem);
+}
+
+/* Brand-bright accent line (used everywhere as a section divider) */
+.accent-line {
+  height: 1px;
+  background: var(--brand);
+  display: block;
+}

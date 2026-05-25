@@ -80,7 +80,7 @@ vi.mock("@/components/shop/catalog-toolbar", () => ({
 
 describe("shop product-card link semantics", () => {
   it("does not render nested anchors in product cards", async () => {
-    const page = await ShopPage({ searchParams: Promise.resolve({}) });
+    const page = await ShopPage();
     const { container } = render(page);
     const anchors = Array.from(container.querySelectorAll("a"));
 

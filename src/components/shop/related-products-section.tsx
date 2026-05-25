@@ -2,6 +2,7 @@ import Image from "next/image";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { formatPkr } from "@/lib/utils";
 import type { Product } from "@/lib/db/types";
+import { RelatedProductsReveal } from "@/components/shop/related-products-reveal";
 
 type RelatedProductsSectionProps = {
   related: Product[];
@@ -15,9 +16,9 @@ export function RelatedProductsSection({ related }: RelatedProductsSectionProps)
       <h2 className="display-kicker text-4xl leading-none sm:text-5xl md:text-6xl">YOU MIGHT ALSO LIKE</h2>
       <p className="mt-4 text-text-muted">Other frames you might obsess over.</p>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      <RelatedProductsReveal className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {related.map((item) => (
-          <article key={item.id} className="group">
+          <article key={item.id} data-reveal className="group">
             <div className="relative mb-5 aspect-4/5 overflow-hidden bg-bg-deep">
               <Image
                 src={item.images[0]}
@@ -41,7 +42,7 @@ export function RelatedProductsSection({ related }: RelatedProductsSectionProps)
             </TransitionLink>
           </article>
         ))}
-      </div>
+      </RelatedProductsReveal>
     </section>
   );
 }

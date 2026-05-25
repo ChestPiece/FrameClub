@@ -1,0 +1,345 @@
+"use client";
+
+import * as React from "react";
+import { CatalogProductCard } from "@/components/shop/catalog-product-card";
+import { ShopGridAnimations } from "@/components/shop/shop-grid-animations";
+import type { Product } from "@/lib/db/types";
+
+type ShopClientViewProps = {
+  products: Product[];
+};
+
+const CATEGORY_TABS = [
+  { value: "all", label: "All" },
+  { value: "diecast", label: "Cars" },
+  { value: "football", label: "Football" },
+] as const;
+
+type CategoryTab = (typeof CATEGORY_TABS)[number]["value"];
+
+export function ShopClientView({ products }: ShopClientViewProps) {
+  const [category, setCategory] = React.useState<CategoryTab>("all");
+  const [filter, setFilter] = React.useState<string>("all");
+  const [sort, setSort] = React.useState<"featured" | "lead" | "year">("featured");
+
+  const categoryProducts = React.useMemo(
+    () =>
+      category === "all"
+        ? products
+        : products.filter((p) => p.category === category),
+    [products, category],
+  );
+
+  const brands = React.useMemo(
+    () => ["all", ...Array.from(new Set(categoryProducts.map((p) => p.brand?.toLowerCase()).filter(Boolean)))],
+    [categoryProducts],
+  );
+
+  React.useEffect(() => {
+    setFilter("all");
+  }, [category]);
+
+  const filtered = React.useMemo(() => {
+    const base = categoryProducts.filter(
+      (p) => filter === "all" || p.brand?.toLowerCase() === filter,
+    );
+    if (sort === "lead") {
+      return [...base].sort((a, b) => (a.deliveryDays ?? 0) - (b.deliveryDays ?? 0));
+    }
+    if (sort === "year") {
+      return [...base].sort((a, b) => {
+        const aYear = parseInt(a.years ?? "0", 10);
+        const bYear = parseInt(b.years ?? "0", 10);
+        return bYear - aYear;
+      });
+    }
+    return base;
+  }, [categoryProducts, filter, sort]);
+
+  return (
+    <div style={{ paddingTop: "calc(7.5rem + 36px)" }}>
+      <section
+        style={{
+          background: "var(--bg-deep)",
+          padding: "56px 0 40px",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            margin: "0 auto",
+            width: "min(calc(100% - 2rem), 80rem)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 24,
+              marginBottom: 48,
+            }}
+          >
+            <p
+              data-animate-heading
+              style={{
+                fontFamily: "var(--font-body, Inter, sans-serif)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+                margin: 0,
+              }}
+            >
+              § Collection · 2026 Edition
+            </p>
+
+            <h1
+              style={{
+                fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                fontSize: "clamp(2.75rem, 6vw, 5.5rem)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "var(--text-primary)",
+                fontWeight: 400,
+                lineHeight: 0.92,
+                margin: 0,
+              }}
+            >
+              THE{" "}
+              <span style={{ color: "var(--brand-bright)" }}>COLLECTION.</span>
+            </h1>
+
+            <p
+              style={{
+                maxWidth: 640,
+                fontSize: 16,
+                lineHeight: 1.7,
+                color: "var(--text-muted)",
+                margin: 0,
+              }}
+            >
+              {products.length} frames in this drop. One flat price. Every unit
+              handbuilt to spec. Filter, configure, ship.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+              flexWrap: "wrap",
+              paddingTop: 32,
+              borderTop: "0.5px solid var(--border)",
+              marginBottom: 16,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-body, Inter, sans-serif)",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+                marginRight: 16,
+              }}
+            >
+              Category ▸
+            </span>
+            {CATEGORY_TABS.map((tab) => {
+              const active = category === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  data-button-motion="true"
+                  data-button-motion-level="subtle"
+                  onClick={() => setCategory(tab.value)}
+                  style={{
+                    padding: "10px 16px",
+                    fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                    fontSize: 11,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    border: active
+                      ? "1px solid var(--brand-bright)"
+                      : "1px solid var(--border)",
+                    background: active
+                      ? "color-mix(in srgb, var(--brand) 16%, transparent)"
+                      : "transparent",
+                    color: active ? "var(--text-primary)" : "var(--text-muted)",
+                    cursor: "pointer",
+                    transition: "all 0.25s ease",
+                    borderRadius: 0,
+                  }}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto",
+              gap: 24,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-body, Inter, sans-serif)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
+                  marginRight: 16,
+                }}
+              >
+                Filter ▸
+              </span>
+              {brands.map((b) => {
+                const active = filter === b;
+                return (
+                  <button
+                    key={b}
+                    data-button-motion="true"
+                    data-button-motion-level="subtle"
+                    onClick={() => setFilter(b)}
+                    style={{
+                      padding: "10px 16px",
+                      fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      border: active
+                        ? "1px solid var(--brand-bright)"
+                        : "1px solid var(--border)",
+                      background: active
+                        ? "color-mix(in srgb, var(--brand) 16%, transparent)"
+                        : "transparent",
+                      color: active ? "var(--text-primary)" : "var(--text-muted)",
+                      cursor: "pointer",
+                      transition: "all 0.25s ease",
+                      borderRadius: 0,
+                    }}
+                  >
+                    {b === "all" ? "All" : b}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-body, Inter, sans-serif)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Sort ▸
+              </span>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as "featured" | "lead" | "year")}
+                style={{
+                  background: "var(--bg-base)",
+                  color: "var(--text-primary)",
+                  border: "0.5px solid var(--border)",
+                  padding: "10px 14px",
+                  fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  borderRadius: 0,
+                  cursor: "pointer",
+                  appearance: "none",
+                }}
+              >
+                <option value="featured">Featured</option>
+                <option value="lead">Lead Time</option>
+                <option value="year">Year (Newest)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: "var(--bg-surface)",
+          padding: "40px 0 80px",
+        }}
+      >
+        <div
+          style={{
+            margin: "0 auto",
+            width: "min(calc(100% - 2rem), 80rem)",
+          }}
+        >
+          {filtered.length === 0 ? (
+            <div
+              style={{
+                padding: 80,
+                textAlign: "center",
+                border: "0.5px dashed var(--border)",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--font-body, Inter, sans-serif)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
+                  margin: 0,
+                }}
+              >
+                No frames match your filters.
+              </p>
+            </div>
+          ) : (
+            <ShopGridAnimations filterSignal={`${filter}::${sort}`}>
+              <div
+                data-shop-grid
+                data-animate-page="shop"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 24,
+                }}
+              >
+                {filtered.map((product) => (
+                  <CatalogProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </ShopGridAnimations>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}

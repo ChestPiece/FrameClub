@@ -1,4 +1,14 @@
 export type ProductStatus = "available" | "preorder" | "unavailable";
+export type ProductCategory = "diecast" | "football";
+export type ContactIntent = "general" | "notify" | "custom-frame";
+
+export type CustomFrameBrief = {
+  team?: string;
+  playerName?: string;
+  jerseyNumber?: string;
+  frameSize?: "small" | "medium" | "large";
+  referenceUrl?: string;
+};
 export type PaymentStatus = "pending" | "paid" | "failed";
 export type OrderStatus =
   | "pending"
@@ -31,6 +41,7 @@ export type Product = {
   years: string;
   specs: ProductSpec[];
   backgrounds: BackgroundOption[];
+  category: ProductCategory;
 };
 
 export type OrderRecord = {
@@ -58,6 +69,8 @@ export type ContactSubmission = {
   name: string;
   email: string;
   message: string;
+  intent: ContactIntent;
+  meta: CustomFrameBrief | null;
   createdAt: string;
 };
 

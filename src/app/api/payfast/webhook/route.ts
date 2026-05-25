@@ -18,6 +18,7 @@ export async function POST(request: Request) {
 
   const formData = await request.formData().catch(() => null);
 
+  // PayFast ITN requires plain text responses — not JSON envelopes.
   if (!formData) {
     return new NextResponse("Invalid Request", { status: 400 });
   }
@@ -44,6 +45,19 @@ export async function POST(request: Request) {
 
   if (!orderId) {
     return new NextResponse("Missing m_payment_id", { status: 400 });
+  }
+
+  // Idempotency: reject already-processed payment IDs
+  if (paymentId) {
+    const { data: existing } = await serviceClient
+      .from("orders")
+      .select("id")
+      .eq("payfast_payment_id", paymentId)
+      .maybeSingle();
+    if (existing) {
+      console.log("PayFast webhook: duplicate pf_payment_id, ignoring", { paymentId, orderId });
+      return new NextResponse("OK", { status: 200 });
+    }
   }
 
   const { data: currentOrder, error: orderError } = await serviceClient
@@ -102,5 +116,6 @@ export async function POST(request: Request) {
     });
   }
 
+  // PayFast ITN expects plain text "OK", not JSON — do not convert to ok() envelope.
   return new NextResponse("OK", { status: 200 });
 }

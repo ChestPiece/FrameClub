@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { useGSAP } from "@gsap/react";
 import { X } from "lucide-react";
-import { gsap } from "@/lib/animation/gsap-config";
+import { useOverlayMotion } from "@/lib/animation";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 
@@ -22,8 +21,6 @@ type FullscreenNavProps = {
 
 export function FullscreenNav({ isOpen, onClose, navItems }: FullscreenNavProps) {
   const overlayRef = React.useRef<HTMLDivElement>(null);
-  const itemWrapperRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const ctaWrapperRef = React.useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -39,99 +36,22 @@ export function FullscreenNav({ isOpen, onClose, navItems }: FullscreenNavProps)
     return () => document.removeEventListener("keydown", handleEsc);
   }, [isOpen, onClose]);
 
-  React.useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  useGSAP(
-    () => {
-      const overlay = overlayRef.current;
-      if (!overlay) return;
-
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const validItems = itemWrapperRefs.current.filter(Boolean) as HTMLDivElement[];
-
-      if (isOpen) {
-        overlay.style.display = "flex";
-
-        if (prefersReduced) {
-          gsap.set(overlay, { opacity: 1 });
-          validItems.forEach((el) => {
-            gsap.set(el, { opacity: 1 });
-          });
-          if (ctaWrapperRef.current) gsap.set(ctaWrapperRef.current, { opacity: 1 });
-          return;
-        }
-
-        const tl = gsap.timeline();
-        tl.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" });
-
-        if (validItems.length > 0) {
-          tl.fromTo(
-            validItems,
-            { y: 60, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: "expo.out", stagger: 0.08 },
-            "-=0.05",
-          );
-        }
-
-        if (ctaWrapperRef.current) {
-          tl.fromTo(
-            ctaWrapperRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" },
-            "-=0.3",
-          );
-        }
-
-        return;
-      }
-
-      if (prefersReduced) {
-        gsap.set(overlay, { opacity: 0 });
-        overlay.style.display = "none";
-        return;
-      }
-
-      const tl = gsap.timeline({
-        onComplete: () => {
-          overlay.style.display = "none";
-        },
-      });
-
-      if (ctaWrapperRef.current) {
-        tl.to(ctaWrapperRef.current, {
-          opacity: 0,
-          y: 20,
-          duration: 0.18,
-          ease: "expo.in",
-        });
-      }
-
-      if (validItems.length > 0) {
-        tl.to(
-          [...validItems].reverse(),
-          { opacity: 0, y: 30, duration: 0.18, ease: "expo.in", stagger: 0.04 },
-          "-=0.1",
-        );
-      }
-
-      tl.to(overlay, { opacity: 0, duration: 0.15, ease: "power2.out" }, "-=0.05");
-    },
-    { scope: overlayRef, dependencies: [isOpen], revertOnUpdate: true },
-  );
+  // useOverlayMotion handles body scroll lock + clip-reveal + stagger links + reduced motion.
+  useOverlayMotion(isOpen, overlayRef, "[data-nav-link]");
 
   const overlay = (
     <div
       ref={overlayRef}
       className="fixed inset-0 z-90 flex flex-col bg-bg-deep"
-      style={{ display: "none", opacity: 0 }}
+      style={{
+        clipPath: "inset(0% 0% 100% 0%)",
+        opacity: 1,
+        pointerEvents: isOpen ? "auto" : "none",
+      }}
       role="dialog"
       aria-modal="true"
       aria-label="Navigation menu"
+      aria-hidden={!isOpen}
     >
       <div className="flex items-center justify-between px-6 py-6 border-b border-border/40">
         <span className="display-kicker text-sm text-text-muted tracking-[0.2em]">
@@ -151,12 +71,10 @@ export function FullscreenNav({ isOpen, onClose, navItems }: FullscreenNavProps)
       </div>
 
       <nav className="flex flex-1 flex-col justify-center">
-        {navItems.map((item, i) => (
+        {navItems.map((item) => (
           <div
             key={item.href}
-            ref={(el) => {
-              itemWrapperRefs.current[i] = el;
-            }}
+            data-nav-link
             className="border-b border-brand/20"
             style={{ opacity: 0 }}
           >
@@ -179,11 +97,7 @@ export function FullscreenNav({ isOpen, onClose, navItems }: FullscreenNavProps)
         ))}
       </nav>
 
-      <div
-        ref={ctaWrapperRef}
-        className="px-6 pb-8 pt-6"
-        style={{ opacity: 0 }}
-      >
+      <div data-nav-link className="px-6 pb-8 pt-6" style={{ opacity: 0 }}>
         <TransitionLink
           href="/shop"
           onClick={onClose}

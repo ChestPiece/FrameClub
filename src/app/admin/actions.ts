@@ -8,7 +8,7 @@ import { getOrderById } from '@/lib/db/services'
 import { assertAdminSession } from '@/lib/auth/assert-admin-session'
 import { getProductBySlug } from '@/lib/shop/data'
 
-export async function updateOrderStatus(orderId: string, status: OrderStatus, _customerEmail: string, _orderNumber: string, productSlug: string) {
+export async function updateOrderStatus(orderId: string, status: OrderStatus, productSlug: string) {
   const auth = await assertAdminSession()
   if (!auth.ok) {
     return { success: false, error: auth.error }
@@ -33,7 +33,11 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus, _c
 
   const orderRecord = await getOrderById(orderId)
   if (orderRecord) {
-    await sendStatusUpdate(orderRecord, productName)
+    try {
+      await sendStatusUpdate(orderRecord, productName)
+    } catch (emailErr) {
+      console.error("Failed to send status update email:", emailErr)
+    }
   }
 
   revalidatePath('/admin')

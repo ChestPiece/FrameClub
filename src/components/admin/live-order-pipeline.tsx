@@ -58,8 +58,6 @@ export function LiveOrderPipeline({ orders }: LiveOrderPipelineProps) {
                 <OrderStatusSelect
                   orderId={order.id}
                   currentStatus={order.orderStatus}
-                  customerEmail={order.customerEmail}
-                  orderNumber={order.orderNumber}
                   productSlug={order.productSlug}
                 />
               </TableCell>

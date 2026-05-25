@@ -3,6 +3,7 @@ import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/shared/status-badge";
 import type { Product } from "@/lib/db/types";
+import { FOOTBALL_FRAME_COPY } from "@/lib/content/copy-constants";
 import { formatPkr } from "@/lib/utils";
 
 type CatalogProductCardProps = {
@@ -12,11 +13,15 @@ type CatalogProductCardProps = {
 export function CatalogProductCard({ product }: CatalogProductCardProps) {
   const defaultBackground = product.backgrounds[0]?.value ?? "carbon-grid";
   const quickAddHref = `/checkout?slug=${encodeURIComponent(product.slug)}&background=${encodeURIComponent(defaultBackground)}`;
+  const isFootball = product.category === "football";
+  const quoteHref = `/contact?intent=custom-frame&product=${encodeURIComponent(product.slug)}`;
 
   return (
     <article
       data-animate-item
       data-flip-card
+      data-reveal
+      data-tilt
       className={`group flex flex-col bg-bg-elevated transition-colors duration-300 ${
         product.status === "unavailable" ? "opacity-75" : "opacity-100"
       }`}
@@ -29,7 +34,7 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain p-5 sm:p-8 opacity-95 transition-[opacity,transform] duration-500 ease-out motion-safe:group-hover:scale-[1.02] group-hover:opacity-100"
+              className="object-contain p-5 sm:p-8 opacity-95 transition-[opacity,transform] duration-500 ease-out motion-safe:group-hover:scale-[1.04] group-hover:opacity-100"
             />
             <div className="absolute right-4 top-4 z-10 rotate-12 border border-brand bg-bg-surface/80 px-2 py-1 text-[10px] uppercase tracking-widest text-brand backdrop-blur-sm">
               MADE TO ORDER
@@ -51,7 +56,9 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
       <div className="mt-auto space-y-4 px-8 pb-8">
         <div className="flex items-center justify-between bg-bg-deep px-3 py-2.5">
           <span className="technical-label text-[10px] text-text-muted">Price</span>
-          <span className="display-kicker text-sm text-text-primary">{formatPkr(product.price)}</span>
+          <span className="display-kicker text-sm text-text-primary">
+            {isFootball ? FOOTBALL_FRAME_COPY.priceLine : formatPkr(product.price)}
+          </span>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -63,13 +70,29 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
             View Specs
           </Button>
 
-          {product.status === "unavailable" ? (
+          {isFootball ? (
+            <Button
+              render={<TransitionLink href={quoteHref} />}
+              variant="brand"
+              className="display-kicker min-touch-target w-full justify-center"
+            >
+              {FOOTBALL_FRAME_COPY.cardCta}
+            </Button>
+          ) : product.status === "unavailable" ? (
             <Button
               render={<TransitionLink href={`/contact?product=${encodeURIComponent(product.slug)}`} />}
               variant="muted"
               className="display-kicker min-touch-target w-full justify-center"
             >
               Notify Me
+            </Button>
+          ) : product.status === "preorder" ? (
+            <Button
+              render={<TransitionLink href={quickAddHref} />}
+              variant="brand"
+              className="display-kicker min-touch-target w-full justify-center"
+            >
+              Pre-Order Now
             </Button>
           ) : (
             <Button

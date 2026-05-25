@@ -5,3 +5,8 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   shipped: "Shipped",
   delivered: "Delivered",
 };
+
+export const PRODUCT_CATEGORY_LABELS: Record<string, string> = {
+  diecast: "Diecast",
+  football: "Football",
+};

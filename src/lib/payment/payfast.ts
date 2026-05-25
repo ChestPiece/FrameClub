@@ -46,7 +46,7 @@ export function generatePayFastSignature(data: Record<string, string>): string {
     queryParams += `&passphrase=${encodeURIComponent(payfastConfig.passphrase)}`;
   }
 
-  // Create the md5 hash
+  // MD5 is required by PayFast's ITN specification — not a choice.
   return crypto.createHash('md5').update(queryParams).digest('hex');
 }
 

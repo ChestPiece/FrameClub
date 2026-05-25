@@ -43,12 +43,12 @@ export function ContactAnimations() {
               tl.to(
                 kicker,
                 {
-                  duration: 0.75,
+                  duration: 0.5,
                   scrambleText: {
                     text: originalText,
                     chars: "upperCase",
-                    revealDelay: 0.06,
-                    speed: 0.32,
+                    revealDelay: 0.04,
+                    speed: 0.5,
                   },
                 },
                 0,
@@ -60,6 +60,9 @@ export function ContactAnimations() {
 
           if (heading) {
             try {
+              if (!heading.getAttribute("aria-label")) {
+                heading.setAttribute("aria-label", heading.textContent ?? "");
+              }
               const split = SplitText.create(heading, {
                 type: "chars",
                 charsClass: "contact-hero-char",
@@ -70,15 +73,15 @@ export function ContactAnimations() {
               tl.fromTo(
                 split.chars,
                 { y: 50, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.85, stagger: 0.03 },
-                0.08,
+                { y: 0, autoAlpha: 1, duration: 0.55, stagger: 0.018 },
+                0.06,
               );
             } catch {
               tl.fromTo(
                 heading,
                 { y: 50, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.85 },
-                0.08,
+                { y: 0, autoAlpha: 1, duration: 0.55 },
+                0.06,
               );
             }
           }

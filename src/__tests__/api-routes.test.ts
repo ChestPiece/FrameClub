@@ -174,8 +174,11 @@ describe("api routes", () => {
   it("POST /api/payfast/webhook updates paid order and sends emails", async () => {
     verifySignatureMock.mockReturnValue(true);
 
+    // maybeSingle: idempotency check — no duplicate found (payment not yet processed)
+    const maybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+    // single: price lookup
     const single = vi.fn().mockResolvedValue({ data: { price: 5000 }, error: null });
-    const eq = vi.fn().mockReturnValue({ single });
+    const eq = vi.fn().mockReturnValue({ single, maybeSingle });
     const select = vi.fn().mockReturnValue({ eq });
     const from = vi.fn(() => ({ select }));
     createServiceClientMock.mockResolvedValue({ from });
@@ -270,5 +273,70 @@ describe("api routes", () => {
     expect(res.status).toBe(200);
     expect(json.success).toBe(true);
     expect(json.data.order.id).toBe("o1");
+  });
+
+  it("POST /api/orders fails when NEXT_PUBLIC_SITE_URL not set", async () => {
+    const prev = process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+
+    createOrderMock.mockResolvedValue({
+      data: {
+        id: "order-2",
+        orderNumber: "FC-100002",
+        productSlug: "r34",
+        price: 5000,
+      },
+    });
+
+    const req = new Request("http://localhost:3000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerName: "Anas Altaf",
+        customerEmail: "anas@example.com",
+        customerPhone: "123",
+        customerAddress: "addr",
+        customerCity: "Lahore",
+        productSlug: "r34",
+        background: "Midnight",
+      }),
+    });
+
+    const res = await postOrderRoute(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(500);
+    expect(json.error.code).toBe("CONFIG_ERROR");
+
+    process.env.NEXT_PUBLIC_SITE_URL = prev;
+  });
+
+  it("POST /api/payfast/webhook ignores duplicate pf_payment_id (idempotency)", async () => {
+    verifySignatureMock.mockReturnValue(true);
+
+    // First .from() call: idempotency check — maybeSingle() finds an existing record
+    const maybeSingle = vi.fn().mockResolvedValue({ data: { id: "order-1" }, error: null });
+    const eqIdempotency = vi.fn().mockReturnValue({ maybeSingle });
+    const selectIdempotency = vi.fn().mockReturnValue({ eq: eqIdempotency });
+    const from = vi.fn(() => ({ select: selectIdempotency }));
+    createServiceClientMock.mockResolvedValue({ from });
+
+    const form = new FormData();
+    form.set("m_payment_id", "order-1");
+    form.set("payment_status", "COMPLETE");
+    form.set("amount_gross", "5000");
+    form.set("pf_payment_id", "pf-already-processed");
+    form.set("signature", "sig");
+
+    const req = new Request("http://localhost:3000/api/payfast/webhook", {
+      method: "POST",
+      body: form,
+    });
+
+    const res = await postWebhookRoute(req);
+
+    expect(res.status).toBe(200);
+    expect(await res.text()).toBe("OK");
+    expect(applyWebhookMock).not.toHaveBeenCalled();
   });
 });

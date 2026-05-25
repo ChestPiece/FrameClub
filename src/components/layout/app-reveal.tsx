@@ -51,7 +51,7 @@ export function AppReveal({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      gsap.set(el, { autoAlpha: 0, y: 18 });
+      gsap.set(el, { autoAlpha: 0, y: 12 });
 
       let done = false;
       let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
@@ -66,7 +66,7 @@ export function AppReveal({ children }: { children: React.ReactNode }) {
         gsap.to(el, {
           autoAlpha: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.5,
           ease: "power3.out",
           clearProps: "transform,opacity,visibility",
           onComplete: finishReveal,

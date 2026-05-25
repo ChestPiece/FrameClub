@@ -1,336 +1,168 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 @AGENTS.md
-# CLAUDE.md — The Frame Club
 
-## What This Project Is
+## Commands
 
-The Frame Club is a Pakistani e-commerce business selling custom diecast car frames. Every frame is made to order — the customer picks a car model, chooses a background design, and the maker sources the diecast, builds the frame, and ships it nationwide across Pakistan. One product. One price: Rs. 5,000.
-
-The business ran entirely through Instagram DMs before this website. 50+ orders fulfilled that way. This site replaces that system with a proper storefront, checkout, and order management. The ordering is still conversational by nature — the client builds each frame himself — so the site's job is to capture demand, not simulate a warehouse.
-
-Instagram: @frameclub__
-Tagline: Where Speed Meets Art
-
----
-
-## Tech Stack
-
-- **Framework:** Next.js 16 (App Router)
-- **Database + Auth:** Supabase
-- **UI Components:** shadcn/ui (customized to match brand — override defaults aggressively)
-- **Styling:** Tailwind CSS + CSS custom properties
-- **Design Reference:** Stitch-generated mockups ("The Machined Monolith" design system)
-- **Payments:** PayFast (primary Pakistani gateway — EasyPaisa, JazzCash, cards, bank transfer)
-- **Email:** Resend (order confirmations, admin notifications)
-- **Image Storage:** Supabase Storage
-- **Deployment:** Vercel
-
----
-
-## Design System — The Machined Monolith
-
-This site is not a generic e-commerce template. It should feel like a high-end automotive brochure — heavy, precise, expensive. When in doubt, make it darker and give it more space.
-
-### Color Tokens
-
-```css
-:root {
-  /* Backgrounds */
-  --bg-base:          #141313;  /* primary canvas */
-  --bg-recessed:      #0E0E0E;  /* recessed sections */
-  --bg-surface:       #1C1B1B;  /* section blocks */
-  --bg-elevated:      #2A2A2A;  /* cards, lifted elements */
-  --bg-highest:       #353434;  /* modals */
-  --bg-nav:           rgba(58, 57, 57, 0.6); /* frosted nav */
-
-  /* Brand */
-  --brand:            #380306;  /* primary accent, CTAs */
-  --brand-mid:        #8E130C;  /* hover, gradient end */
-  --brand-bright:     #C0392B;  /* highlights, focus */
-
-  /* Text */
-  --text-primary:     #F5F5F5;
-  --text-muted:       #888888;
-
-  /* Borders */
-  --border:           #494542;
-  --border-subtle:    rgba(84, 67, 66, 0.15);
-
-  /* Shadows */
-  --shadow-ambient:   rgba(56, 3, 6, 0.15);
-}
+```bash
+npm run dev      # Next.js dev server (uses --webpack flag)
+npm run build    # Production build
+npm run test     # Run all tests (Vitest)
+npx vitest run src/__tests__/services.test.ts  # Run a single test file
 ```
 
-### Typography
+Vitest config uses jsdom + `@testing-library/react`. Single-file runs are the fastest feedback loop — prefer them over the full suite while iterating.
 
-- **Headlines:** Bebas Neue — all caps, letter-spacing 0.1em to 0.2em, treated as graphic elements
-- **Body:** Inter — 16px base, line-height 1.6 minimum
-- Use extreme scale contrast. A massive Bebas Neue headline next to a tiny Inter spec label is intentional.
+## Stack
 
-### Non-Negotiable Rules
+Next.js 16 (App Router, `--webpack`) · React 19 · Supabase (`@supabase/ssr` + `@supabase/supabase-js`) · Tailwind v4 (`@tailwindcss/postcss`) · GSAP 3 + `@gsap/react` · Anime.js 4 · Base UI (`@base-ui/react`) + shadcn overrides · Zod 4 · react-hook-form 7 · Resend · Vitest 4.
 
-- **0px border radius. Everywhere. No exceptions.** Not on buttons, cards, inputs, badges, modals. Nothing.
-- **No white backgrounds.** The darkest thing on the page is `#0E0E0E`. The lightest text is `#F5F5F5`.
-- **No 1px solid borders for sectioning.** Boundaries come from background color shifts, not lines.
-- **No traditional drop shadows.** Use tonal layering — put a `#2A2A2A` element on `#141313` for lift.
-- **No filled or playful icons.** Thin stroke only. Lucide icons are fine, keep strokeWidth at 1.5.
-- **Red is an accent, not a background.** Use it on CTAs, active states, badges, one accent per section. Not as a full section fill.
-- **shadcn components must be overridden** to match this system. Do not ship shadcn defaults.
+## Library Layout (`src/lib/`)
 
-### Tailwind Config Extensions
+- `db/services.ts` — single Supabase access layer. All product, order, contact, notify queries live here. No component talks to Supabase directly.
+- `db/types.ts` — shared DB record types.
+- `db/labels.ts` — display labels for enum-ish DB values.
+- `supabase/server.ts` / `client.ts` / `middleware.ts` — client factories. Server uses SSR cookies; middleware handles session refresh.
+- `supabase/database.types.ts` — generated types. Do not hand-edit.
+- `auth/admin.ts` + `auth/assert-admin-session.ts` — admin gate. Call `assertAdminSession()` at top of every `/admin/*` Server Component; it throws a redirect when no session.
+- `payment/payfast.ts` — PayFast signature build + webhook signature verify.
+- `payment/order-access-token.ts` — JWT signer for `/order/[id]` confirmation links. Secret: `ORDER_ACCESS_TOKEN_SECRET`.
+- `payment/index.ts` — barrel re-export.
+- `emails/send.ts` — Resend wrapper. Init is deferred (lazy) so build does not require `RESEND_API_KEY`.
+- `emails/templates.ts` — transactional email HTML.
+- `http/api-envelope.ts` — `{ ok, data | error }` response shape used by every `/api/*` route.
+- `shop/catalog.ts` / `shop/data.ts` / `shop/diecast-assets.ts` — product catalog helpers + placeholder image map.
+- `content/copy-constants.ts` — locked marketing copy. Do not rewrite inline; import the constant.
+- `content/nav-constants.ts` — `MOBILE_NAV_ITEMS`, `DESKTOP_NAV_ITEMS`.
+- `animation/gsap-config.ts` — GSAP defaults (ease, duration). All GSAP usage goes through this.
+- `animation/anime-config.ts` — Anime.js defaults.
+- `animation/button-motion.ts` — button hover/press primitive driven by `ButtonMotionProvider`.
+- `animation/motion-hooks.ts` / `motion-primitives.ts` — reusable scroll + entrance primitives.
+- `animation/scroll-layout.ts` / `scroll-trigger-refresh.ts` / `wait-for-layout-stable.ts` — ScrollTrigger lifecycle helpers; refresh after layout settles to avoid stale measurements.
+- `animation/scroll-to-collection.ts` — used by mobile `?section=collection` deep link.
 
-```ts
-theme: {
-  extend: {
-    colors: {
-      'bg-base':      '#141313',
-      'bg-recessed':  '#0E0E0E',
-      'bg-surface':   '#1C1B1B',
-      'bg-elevated':  '#2A2A2A',
-      'brand':        '#380306',
-      'brand-mid':    '#8E130C',
-      'brand-bright': '#C0392B',
-      'text-primary': '#F5F5F5',
-      'text-muted':   '#888888',
-      'border-dark':  '#494542',
-    },
-    fontFamily: {
-      display: ['Bebas Neue', 'sans-serif'],
-      body:    ['Inter', 'sans-serif'],
-    },
-    borderRadius: {
-      none:    '0px',
-      DEFAULT: '0px',
-      sm:      '0px',
-      md:      '0px',
-      lg:      '0px',
-      full:    '0px',
-    },
-  }
-}
-```
+## Routing
 
----
+All pages are Server Components by default. Client components co-located with `*-animations.tsx`, `*-form.tsx`, `*-client.tsx` suffixes.
 
-## Database Schema
+Public pages: `/`, `/about`, `/shop`, `/shop/[slug]`, `/checkout`, `/order/[id]`, `/contact`.
+Admin pages: `/admin`, `/admin/login`, `/admin/orders`, `/admin/products`. Every admin page calls `assertAdminSession()` first.
 
-Four tables. Keep it simple.
+API routes (writes only — reads go through Server Components):
+- `POST /api/orders` — create order, return PayFast redirect.
+- `GET  /api/orders/[id]` — order detail, JWT-gated.
+- `POST /api/payfast/webhook` — verify signature, mark order paid, fire email.
+- `POST /api/contact` — contact form submit.
+- `POST /api/notify` — notify-me subscription for `unavailable` products.
 
-```sql
--- Products
-create table products (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  brand text not null,
-  description text,
-  images text[],
-  price integer not null default 5000,
-  status text check (status in ('available', 'preorder', 'unavailable')) default 'available',
-  delivery_days integer default 7,
-  specs jsonb,
-  years text,
-  created_at timestamptz default now()
-);
+## Data Flow
 
--- Orders
-create table orders (
-  id uuid primary key default gen_random_uuid(),
-  order_number text unique not null,
-  customer_name text not null,
-  customer_email text not null,
-  customer_phone text not null,
-  customer_address text not null,
-  customer_city text not null,
-  product_id uuid references products(id),
-  customization jsonb,
-  price integer not null,
-  payment_status text check (payment_status in ('pending', 'paid', 'failed')) default 'pending',
-  order_status text check (order_status in ('pending', 'confirmed', 'in_production', 'shipped', 'delivered')) default 'pending',
-  payfast_payment_id text,
-  notes text,
-  created_at timestamptz default now()
-);
+Server Component → `db/services.ts` → Supabase → props to Client Component. Never call Supabase from a Client Component. Mutations always go through `/api/*` with Zod-validated bodies and the `api-envelope` shape.
 
--- Customization options (per product)
-create table customization_options (
-  id uuid primary key default gen_random_uuid(),
-  product_id uuid references products(id),
-  type text not null,  -- 'background_color', 'background_design'
-  label text not null,
-  value text not null,
-  preview_url text
-);
+## Animation System
 
--- Admin users handled by Supabase Auth
-```
+GSAP + ScrollTrigger is primary; Anime.js used for button/micro-interactions. Providers in `src/components/providers/`:
+- `gsap-provider.tsx` — registers plugins, sets defaults from `gsap-config.ts`.
+- `smooth-scroll-provider.tsx` — wraps the app with smooth scroll.
+- `button-motion-provider.tsx` — shared button motion context consumed by `components/ui/button.tsx`.
 
----
+Page-level animations live in component files (`home-animations.tsx`, `shop-animations.tsx`, …) and run inside `useGSAP` so cleanup is automatic. After any layout-affecting state change, call `scroll-trigger-refresh` after `wait-for-layout-stable` — measuring too early causes pin/snap drift.
 
-## Product Availability System
+## Design System — Non-Negotiables
 
-Each product has three states. The UI must reflect these clearly:
+- **0px border radius everywhere.** `tailwind.config` sets all radius tokens to `0px`. No rounded corners ever.
+- **Backgrounds:** only `#141313` `#0E0E0E` `#1C1B1B` `#2A2A2A` `#353434`. No white. No light grays.
+- **Red (accent only):** `--brand #380306` · `--brand-mid #8E130C` · `--brand-bright #C0392B`. Never use as section fill.
+- **Typography:** `font-display` (Bebas Neue) for headlines, `font-body` (Inter) for everything else. No third family.
+- **shadcn/Base UI:** every primitive in `src/components/ui/` is a custom override. Never ship defaults. Match radius, color, and motion rules above.
+- **Copy:** import from `content/copy-constants.ts`. Never rewrite marketing strings inline.
 
-| Status | Badge | CTA | Notes |
-|--------|-------|-----|-------|
-| `available` | Green "Available" | "Order Now" | Normal checkout flow |
-| `preorder` | Red "Pre-Order" | "Pre-Order Now" | Shows estimated wait |
-| `unavailable` | Grey "Unavailable" | "Notify Me" | Email capture only |
+## Business Rules
 
-The admin can change product status from the dashboard. No code deployment needed.
+- One product line, one price: **Rs. 5,000**. No discounts, no variants beyond the configurator background choice.
+- All orders **made-to-order**. No inventory, no stock counters, no SKU logic.
+- Payment **upfront via PayFast only**. No COD. No Stripe. No alternative gateways.
+- Product `status` enum drives CTA + badge:
+  - `available` → "Add to Order · {price}" (submit)
+  - `preorder` → "Reserve · {price}" (submit)
+  - `unavailable` → "Notify Me When Available" → `/contact?intent=notify&product={slug}`
+- `unavailable` hides configurator + qty stepper entirely (`product-detail-form.tsx`).
+- Status flips live from `/admin/products`. No deploy needed.
+- **Keychains** are planned but not launched. Build nothing for them yet.
 
----
+## Codebase Truths (verified — assume before assuming "bug")
 
-## Order Flow
-
-1. Customer lands on product page
-2. Selects background design from swatches
-3. Adds optional notes (special requests)
-4. Clicks Order Now → goes to checkout
-5. Fills name, email, phone, delivery address
-6. Pays via PayFast (EasyPaisa / JazzCash / card / bank)
-7. PayFast webhook hits `/api/payfast/webhook` → marks order as paid
-8. Customer gets confirmation email via Resend
-9. Admin gets new order notification email
-10. Admin logs into dashboard, sees order, updates status as it progresses
-
----
-
-## Pages
-
-| Page | Route | Notes |
-|------|-------|-------|
-| Homepage | `/` | 7 sections — hero, what is this, how it works, collection, customization, social proof, CTA |
-| Collection | `/shop` | Product grid with Available/Pre-order/Unavailable filters |
-| Product Detail | `/shop/[slug]` | Image gallery, customization selector, specs, order CTA |
-| Checkout | `/checkout` | Customer details form + PayFast redirect |
-| Order Confirmation | `/order/[id]` | Post-payment confirmation |
-| About | `/about` | Brand story |
-| Contact | `/contact` | WhatsApp link + contact form |
-| Admin Login | `/admin/login` | Supabase Auth |
-| Admin Dashboard | `/admin` | Stats overview |
-| Admin Orders | `/admin/orders` | Order table, inline status updates |
-| Admin Products | `/admin/products` | Product management, status toggles |
-
----
-
-## Admin Dashboard
-
-Protected by Supabase Auth. One admin user — the client.
-
-What the admin can do:
-- View all orders sorted by date (newest first)
-- Update order status inline (pending → confirmed → in_production → shipped → delivered)
-- Change product availability (available / preorder / unavailable)
-- View customer contact details per order
-- Export orders as CSV
-
-The admin dashboard uses the same dark design system as the customer-facing site. It is functional, not decorative.
-
----
-
-## API Routes
-
-```
-POST /api/payfast/webhook     — PayFast payment confirmation
-POST /api/orders              — Create new order
-GET  /api/orders/[id]         — Get order details
-POST /api/contact             — Contact form submission
-POST /api/notify              — "Notify me" email capture for unavailable products
-```
-
----
-
-## Component Architecture
-
-```
-/components
-  /ui          — shadcn base components (all overridden for brand)
-  /layout      — Navbar, Footer
-  /home        — Hero, WhatIsThis, HowItWorks, FeaturedCollection,
-                 CustomizationSection, SocialProof, FinalCTA
-  /shop        — ProductGrid, ProductCard, FilterBar
-  /product     — ImageGallery, CustomizationSelector, SpecsGrid,
-                 OrderButton, RelatedFrames
-  /checkout    — CheckoutForm, OrderSummary
-  /admin       — StatCard, OrderTable, ProductTable, StatusBadge,
-                 StatusToggle
-  /shared      — StatusBadge, SectionHeading, CTAButton
-```
-
----
-
-## Key Business Rules
-
-- Every order is made to order. There is no stock sitting in a warehouse.
-- One price: Rs. 5,000. No discounts, no variants, no size options.
-- Payment is full upfront. No COD.
-- Pre-order products show estimated delivery time. Standard is 7-10 working days.
-- The client handles all production and shipping himself. The website's job is to capture the order and get out of the way.
-- Keychains are a planned product but not launched yet. Do not build anything for them yet. Leave room in the schema.
-
----
+- **No cart.** No `/cart` page, no cart store (no context/zustand/localStorage). `cartCount` is a `SiteHeader` prop defaulting to `0`. Checkout is direct via URL query params: `/checkout?slug=...&background=...`. Intentional.
+- **Placeholder product images.** All products share 3 diecast shots via `shop/diecast-assets.ts → productDiecastImages()`. `data.ts:17` flags it as temporary pending real photography. Not a bug.
+- **Splash screen fires once per session** via `window.__frameClubLoaderDone` (`SITE_LOADER_DONE_FLAG`). Does NOT replay on client-side navigation. Duration ~1.4s. See `components/layout/site-loader.tsx`.
+- **Mobile nav** hardcodes `/?section=collection` for "Explore". `HomeSectionScroll` reads param → `scrollToCollectionSection()` → `history.replaceState` back to `/`. Mobile cannot JS-scroll the same way desktop nav does.
+- **Notify-me flow:** `/contact?intent=notify&product={slug}` → `ContactForm` sees `intentIsNotify` → email-only form → `POST /api/notify` → `notify_subscriptions` table.
+- **Spec data:** `products.specs` is JSONB `Array<{label, value}>`. `findSpec()` does substring match on `label`. Known key aliases in code: `["torque"]`, `["0-100","0–100","0 to 100","acceleration"]`, `["power","hp"]`, `["top speed","speed"]`.
 
 ## Environment Variables
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-PAYFAST_MERCHANT_ID=
-PAYFAST_MERCHANT_KEY=
-PAYFAST_PASSPHRASE=
-PAYFAST_SANDBOX=true  # flip to false on launch
-RESEND_API_KEY=
-NEXT_PUBLIC_SITE_URL=
-ADMIN_EMAIL=
-# Required in production for signed order confirmation / checkout retry links (do not reuse service role key).
-ORDER_ACCESS_TOKEN_SECRET=
-```
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — client.
+- `SUPABASE_SERVICE_ROLE_KEY` — server-only writes (admin, webhook).
+- `ORDER_ACCESS_TOKEN_SECRET` — JWT signing for order links.
+- `PAYFAST_MERCHANT_ID`, `PAYFAST_MERCHANT_KEY`, `PAYFAST_PASSPHRASE`, `PAYFAST_MODE` (`sandbox`/`live`).
+- `RESEND_API_KEY` — lazy-loaded; missing key does not break build.
+- `NEXT_PUBLIC_SITE_URL` — used in PayFast return URLs + email links.
 
----
+## Conventions
 
-## Copy — Final Approved Text
+- Server Component is default. Add `"use client"` only when you need event handlers, refs, or browser APIs.
+- All form validation: Zod schema in the route handler, parsed before any DB call.
+- All API responses: `{ ok: true, data }` or `{ ok: false, error }` from `http/api-envelope.ts`.
+- TypeScript strict. No `any` without a `// reason:` comment.
+- Tests live in `src/__tests__/`. Mirror filename of subject when reasonable.
+- File naming: kebab-case for files and folders. Component file exports a single default-or-named component matching the filename.
+- Imports: use `@/` alias for `src/`. No deep relative chains (`../../..`).
+- Never introduce a new top-level dependency without checking whether an existing one covers it (Anime.js vs GSAP, Base UI vs shadcn, Zod vs hand-rolled validation).
 
-These are locked. Do not rewrite them.
+## Supabase Tables (high level)
 
-**Hero:** YOUR FAVOURITE CAR. FRAMED. FOREVER.
-**Hero sub:** Custom diecast frames for the car obsessed. Nationwide delivery across Pakistan.
-**Hero CTA:** Order Your Frame — Rs. 5,000
+- `products` — `slug`, `name`, `price`, `status` (`available|preorder|unavailable`), `specs` JSONB.
+- `orders` — `id`, `product_slug`, `background`, `customer_*`, `status` (`pending|paid|failed`), `payfast_*` fields, `created_at`.
+- `contact_messages` — `name`, `email`, `message`, `created_at`.
+- `notify_subscriptions` — `email`, `product_slug`, `created_at`.
 
-**Section 2:** NOT A POSTER. NOT A TOY. SOMETHING BETTER.
+Writes from server only (service-role key). RLS expected to deny anon writes — verify before assuming a client write will land.
 
-**Section 3:** THREE STEPS. ONE FRAME. DELIVERED TO YOUR DOOR.
-- Step 1 — Pick Your Car
-- Step 2 — Customise It
-- Step 3 — We Build & Ship
+## PayFast Flow (end to end)
 
-**Collection:** THE COLLECTION — Every frame is made to order. No two are exactly alike.
+1. User submits `/checkout` form → `POST /api/orders` creates a `pending` order, returns PayFast redirect URL + signed fields.
+2. Browser auto-posts to PayFast hosted page.
+3. PayFast → user back to `return_url` (`/order/[id]?token=...`); JWT from `order-access-token.ts` gates the page.
+4. PayFast → `POST /api/payfast/webhook` server-to-server. Verify signature via `payment/payfast.ts`, then flip order to `paid` and send confirmation email through Resend.
+5. Sandbox vs live driven by `PAYFAST_MODE`. Never trust webhook payload without signature verify — webhook is the source of truth, not the return URL.
 
-**Customization:** BUILT AROUND YOUR OBSESSION.
+## Common Tasks
 
-**Social proof:** 50+ FRAMES DELIVERED. ZERO COMPLAINTS.
+- **Add a product field:** migrate `products` table → regenerate `database.types.ts` → expose via `db/services.ts` → render in `components/product/`. Do not bypass the service layer.
+- **Change a CTA label or marketing copy:** edit `content/copy-constants.ts`. Never inline.
+- **Add an admin screen:** create `src/app/admin/<name>/page.tsx`, call `assertAdminSession()` first line, render Server Component, fetch via `db/services.ts`.
+- **Add an API write:** create `src/app/api/<name>/route.ts`, validate with Zod, wrap response in `apiEnvelope`, use server Supabase client with service-role.
+- **Add an animation:** define defaults in `animation/gsap-config.ts` if reusable, otherwise scope inside a `useGSAP` hook in the component's `*-animations.tsx` file.
 
-**Final CTA:** READY TO FRAME YOUR OBSESSION?
-**CTA sub:** Rs. 5,000. Fully customised. Delivered nationwide. Takes 2 minutes to order.
-**CTA button:** ORDER NOW
+## Gotchas
 
-**Trust line:** Nationwide Delivery 🇵🇰 | Secure Payment | Handcrafted to Order
+- `next dev --webpack` is intentional — Turbopack flag is not used here. Do not "fix" it.
+- Resend init is deferred; missing `RESEND_API_KEY` will not crash the build but will throw at first send. Guard local dev accordingly.
+- ScrollTrigger pin/snap drifts if measured before layout is stable. Always go through `wait-for-layout-stable` + `scroll-trigger-refresh`.
+- Splash flag is per-session — to retest, hard reload or clear `window.__frameClubLoaderDone`.
+- Order confirmation URL token is single-secret JWT; rotating `ORDER_ACCESS_TOKEN_SECRET` invalidates every existing link.
+- Do not add a cart. The product is direct-to-checkout by design.
 
----
+## Memory & Context
 
-## Sanity Check
+User-level auto-memory lives outside the repo (see `~/.claude/projects/.../memory/`). Project facts that change frequently belong there, not in this file. This file is the durable, repo-checked-in source of truth — keep it stable across sessions.
 
-Clone the repo, set up `.env.local`, and the site should run. Adding a new product should take under 2 minutes in the admin dashboard. Changing a product from available to preorder should not require touching code.
+## When in Doubt
 
-If any of that requires digging through the codebase, something is built wrong.
-
----
-
-## Hard Stops
-
-- Generic shadcn styling. Every component that ships with defaults is a failure.
-- Rounded corners. Anywhere.
-- White or near-white backgrounds.
-- Placeholder content in production — no lorem ipsum, no fake car names, no made-up reviews.
-- Building anything for keychains. That product doesn't exist yet.
-- Overcomplicating checkout. One product, one price. Keep it stupid simple.
-- Order state that lives only on the client. Everything hits Supabase.
+- Read `node_modules/next/dist/docs/` before assuming Next.js API shape — version 16 has breaking changes from training data (see `AGENTS.md`).
+- Read `db/services.ts` before writing any new Supabase query — a helper likely exists.
+- Read `content/copy-constants.ts` before writing user-facing strings.
+- Read `components/ui/` before reaching for a shadcn primitive — overrides may already exist.
+- Run `npm run test` against the touched area before reporting a task done; UI changes also need a browser check.

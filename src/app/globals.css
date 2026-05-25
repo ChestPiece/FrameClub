@@ -119,19 +119,19 @@
   }
 
   .display-fluid {
-    font-size: clamp(2rem, 6vw, 6rem);
+    font-size: clamp(1.75rem, 5vw, 5rem);
   }
 
   .display-section {
-    font-size: clamp(1.75rem, 4vw, 4rem);
+    font-size: clamp(1.5rem, 3.5vw, 3.25rem);
   }
 
   .display-hero-fluid {
-    font-size: clamp(2.75rem, 9vw, 8rem);
+    font-size: clamp(2.25rem, 7vw, 6rem);
   }
 
   .display-massive-fluid {
-    font-size: clamp(4rem, 10vw, 9rem);
+    font-size: clamp(3rem, 8vw, 7rem);
   }
 
   .technical-label {
@@ -205,6 +205,49 @@
     background-color: var(--brand-bright);
   }
 
+  /* Site header layout — responsive */
+  .fc-nav-row {
+    margin: 0 auto;
+    width: min(calc(100% - 2rem), 80rem);
+    height: 5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    z-index: 10;
+  }
+  .fc-nav-desktop,
+  .fc-nav-cart,
+  .fc-nav-cta {
+    display: none;
+  }
+  .fc-nav-hamburger {
+    display: flex;
+  }
+  @media (min-width: 768px) {
+    .fc-nav-row {
+      grid-template-columns: auto 1fr auto auto;
+    }
+    .fc-nav-desktop {
+      display: flex;
+    }
+    .fc-nav-cart,
+    .fc-nav-cta {
+      display: inline-flex;
+    }
+    .fc-nav-hamburger {
+      display: none;
+    }
+  }
+  .fc-nav-cart:hover {
+    color: var(--text-primary) !important;
+  }
+  .fc-nav-cta:hover {
+    background: var(--brand-mid) !important;
+    border-color: var(--brand-mid) !important;
+  }
+
   .gsap-hidden {
     visibility: hidden;
     opacity: 0;
@@ -212,6 +255,42 @@
 
   .scroll-margin-site-header {
     scroll-margin-top: var(--site-header-height);
+  }
+
+  /* Hero grid: single column on mobile, two columns on md+ */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+  }
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: 1.3fr 0.7fr !important;
+      gap: 56px !important;
+    }
+  }
+
+  /* Social proof testimonial: stack on mobile */
+  .social-proof-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  @media (min-width: 640px) {
+    .social-proof-grid {
+      grid-template-columns: auto 1fr !important;
+      gap: 80px !important;
+    }
+  }
+
+  /* Hero section: reduce top padding on mobile */
+  #hero-section {
+    padding-top: calc(var(--site-header-height) + 1.5rem) !important;
+    padding-bottom: 2.5rem !important;
+  }
+  @media (min-width: 768px) {
+    #hero-section {
+      padding-top: calc(7.5rem + 40px) !important;
+      padding-bottom: 4rem !important;
+    }
   }
 
   /* Background pattern classes */

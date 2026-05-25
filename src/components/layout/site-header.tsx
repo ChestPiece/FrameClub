@@ -10,21 +10,25 @@ import { useHeaderIntroAnimation } from "@/components/layout/hooks/use-header-in
 import { useHeaderScrollAnimation } from "@/components/layout/hooks/use-header-scroll-animation";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
-import { NAV_ITEMS, MOBILE_NAV_ITEMS } from "@/lib/content/nav-constants";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { MOBILE_NAV_ITEMS } from "@/lib/content/nav-constants";
 import { FullscreenNav } from "@/components/layout/fullscreen-nav";
 import { SiteTicker } from "@/components/layout/site-ticker";
 import { cn, isPrefixActive } from "@/lib/utils";
 
-const navItems = NAV_ITEMS;
 const mobileNavItems = [...MOBILE_NAV_ITEMS];
 
-export function SiteHeader() {
+const NAV_LINKS = [
+  { route: "/", label: "Explore" },
+  { route: "/shop", label: "Collection" },
+  { route: "/about", label: "Story" },
+  { route: "/contact", label: "Contact" },
+];
+
+interface SiteHeaderProps {
+  cartCount?: number;
+}
+
+export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
   const pathname = usePathname();
   const rootRef = React.useRef<HTMLElement | null>(null);
   const headerTintRef = React.useRef<HTMLDivElement | null>(null);
@@ -34,32 +38,33 @@ export function SiteHeader() {
   const mobileToggleRef = React.useRef<HTMLButtonElement | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
   const [headerReady, setHeaderReady] = React.useState(false);
-  const exploreActive = pathname === "/";
   const scrollTriggerReady = useScrollTriggerReady();
 
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
+  const handleExploreClick = React.useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      if (pathname !== "/") return;
+      event.preventDefault();
+      scrollToCollectionSection();
+    },
+    [pathname],
+  );
 
-  const handleExploreClick = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname !== "/") return;
-    event.preventDefault();
-    scrollToCollectionSection();
-  }, [pathname]);
+  const animateUnderline = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>, shouldShow: boolean) => {
+      const currentTarget = event.currentTarget;
+      const underline = currentTarget.querySelector<HTMLElement>("[data-nav-underline]");
+      if (!underline) return;
 
-  const animateUnderline = React.useCallback((event: React.MouseEvent<HTMLElement>, shouldShow: boolean) => {
-    const currentTarget = event.currentTarget;
-    const underline = currentTarget.querySelector<HTMLElement>("[data-nav-underline]");
-    if (!underline) return;
-
-    gsap.killTweensOf(underline);
-    gsap.to(underline, {
-      scaleX: shouldShow ? 1 : 0,
-      transformOrigin: shouldShow ? "left center" : "right center",
-      duration: shouldShow ? 0.25 : 0.2,
-      ease: shouldShow ? "power2.out" : "power2.in",
-    });
-  }, []);
+      gsap.killTweensOf(underline);
+      gsap.to(underline, {
+        scaleX: shouldShow ? 1 : 0,
+        transformOrigin: shouldShow ? "left center" : "right center",
+        duration: shouldShow ? 0.25 : 0.2,
+        ease: shouldShow ? "power2.out" : "power2.in",
+      });
+    },
+    [],
+  );
 
   useHeaderIntroAnimation({
     rootRef,
@@ -73,13 +78,32 @@ export function SiteHeader() {
 
   useHeaderScrollAnimation({ mobileToggleRef, mobileNavOpen });
 
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
-    <header ref={rootRef} className="fixed inset-x-0 top-0 z-40 bg-(--bg-nav) backdrop-blur-xl">
+    <header
+      ref={rootRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 40,
+        background: "var(--bg-nav)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        borderBottom: "0.5px solid var(--border-subtle)",
+      }}
+    >
+      {/* Scroll tint overlay — GSAP controlled */}
       <div
         ref={headerTintRef}
         className="pointer-events-none absolute inset-0 z-0 bg-bg-deep opacity-0"
         aria-hidden
       />
+
+      {/* Ticker */}
       <div
         ref={tickerWrapRef}
         className={cn(
@@ -90,104 +114,208 @@ export function SiteHeader() {
       >
         <SiteTicker />
       </div>
+
+      {/* Nav row */}
       <div
         ref={navRowRef}
         className={cn(
-          "relative z-10 frame-container grid h-20 w-full min-inline-safe grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:grid-cols-[auto_1fr_auto] md:gap-4",
+          "fc-nav-row",
           mobileNavOpen && "pointer-events-none md:pointer-events-auto",
         )}
       >
+        {/* Logo — col 1 */}
         <TransitionLink
           ref={logoRef}
           href="/"
           data-header-logo
-          className={`${headerReady ? "gsap-hidden" : ""} display-kicker min-w-0 min-inline-safe flex max-w-full items-center gap-2 text-xl leading-none text-text-primary sm:gap-3 md:max-w-none md:text-3xl`}
+          className={`${headerReady ? "gsap-hidden" : ""}`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 10,
+            textDecoration: "none",
+          }}
         >
           <Image
             src="/Assets/FrameClub.png"
             alt="The Frame Club Logo"
             width={34}
             height={34}
-            className="size-[34px] shrink-0 object-contain sm:h-9 sm:w-9"
+            style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
           />
-          <span className="hidden min-w-0 truncate sm:inline">THE FRAME CLUB</span>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 22,
+              letterSpacing: "0.18em",
+              lineHeight: 1,
+              color: "var(--text-primary)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            THE FRAME CLUB
+          </span>
         </TransitionLink>
 
-        <NavigationMenu className="hidden justify-self-center md:flex">
-          <NavigationMenuList className="items-center gap-10 text-xs uppercase tracking-[0.22em]">
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                render={<TransitionLink href="/?section=collection" onClick={handleExploreClick} />}
+        {/* Nav — col 2 (desktop only) */}
+        <nav
+          className="fc-nav-desktop"
+          style={{
+            alignItems: "center",
+            gap: 0,
+            justifySelf: "center",
+          }}
+        >
+          {NAV_LINKS.map((item) => {
+            const isExplore = item.route === "/";
+            const active = isExplore
+              ? pathname === "/"
+              : item.route === "/shop"
+                ? isPrefixActive(pathname, item.route)
+                : pathname === item.route;
+
+            return (
+              <TransitionLink
+                key={item.route}
+                href={item.route}
+                onClick={isExplore ? handleExploreClick : undefined}
                 data-desktop-link
-                onMouseEnter={(event) => animateUnderline(event, true)}
-                onMouseLeave={(event) => animateUnderline(event, false)}
-                className={`group/nav-link relative border-0 pb-1 pl-4 text-text-muted hover:text-text-primary ${
-                  exploreActive ? "text-text-primary" : ""
-                }`}
+                onMouseEnter={(event) => animateUnderline(event as React.MouseEvent<HTMLElement>, true)}
+                onMouseLeave={(event) => animateUnderline(event as React.MouseEvent<HTMLElement>, false)}
+                className="fc-nav-link"
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                  padding: "10px 16px",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  color: active ? "var(--text-primary)" : "var(--text-muted)",
+                }}
               >
-                {exploreActive ? <span className="absolute top-1/2 left-0 h-4 w-[2px] -translate-y-1/2 bg-brand-mid" /> : null}
-                Explore
+                {active && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 2,
+                      height: 14,
+                      background: "var(--brand-bright)",
+                    }}
+                  />
+                )}
+                {item.label}
                 <span data-nav-underline className="nav-link-underline" />
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            {navItems.map((item) => {
-              const active = isPrefixActive(pathname, item.href);
+              </TransitionLink>
+            );
+          })}
+        </nav>
 
-              return (
-                <NavigationMenuItem key={item.href}>
-                  <NavigationMenuLink
-                    render={<TransitionLink href={item.href} />}
-                    data-desktop-link
-                    onMouseEnter={(event) => animateUnderline(event, true)}
-                    onMouseLeave={(event) => animateUnderline(event, false)}
-                    className={`group/nav-link relative border-0 pb-1 pl-4 ${
-                      active ? "text-text-primary" : "text-text-muted hover:text-text-primary"
-                    }`}
-                  >
-                    {active ? <span className="absolute top-1/2 left-0 h-4 w-[2px] -translate-y-1/2 bg-brand-mid" /> : null}
-                    {item.label}
-                    <span data-nav-underline className="nav-link-underline" />
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              );
-            })}
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        <div className="flex shrink-0 items-center justify-self-end gap-2 sm:gap-3">
-          <Button
-            render={<TransitionLink href="/shop" />}
-            variant="brand"
-            size="sm"
-            data-header-cta
-            className={`${headerReady ? "gsap-hidden" : ""} display-kicker min-touch-target px-3 py-2 sm:px-4 md:px-6 md:text-sm`}
+        {/* Cart button — col 3 (desktop only) */}
+        <TransitionLink
+          href="/shop"
+          className="fc-nav-cart"
+          aria-label="View collection"
+          style={{
+            alignItems: "center",
+            gap: 8,
+            background: "transparent",
+            color: "var(--text-muted)",
+            border: "none",
+            padding: "10px 12px",
+            fontFamily: "var(--font-body)",
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            textDecoration: "none",
+            transition: "color 0.2s ease",
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.25"
+            aria-hidden="true"
           >
-            <span className="md:hidden">ORDER</span>
-            <span className="hidden md:inline">ORDER NOW</span>
-          </Button>
+            <path d="M2 3h2l1.5 8.5h7L14 5H5" strokeLinejoin="round" />
+            <circle cx="6.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
+            <circle cx="11.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
+          </svg>
+          <span style={{ color: "var(--text-primary)" }}>Cart</span>
+        </TransitionLink>
 
-          <Button
-            ref={mobileToggleRef}
-            variant="ghost"
-            size="icon"
-            className="relative md:hidden"
-            aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={mobileNavOpen}
-            onClick={() => setMobileNavOpen((previous) => !previous)}
-          >
-            <span className="sr-only">Toggle navigation</span>
-            <span
-              data-hamburger-bar
-              className="absolute h-[1.5px] w-5 -translate-y-1.5 bg-text-primary"
-            />
-            <span data-hamburger-bar className="absolute h-[1.5px] w-5 bg-text-primary" />
-            <span
-              data-hamburger-bar
-              className="absolute h-[1.5px] w-5 translate-y-1.5 bg-text-primary"
-            />
-          </Button>
-        </div>
+        {/* ORDER NOW — col 4 (desktop only) */}
+        <TransitionLink
+          href="/shop"
+          data-header-cta
+          className={cn("fc-nav-cta", headerReady && "gsap-hidden")}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            background: "var(--brand-bright)",
+            color: "var(--text-primary)",
+            border: "1px solid var(--brand-bright)",
+            padding: "12px 22px",
+            fontFamily: "var(--font-display)",
+            fontSize: 12,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            minHeight: 44,
+            whiteSpace: "nowrap",
+          }}
+        >
+          ORDER NOW →
+        </TransitionLink>
       </div>
+
+      {/* Mobile hamburger — mobile only, hidden on md+ */}
+      <button
+        ref={mobileToggleRef}
+        type="button"
+        data-button-motion="true"
+        data-button-motion-level="minimal"
+        aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={mobileNavOpen}
+        onClick={() => setMobileNavOpen((previous) => !previous)}
+        className="fc-nav-hamburger"
+        style={{
+          position: "absolute",
+          right: "1rem",
+          top: "50%",
+          transform: "translateY(calc(-50% + 1.25rem))",
+          zIndex: 50,
+          alignItems: "center",
+          justifyContent: "center",
+          width: 44,
+          height: 44,
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        <span className="sr-only">Toggle navigation</span>
+        <span
+          data-hamburger-bar
+          className="absolute h-[1.5px] w-5 -translate-y-1.5 bg-text-primary"
+        />
+        <span data-hamburger-bar className="absolute h-[1.5px] w-5 bg-text-primary" />
+        <span
+          data-hamburger-bar
+          className="absolute h-[1.5px] w-5 translate-y-1.5 bg-text-primary"
+        />
+      </button>
+
       <FullscreenNav
         isOpen={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}

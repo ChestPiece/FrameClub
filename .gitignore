@@ -44,6 +44,19 @@ yarn-error.log*
 # local planning/spec artifacts
 docs/restructuring-plan.md
 docs/superpowers/specs/
+claude design/
+
+# ruflo / claude-flow generated local files
+.claude-flow/
+.claude/agents/
+.claude/commands/
+.claude/helpers/
+.claude/skills/
+.claude/memory.db
+.claude/settings.json
+.mcp.json
+.swarm/
+ruvector.db
 
 # vercel
 .vercel
@@ -51,3 +64,4 @@ docs/superpowers/specs/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.gstack/
