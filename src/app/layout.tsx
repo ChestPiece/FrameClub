@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   title: "The Frame Club",
   description: "Where Speed Meets Art",
   icons: {
-    icon: "/Assets/FrameClub.png",
+    icon: "/Assets/frame-club-logo.jpg",
   },
 };
 

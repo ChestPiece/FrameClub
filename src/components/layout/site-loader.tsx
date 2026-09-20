@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useGSAP } from "@gsap/react";
@@ -227,7 +227,7 @@ export function SiteLoader() {
         className="absolute bottom-6 right-6 font-body text-[10px] uppercase tracking-[0.3em] text-text-muted sm:bottom-10 sm:right-10"
         style={{ opacity: 0 }}
       >
-        Lahore · Karachi · Islamabad
+        Multan · Lahore · Karachi · Islamabad
       </p>
 
       {/* Center stack: aperture + word */}

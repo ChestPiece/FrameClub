@@ -93,7 +93,9 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
         zIndex: 40,
         background: "var(--bg-nav)",
         backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
         borderBottom: "0.5px solid var(--border-subtle)",
+        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
       }}
     >
       {/* Scroll tint overlay — GSAP controlled */}
@@ -118,43 +120,34 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
       {/* Nav row */}
       <div
         ref={navRowRef}
+        data-cart={cartCount > 0 ? "1" : "0"}
         className={cn(
           "fc-nav-row",
           mobileNavOpen && "pointer-events-none md:pointer-events-auto",
         )}
       >
-        {/* Logo — col 1 */}
+        {/* Logo — col 1 (circular mark only; wordmark is inside the asset) */}
         <TransitionLink
           ref={logoRef}
           href="/"
           data-header-logo
-          className={`${headerReady ? "gsap-hidden" : ""}`}
+          aria-label="The Frame Club"
+          className={`${headerReady ? "gsap-hidden" : ""} fc-nav-logo`}
           style={{
             display: "inline-flex",
             alignItems: "center",
-            gap: 10,
             textDecoration: "none",
+            flexShrink: 0,
           }}
         >
           <Image
-            src="/Assets/FrameClub.png"
-            alt="The Frame Club Logo"
-            width={34}
-            height={34}
-            style={{ width: 34, height: 34, objectFit: "contain", flexShrink: 0 }}
+            src="/Assets/frame-club-logo.jpg"
+            alt=""
+            width={104}
+            height={104}
+            className="fc-nav-logo-img"
+            priority
           />
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 22,
-              letterSpacing: "0.18em",
-              lineHeight: 1,
-              color: "var(--text-primary)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            THE FRAME CLUB
-          </span>
         </TransitionLink>
 
         {/* Nav — col 2 (desktop only) */}
@@ -216,67 +209,60 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
           })}
         </nav>
 
-        {/* Cart button — col 3 (desktop only) */}
-        <TransitionLink
-          href="/shop"
-          className="fc-nav-cart"
-          aria-label="View collection"
-          style={{
-            alignItems: "center",
-            gap: 8,
-            background: "transparent",
-            color: "var(--text-muted)",
-            border: "none",
-            padding: "10px 12px",
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: 500,
-            letterSpacing: "0.28em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            textDecoration: "none",
-            transition: "color 0.2s ease",
-          }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.25"
-            aria-hidden="true"
+        {/* Cart — only when count > 0 (no cart product today) */}
+        {cartCount > 0 ? (
+          <TransitionLink
+            href="/shop"
+            className="fc-nav-cart"
+            aria-label={`Cart, ${cartCount} items`}
+            style={{
+              alignItems: "center",
+              gap: 8,
+              background: "transparent",
+              color: "var(--text-muted)",
+              border: "none",
+              padding: "10px 12px",
+              fontFamily: "var(--font-body)",
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              textDecoration: "none",
+              transition: "color 0.2s ease",
+            }}
           >
-            <path d="M2 3h2l1.5 8.5h7L14 5H5" strokeLinejoin="round" />
-            <circle cx="6.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
-            <circle cx="11.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
-          </svg>
-          <span style={{ color: "var(--text-primary)" }}>Cart</span>
-        </TransitionLink>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.25"
+              aria-hidden="true"
+            >
+              <path d="M2 3h2l1.5 8.5h7L14 5H5" strokeLinejoin="round" />
+              <circle cx="6.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
+              <circle cx="11.5" cy="13.5" r="0.75" fill="currentColor" stroke="none" />
+            </svg>
+            <span style={{ color: "var(--text-primary)" }}>Cart · {cartCount}</span>
+          </TransitionLink>
+        ) : null}
 
         {/* ORDER NOW — col 4 (desktop only) */}
-        <TransitionLink
-          href="/shop"
+        <Button
+          render={<TransitionLink href="/shop" />}
           data-header-cta
-          className={cn("fc-nav-cta", headerReady && "gsap-hidden")}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            background: "var(--brand-bright)",
-            color: "var(--text-primary)",
-            border: "1px solid var(--brand-bright)",
-            padding: "12px 22px",
-            fontFamily: "var(--font-display)",
-            fontSize: 12,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            textDecoration: "none",
-            minHeight: 44,
-            whiteSpace: "nowrap",
-          }}
+          variant="brand"
+          size="default"
+          className={cn(
+            "fc-nav-cta font-display uppercase",
+            headerReady && "gsap-hidden",
+          )}
+          style={{ letterSpacing: "0.14em" }}
         >
           ORDER NOW →
-        </TransitionLink>
+        </Button>
       </div>
 
       {/* Mobile hamburger — mobile only, hidden on md+ */}

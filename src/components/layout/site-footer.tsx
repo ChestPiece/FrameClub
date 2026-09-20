@@ -1,9 +1,7 @@
-"use client";
+﻿"use client";
 
-import * as React from "react";
 import type { CSSProperties } from "react";
 import { TransitionLink } from "@/components/layout/page-transition";
-import { useFooterReveal } from "@/components/layout/layout-animations";
 
 const kickerStyle: CSSProperties = {
   fontFamily: "var(--font-body)",
@@ -15,11 +13,8 @@ const kickerStyle: CSSProperties = {
   marginBottom: 16,
 };
 
+/** Slim site footer — no SplitText (nested accent span broke char opacity). */
 export function SiteFooter() {
-  const wordmarkRef = React.useRef<HTMLDivElement>(null);
-  const linksContainerRef = React.useRef<HTMLDivElement>(null);
-  useFooterReveal(wordmarkRef, linksContainerRef);
-
   return (
     <footer
       style={{
@@ -33,66 +28,33 @@ export function SiteFooter() {
         style={{
           margin: "0 auto",
           width: "min(calc(100% - 2rem), 80rem)",
-          paddingTop: 56,
+          paddingTop: 48,
           paddingBottom: 28,
         }}
       >
-        {/* Massive wordmark */}
         <div
-          ref={wordmarkRef}
+          className="font-display uppercase"
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(3rem, 12vw, 10rem)",
+            fontSize: "clamp(2rem, 8vw, 5.5rem)",
             letterSpacing: "0.04em",
             color: "var(--text-primary)",
-            lineHeight: 0.9,
-            marginBottom: 36,
-            opacity: 0.96,
+            lineHeight: 0.92,
+            marginBottom: 40,
           }}
         >
-          THE FRAME
-          <br />
-          <span style={{ color: "var(--brand-bright)" }}>CLUB.</span>
+          FRAME
+          <span style={{ color: "var(--brand-bright)" }}>CLUB</span>
         </div>
 
-        {/* 4-col grid */}
         <div
-          ref={linksContainerRef}
+          className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3"
           style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr 1fr",
-            gap: 48,
-            paddingTop: 36,
+            paddingTop: 32,
             borderTop: "0.5px solid var(--border)",
           }}
         >
-          {/* Col 1: The Build */}
           <div>
-            <div data-reveal style={kickerStyle}>
-              The Build
-            </div>
-            <p
-              data-reveal
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                lineHeight: 1.7,
-                color: "var(--text-muted)",
-                maxWidth: 360,
-                margin: 0,
-              }}
-            >
-              Custom diecast car frames, handcrafted in Lahore and shipped
-              nationwide. One SKU. Endless permutations. Built around your
-              obsession.
-            </p>
-          </div>
-
-          {/* Col 2: Navigate */}
-          <div>
-            <div data-reveal style={kickerStyle}>
-              Navigate
-            </div>
+            <div style={kickerStyle}>Navigate</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
                 { label: "Explore", href: "/" },
@@ -103,13 +65,10 @@ export function SiteFooter() {
                 <TransitionLink
                   key={link.href}
                   href={link.href}
-                  data-reveal
+                  className="font-display uppercase text-text-primary"
                   style={{
-                    fontFamily: "var(--font-display)",
                     fontSize: 13,
                     letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    color: "var(--text-primary)",
                     textDecoration: "none",
                   }}
                 >
@@ -119,28 +78,21 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* Col 3: Logistics */}
           <div>
-            <div data-reveal style={kickerStyle}>
-              Logistics
-            </div>
+            <div style={kickerStyle}>Logistics</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
                 { label: "Shipping", subject: "shipping" },
                 { label: "Returns", subject: "returns" },
                 { label: "FAQ", subject: "faq" },
-                { label: "Care Guide", subject: "care-guide" },
               ].map((item) => (
                 <TransitionLink
                   key={item.label}
                   href={`/contact?subject=${item.subject}`}
-                  data-reveal
+                  className="font-display uppercase text-text-primary"
                   style={{
-                    fontFamily: "var(--font-display)",
                     fontSize: 13,
                     letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    color: "var(--text-primary)",
                     textDecoration: "none",
                   }}
                 >
@@ -150,13 +102,9 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* Col 4: Workshop */}
           <div>
-            <div data-reveal style={kickerStyle}>
-              Workshop
-            </div>
+            <div style={kickerStyle}>Workshop</div>
             <p
-              data-reveal
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: 13,
@@ -167,50 +115,36 @@ export function SiteFooter() {
             >
               Studio 04, Block-C
               <br />
-              Gulberg III · Lahore
+              Gulgasht · Multan
               <br />
               hello@frameclub.pk
             </p>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div
           style={{
-            marginTop: 48,
-            paddingTop: 24,
+            marginTop: 40,
+            paddingTop: 20,
             borderTop: "0.5px solid var(--border)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             flexWrap: "wrap",
-            gap: 16,
+            gap: 12,
           }}
         >
           <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-            }}
+            className="font-body uppercase text-text-muted"
+            style={{ fontSize: 10, letterSpacing: "0.28em" }}
           >
-            © 2026 The Frame Club · Machined Monolith
+            © 2026 The Frame Club
           </span>
           <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 10,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-            }}
+            className="font-body uppercase text-text-muted"
+            style={{ fontSize: 10, letterSpacing: "0.22em" }}
           >
-            NATIONWIDE DELIVERY{" "}
-            <span style={{ color: "var(--brand-bright)" }}>●</span> SECURE
-            PAYMENT <span style={{ color: "var(--brand-bright)" }}>●</span>{" "}
-            HANDCRAFTED
+            Nationwide · PayFast · Handcrafted
           </span>
         </div>
       </div>
