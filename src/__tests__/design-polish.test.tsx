@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -151,8 +151,8 @@ describe("Design polish components", () => {
     const collectionLink = screen.getByRole("link", { name: "BACK TO COLLECTION" });
     expect(collectionLink).toHaveAttribute("href", "/shop");
 
-    const whatsappLink = screen.getByRole("link", { name: /Or contact us on WhatsApp/i });
-    expect(whatsappLink).toHaveAttribute("href", "https://wa.me/923001234567");
+    const contactLink = screen.getByRole("link", { name: /Or contact the workshop/i });
+    expect(contactLink).toHaveAttribute("href", "/contact");
   });
 
   it("renders EmptyState with optional CTA", async () => {
@@ -215,7 +215,7 @@ describe("Design polish components", () => {
       customerEmail: "anas@example.com",
       customerPhone: "123",
       customerAddress: "addr",
-      customerCity: "Lahore",
+      customerCity: "Multan",
       productId: "p1",
       productSlug: "r34",
       customization: { background: "carbon-grid", notes: "" },

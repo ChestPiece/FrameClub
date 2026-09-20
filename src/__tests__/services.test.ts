@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks — must be declared before any vi.mock() calls
@@ -36,7 +36,7 @@ function makeOrderRow(overrides: Record<string, unknown> = {}) {
     customer_email: "anas@example.com",
     customer_phone: "123",
     customer_address: "123 Street",
-    customer_city: "Lahore",
+    customer_city: "Multan",
     product_id: "product-1",
     product_slug: "r34",
     customization: { background: "Midnight", notes: "" },
@@ -116,7 +116,7 @@ describe("createOrder", () => {
     customerEmail: "anas@example.com",
     customerPhone: "123",
     customerAddress: "123 Street",
-    customerCity: "Lahore",
+    customerCity: "Multan",
     productSlug: "r34",
     background: "Midnight",
   };

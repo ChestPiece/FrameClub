@@ -1,15 +1,15 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import { COPY } from "@/lib/content/copy-constants";
 
 describe("locked copy contracts", () => {
   it("matches hero sub-copy (kinetic redesign)", () => {
     expect(COPY.heroSub).toBe(
-      "Handcrafted diecast frames. One workshop in Lahore. One price. Zero compromise.",
+      "Handcrafted diecast frames. One workshop in Multan. One price. Zero compromise.",
     );
   });
 
   it("matches hero eyebrow", () => {
-    expect(COPY.heroEyebrow).toBe("EST. LAHORE · MADE TO ORDER");
+    expect(COPY.heroEyebrow).toBe("EST. MULTAN · MADE TO ORDER");
   });
 
   it("matches hero heading lines", () => {

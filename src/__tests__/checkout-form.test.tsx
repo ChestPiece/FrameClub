@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -70,7 +70,7 @@ function fillDelivery() {
     target: { value: "address" },
   });
   fireEvent.change(screen.getByLabelText("City"), {
-    target: { value: "Lahore" },
+    target: { value: "Multan" },
   });
 }
 

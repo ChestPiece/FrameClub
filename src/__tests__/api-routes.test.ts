@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
   createOrderMock,
@@ -95,7 +95,7 @@ describe("api routes", () => {
         customerEmail: "anas@example.com",
         customerPhone: "123",
         customerAddress: "addr",
-        customerCity: "Lahore",
+        customerCity: "Multan",
         productSlug: "r34",
         background: "Midnight",
       }),
@@ -296,7 +296,7 @@ describe("api routes", () => {
         customerEmail: "anas@example.com",
         customerPhone: "123",
         customerAddress: "addr",
-        customerCity: "Lahore",
+        customerCity: "Multan",
         productSlug: "r34",
         background: "Midnight",
       }),
