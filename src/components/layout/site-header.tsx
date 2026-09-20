@@ -9,7 +9,7 @@ import { scrollToCollectionSection } from "@/lib/animation/scroll-to-collection"
 import { useHeaderIntroAnimation } from "@/components/layout/hooks/use-header-intro-animation";
 import { useHeaderScrollAnimation } from "@/components/layout/hooks/use-header-scroll-animation";
 import { TransitionLink } from "@/components/layout/page-transition";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { MOBILE_NAV_ITEMS } from "@/lib/content/nav-constants";
 import { FullscreenNav } from "@/components/layout/fullscreen-nav";
 import { SiteTicker } from "@/components/layout/site-ticker";
@@ -249,20 +249,21 @@ export function SiteHeader({ cartCount = 0 }: SiteHeaderProps) {
           </TransitionLink>
         ) : null}
 
-        {/* ORDER NOW — col 4 (desktop only) */}
-        <Button
-          render={<TransitionLink href="/shop" />}
+        {/* ORDER NOW — col 4 (desktop only); buttonVariants on link avoids Button+render hydration mismatch */}
+        <TransitionLink
+          href="/shop"
           data-header-cta
-          variant="brand"
-          size="default"
+          data-button-motion="true"
+          data-button-motion-level="default"
           className={cn(
+            buttonVariants({ variant: "brand", size: "default" }),
             "fc-nav-cta font-display uppercase",
             headerReady && "gsap-hidden",
           )}
           style={{ letterSpacing: "0.14em" }}
         >
           ORDER NOW →
-        </Button>
+        </TransitionLink>
       </div>
 
       {/* Mobile hamburger — mobile only, hidden on md+ */}
