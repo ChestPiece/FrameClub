@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -72,10 +72,11 @@ export function LetterSection() {
 
   return (
     <div
+      id="letter-section"
       ref={sectionRef}
       className="bg-bg-deep"
       style={{
-        padding: "56px 0",
+        padding: "clamp(4rem, 10vh, 8rem) 0",
         borderTop: "0.5px solid var(--border)",
         borderBottom: "0.5px solid var(--border)",
       }}
@@ -90,7 +91,7 @@ export function LetterSection() {
           style={{ marginBottom: 24, gap: 12 }}
         >
           <p className="font-body text-text-muted" style={KICKER}>
-            Chapter Two · From the Workshop
+            From the workshop
           </p>
           <p className="font-body text-text-muted" style={KICKER}>
             A letter, not a pitch.
@@ -142,7 +143,7 @@ export function LetterSection() {
             className="font-body text-text-muted"
             style={{ ...KICKER, paddingTop: 6 }}
           >
-            Lahore · 2026
+            Multan · 2026
           </p>
           <div className="flex flex-col" style={{ gap: 14 }}>
             <p

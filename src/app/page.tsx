@@ -4,15 +4,16 @@ import { HomeAnimations } from "@/components/home/home-animations";
 import { HomeSectionScroll } from "@/components/home/home-section-scroll";
 import {
   HeroSection,
-  WhatIsThisSection,
+  StakesSection,
+  SolutionSection,
   LetterSection,
   HowItWorksSection,
   FeaturedCollectionSection,
-  CustomizationSection,
-  SocialProofSection,
   FinalCTASection,
 } from "@/components/home/sections";
 import { getProducts } from "@/lib/shop/data";
+
+/* tastemaker · macrostructure: Long-Scroll Narrative · mood: elegant · hero: H3 · arc: hook->problem->solution->collection->proof->close · contrast: pass */
 
 export default async function Home() {
   const allProducts = await getProducts();
@@ -24,16 +25,16 @@ export default async function Home() {
       <Suspense fallback={null}>
         <HomeSectionScroll />
       </Suspense>
-      <main id="main-content" className="scroll-margin-site-header pb-0">
+      <main id="main-content" className="scroll-margin-site-header overflow-x-clip pb-0">
         <HomeAnimations>
           <HeroSection />
 
-          <section data-animate-section="not-a-poster">
-            <WhatIsThisSection />
+          <section data-animate-section="stakes">
+            <StakesSection />
           </section>
 
-          <section data-animate-section="letter">
-            <LetterSection />
+          <section data-animate-section="solution">
+            <SolutionSection />
           </section>
 
           <section data-animate-section="three-steps">
@@ -44,7 +45,7 @@ export default async function Home() {
             id="collection-section"
             data-animate-section="collection"
             className="bg-bg-surface"
-            style={{ padding: "56px 0" }}
+            style={{ padding: "clamp(3.5rem, 8vh, 6rem) 0" }}
           >
             <div
               className="mx-auto"
@@ -54,21 +55,11 @@ export default async function Home() {
             </div>
           </section>
 
-          <section data-animate-section="customization" className="bg-bg-deep py-8 md:py-10 lg:py-12">
-            <div className="frame-container">
-              <CustomizationSection />
-            </div>
+          <section data-animate-section="letter">
+            <LetterSection />
           </section>
 
-          <section data-animate-section="social-proof">
-            <SocialProofSection />
-          </section>
-
-          <section
-            data-animate-section="final-cta"
-            className="bg-bg-deep texture-overlay relative overflow-hidden"
-            style={{ padding: "72px 0" }}
-          >
+          <section data-animate-section="final-cta" className="bg-bg-deep relative overflow-hidden">
             <FinalCTASection />
           </section>
         </HomeAnimations>

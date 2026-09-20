@@ -94,7 +94,7 @@ export function FeaturedCollectionSection({
             className="font-body text-text-muted"
             style={{ ...KICKER, marginBottom: 10 }}
           >
-            Chapter Four · The Collection
+            The collection
           </p>
           <h2
             className="font-display uppercase text-text-primary"
@@ -165,7 +165,7 @@ export function FeaturedCollectionSection({
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain p-4 grayscale transition-all duration-500 group-hover:grayscale-0"
+                    className="object-contain p-4 grayscale transition-[filter,opacity] duration-500 ease-out group-hover:grayscale-0"
                   />
                 </div>
                 <div style={{ paddingTop: 12 }}>

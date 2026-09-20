@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -8,31 +8,23 @@ import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 import { FCHairline } from "@/components/home/fc-hairline";
 
-const KICKER: React.CSSProperties = {
-  fontSize: 10,
-  fontWeight: 500,
-  letterSpacing: "0.28em",
-  textTransform: "uppercase",
-};
-
 const steps = [
   {
     n: "01",
     title: "Pick your car",
-    body: "Choose from the running collection — Porsche, Nissan, Ferrari, Lamborghini, Toyota — or request a model. We source 1:64 scale from Hot Wheels, Tomica Premium, Mini-GT, and the occasional private import.",
+    body: "Choose from the running collection — or request a model.",
   },
   {
     n: "02",
     title: "Specify the build",
-    body: "Pick the backdrop, the wood finish, and what the spec plate should say. Five backgrounds, four lacquers, four plate variants. Twenty-thousand configurations from a single SKU.",
+    body: "Backdrop, wood finish, and plate — locked on the product page before you pay.",
   },
   {
     n: "03",
     title: "We build & ship",
-    body: "Assembled by hand in Lahore over seven days. Photographed before dispatch. Shipped nationwide via TCS Overnight in a custom rigid foam cradle. Insured, tracked, doorstepped.",
+    body: "Hand-Built In Multan in seven days. Tracked nationwide.",
   },
 ];
-
 
 export function HowItWorksSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -56,13 +48,13 @@ export function HowItWorksSection() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tween = gsap.fromTo(
           cards,
-          { y: 60, opacity: 0 },
+          { y: 16, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.9,
+            duration: 0.45,
             ease: "power3.out",
-            stagger: 0.12,
+            stagger: 0.06,
             scrollTrigger: { trigger: root, start: "top 75%", once: true },
           },
         );
@@ -81,96 +73,73 @@ export function HowItWorksSection() {
     <div
       ref={sectionRef}
       className="bg-bg-surface"
-      style={{ padding: "56px 0" }}
+      style={{ padding: "clamp(3.5rem, 8vh, 5.5rem) 0" }}
     >
       <div
-        className="mx-auto"
+        className="mx-auto min-w-0"
         style={{ width: "min(calc(100% - 2rem), 80rem)" }}
       >
-        {/* Header */}
-        <div
-          className="grid items-end"
-          style={{
-            gridTemplateColumns: "1fr auto",
-            marginBottom: 24,
-            gap: 20,
-          }}
-        >
-          <div style={{ maxWidth: 720 }}>
-            <p
-              className="font-body text-text-muted"
-              style={{ ...KICKER, marginBottom: 10 }}
-            >
-              Chapter Three · The Process
-            </p>
-            <h2
-              className="font-display uppercase text-text-primary"
-              style={{
-                fontSize: "clamp(1.5rem, 3.2vw, 2.75rem)",
-                lineHeight: 1,
-                letterSpacing: "0.04em",
-                margin: 0,
-                fontWeight: 400,
-              }}
-            >
-              Three steps.
-              <br />
-              One frame. <span className="text-brand-bright">Delivered.</span>
-            </h2>
-          </div>
-          <p className="font-body text-text-muted" style={KICKER}>
-            S001 — S003
+        <div style={{ marginBottom: 20, maxWidth: 640 }}>
+          <p
+            className="font-body uppercase text-text-muted"
+            style={{
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: "0.28em",
+              margin: 0,
+              marginBottom: 10,
+            }}
+          >
+            Process
           </p>
+          <h2
+            className="font-display uppercase text-text-primary"
+            style={{
+              fontSize: "clamp(1.5rem, 3.2vw, 2.75rem)",
+              lineHeight: 1,
+              letterSpacing: "0.04em",
+              margin: 0,
+              fontWeight: 400,
+            }}
+          >
+            Three steps. One frame.{" "}
+            <span className="text-brand-bright">Delivered.</span>
+          </h2>
         </div>
 
         <FCHairline />
 
-        {/* Steps */}
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3">
           {steps.map((step, i) => (
             <div
               key={step.n}
               data-how-step-card
               data-motion-reveal
-              className="flex flex-col"
+              className={`flex flex-col min-w-0 ${
+                i < steps.length - 1
+                  ? "border-b border-border-subtle md:border-b-0 md:border-r"
+                  : ""
+              }`}
               style={{
-                padding: "24px 20px 24px 0",
-                paddingLeft: i > 0 ? 20 : 0,
-                borderRight:
-                  i < 2 ? "0.5px solid var(--border-subtle)" : "none",
-                gap: 14,
+                padding: "20px 16px",
+                gap: 10,
                 opacity: 0,
               }}
             >
-              <div
-                className="flex items-baseline"
-                style={{ gap: 12 }}
+              <span
+                className="font-display text-brand-bright"
+                style={{
+                  fontSize: 22,
+                  letterSpacing: "0.04em",
+                  lineHeight: 1,
+                }}
               >
-                <span
-                  className="font-display text-brand-bright"
-                  style={{
-                    fontSize: 26,
-                    letterSpacing: "0.04em",
-                    lineHeight: 1,
-                  }}
-                >
-                  {step.n}
-                </span>
-                <span
-                  style={{
-                    flex: 1,
-                    height: 1,
-                    background: "var(--border)",
-                  }}
-                />
-              </div>
+                {step.n}
+              </span>
               <h3
                 className="font-display uppercase text-text-primary"
                 style={{
-                  fontSize: 18,
+                  fontSize: 17,
                   letterSpacing: "0.04em",
                   fontWeight: 400,
                   lineHeight: 1.1,
@@ -181,7 +150,7 @@ export function HowItWorksSection() {
               </h3>
               <p
                 className="text-text-muted"
-                style={{ fontSize: 13, lineHeight: 1.55, margin: 0 }}
+                style={{ fontSize: 13, lineHeight: 1.5, margin: 0 }}
               >
                 {step.body}
               </p>
@@ -189,8 +158,7 @@ export function HowItWorksSection() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div style={{ marginTop: 28 }}>
+        <div style={{ marginTop: 24 }}>
           <Button
             render={<TransitionLink href="/shop" />}
             variant="outline"
@@ -205,7 +173,7 @@ export function HowItWorksSection() {
               background: "transparent",
             }}
           >
-            Begin a build →
+            Shop the collection →
           </Button>
         </div>
       </div>

@@ -1,178 +1,78 @@
-"use client";
-
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/animation/gsap-config";
-import { useScrollTriggerReady } from "@/components/providers/scroll-trigger-environment";
+import Image from "next/image";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
+import { HOME_HERO_IMAGE } from "@/lib/shop/product-assets";
 
-const KICKER: React.CSSProperties = {
-  fontSize: 10,
-  fontWeight: 500,
-  letterSpacing: "0.28em",
-  textTransform: "uppercase",
-};
-
-const headlineWords = ["READY", "TO", "FRAME", "YOUR", "OBSESSION?"];
-
+/** Media-backed close CTA. Reveal owned by HomeAnimations section batch — no nested hide. */
 export function FinalCTASection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const buttonWrapRef = useRef<HTMLDivElement>(null);
-  const scrollTriggerReady = useScrollTriggerReady();
-
-  useGSAP(
-    () => {
-      if (!scrollTriggerReady) return;
-      const words = headlineRef.current?.querySelectorAll("[data-word]");
-      const buttonEl = buttonWrapRef.current;
-
-      const mm = gsap.matchMedia();
-
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        if (words && words.length) {
-          gsap.set(Array.from(words), { opacity: 1, y: 0, clearProps: "all" });
-        }
-        if (buttonEl) {
-          gsap.set(buttonEl, { opacity: 1, scale: 1, clearProps: "all" });
-        }
-        return () => {};
-      });
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const tweens: gsap.core.Tween[] = [];
-
-        if (words && words.length) {
-          const wordTween = gsap.fromTo(
-            Array.from(words),
-            { autoAlpha: 0, y: 30 },
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.6,
-              ease: "expo.out",
-              stagger: 0.05,
-              scrollTrigger: {
-                trigger: headlineRef.current,
-                start: "top 80%",
-                once: true,
-              },
-            },
-          );
-          tweens.push(wordTween);
-        }
-
-        if (buttonEl) {
-          gsap.set(buttonEl, { autoAlpha: 0, scale: 0.96, transformOrigin: "center center" });
-          const buttonTween = gsap.to(buttonEl, {
-            autoAlpha: 1,
-            scale: 1,
-            duration: 0.5,
-            ease: "back.out(1.4)",
-            scrollTrigger: {
-              trigger: buttonEl,
-              start: "top 85%",
-              once: true,
-            },
-          });
-          tweens.push(buttonTween);
-        }
-
-        return () => {
-          tweens.forEach((t) => {
-            t.scrollTrigger?.kill();
-            t.kill();
-          });
-        };
-      });
-
-      return () => mm.revert();
-    },
-    { scope: sectionRef, dependencies: [scrollTriggerReady] },
-  );
-
   return (
-    <div ref={sectionRef} style={{ position: "relative" }}>
+    <div className="relative overflow-hidden">
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src={HOME_HERO_IMAGE}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center opacity-35"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, var(--bg-deep) 0%, rgba(14,14,14,0.88) 45%, rgba(14,14,14,0.72) 100%)",
+          }}
+        />
+      </div>
+
       <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--brand) 28%, transparent), transparent 65%)",
-        }}
-      />
-      <div
-        className="mx-auto text-center"
-        style={{
-          position: "relative",
-          width: "min(calc(100% - 2rem), 80rem)",
-        }}
+        className="frame-container relative text-center"
+        style={{ paddingBlock: "clamp(4rem, 10vh, 7rem)" }}
       >
         <p
-          className="font-body text-text-muted"
-          style={{ ...KICKER, marginBottom: 16 }}
+          className="font-body uppercase text-text-muted"
+          style={{
+            fontSize: 10,
+            fontWeight: 500,
+            letterSpacing: "0.28em",
+            margin: 0,
+            marginBottom: 16,
+          }}
         >
-          Chapter Six · The Question
+          Rs. 5,000 · Made to order
         </p>
         <h2
-          ref={headlineRef}
           className="font-display uppercase text-text-primary"
           style={{
-            fontSize: "clamp(1.5rem, 3.5vw, 3rem)",
+            fontSize: "clamp(1.75rem, 4.5vw, 3.25rem)",
             letterSpacing: "0.03em",
-            lineHeight: 1,
+            lineHeight: 0.98,
             margin: "0 0 16px",
             fontWeight: 400,
           }}
         >
-          <span data-word data-motion-reveal className="inline-block" style={{ opacity: 0, marginRight: "0.25em" }}>
-            {headlineWords[0]}
-          </span>
-          <span data-word data-motion-reveal className="inline-block" style={{ opacity: 0, marginRight: "0.25em" }}>
-            {headlineWords[1]}
-          </span>
-          <span data-word data-motion-reveal className="inline-block" style={{ opacity: 0 }}>
-            {headlineWords[2]}
-          </span>
-          <br />
-          <span data-word data-motion-reveal className="inline-block" style={{ opacity: 0, marginRight: "0.25em" }}>
-            {headlineWords[3]}
-          </span>
-          <span data-word data-motion-reveal className="inline-block text-brand-bright" style={{ opacity: 0 }}>
-            {headlineWords[4]}
-          </span>
+          Ready to frame your{" "}
+          <span className="text-brand-bright">obsession?</span>
         </h2>
         <p
           className="text-text-muted"
           style={{
-            maxWidth: 460,
-            margin: "0 auto 24px",
-            fontSize: 14,
-            lineHeight: 1.6,
+            maxWidth: 420,
+            margin: "0 auto 28px",
+            fontSize: 15,
+            lineHeight: 1.65,
           }}
         >
-          Fully customised frames at a flat Rs. 5,000. Delivered nationwide. Two minutes to specify, seven days to build.
+          Flat price. Nationwide delivery. Seven days from payment to your door.
         </p>
-        <div ref={buttonWrapRef} style={{ display: "inline-block" }}>
-          <Button
-            render={<TransitionLink href="/shop" />}
-            variant="brand"
-            size="xl"
-            className="font-display uppercase"
-            style={{
-              padding: "12px 28px",
-              fontSize: 12,
-              letterSpacing: "0.18em",
-              border: "1px solid var(--brand-bright)",
-              background: "var(--brand-bright)",
-            }}
-          >
-            ORDER NOW →
-          </Button>
-        </div>
+        <Button
+          render={<TransitionLink href="/shop" />}
+          variant="brand"
+          size="xl"
+          className="font-display uppercase"
+          style={{ letterSpacing: "0.16em" }}
+        >
+          ORDER NOW →
+        </Button>
       </div>
     </div>
   );

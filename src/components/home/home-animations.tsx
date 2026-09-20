@@ -71,27 +71,7 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
               "-=0.3",
             );
 
-            const heroLabel = root?.querySelector('[data-animate="hero-label"]') as HTMLElement | null;
-            if (heroLabel) {
-              const originalText = heroLabel.textContent ?? "";
-              try {
-                tl.to(
-                  heroLabel,
-                  {
-                    duration: 0.55,
-                    scrambleText: {
-                      text: originalText,
-                      chars: "upperCase",
-                      revealDelay: 0.06,
-                      speed: 0.5,
-                    },
-                  },
-                  "-=0.2",
-                );
-              } catch {
-                tl.to(heroLabel, { autoAlpha: 1, y: 0, duration: 0.25 }, "-=0.2");
-              }
-            }
+            // ponytail: no scrambleText on brand — mid-scramble reads as gibberish (FRAMGJMTF)
 
             const heading = root?.querySelector('[data-animate="hero-heading"]') as HTMLElement | null;
             if (heading) {
@@ -114,6 +94,13 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
                 tl.fromTo(heading, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, "-=0.35");
               }
             }
+            tl.fromTo(
+              "[data-hero-sub], [data-hero-ctas]",
+              { y: 12, autoAlpha: 0 },
+              { y: 0, autoAlpha: 1, duration: 0.4, stagger: 0.08 },
+              "-=0.2",
+            );
+
             introHasPlayedRef.current = true;
           } catch {
             revealAllTargets();
@@ -145,7 +132,6 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
         },
         (context) => {
           const reduceMotion = Boolean(context.conditions?.reduceMotion);
-          const isDesktop = Boolean(context.conditions?.desktop);
 
           if (reduceMotion) {
             gsap.set(HIDE_TARGETS, { autoAlpha: 1, y: 0, clearProps: "all" });
@@ -158,23 +144,7 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
           gsap.set(HIDE_TARGETS, { autoAlpha: 0, y: 40 });
           gsap.set(DRAWSVG_LINE_TARGETS, { drawSVG: "0%" });
 
-          // Hero kinetic pin/scrub is owned by HeroSectionAnimations.
-          // Here we only draw the hero accent rule on scroll.
-          gsap.fromTo(
-            "[data-hero-svg-accent] line",
-            { drawSVG: "0%" },
-            {
-              drawSVG: "100%",
-              ease: "none",
-              scrollTrigger: {
-                trigger: "#hero-section",
-                start: "top 85%",
-                end: "bottom 40%",
-                scrub: 1,
-              },
-            },
-          );
-          void isDesktop;
+          // Hero media reveal is owned by HeroSectionAnimations.
 
           ScrollTrigger.batch("[data-animate-section]:not([data-animate-section='hero'])", {
             start: "top 92%",
@@ -205,6 +175,24 @@ export function HomeAnimations({ children }: HomeAnimationsProps) {
             },
             once: true,
           });
+
+          const stakes = document.querySelector<HTMLElement>("[data-stakes-compare]");
+          if (stakes) {
+            gsap.fromTo(
+              stakes,
+              { clipPath: "inset(0 0 100% 0)" },
+              {
+                clipPath: "inset(0 0 0% 0)",
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: stakes,
+                  start: "top 80%",
+                  once: true,
+                },
+              },
+            );
+          }
 
           ScrollTrigger.batch("[data-drawsvg-divider], [data-drawsvg-cta]", {
             start: "top 90%",
