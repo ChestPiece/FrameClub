@@ -72,10 +72,11 @@ Page-level animations live in component files (`home-animations.tsx`, `shop-anim
 
 ## Design System — Non-Negotiables
 
-- **0px border radius everywhere.** `tailwind.config` sets all radius tokens to `0px`. No rounded corners ever.
+- **Soft frame radius.** Default `--radius` = `0.5rem` (8px). Scale: sm 6px · md 8px · lg 12px · xl 16px. No pills (`rounded-full` for chrome). Concentric nesting: outer ≈ inner + pad.
 - **Backgrounds:** only `#141313` `#0E0E0E` `#1C1B1B` `#2A2A2A` `#353434`. No white. No light grays.
 - **Red (accent only):** `--brand #380306` · `--brand-mid #8E130C` · `--brand-bright #C0392B`. Never use as section fill.
 - **Typography:** `font-display` (Bebas Neue) for headlines, `font-body` (Inter) for everything else. No third family.
+- **Origin:** Multan workshop. Copy must say Multan, not Lahore.
 - **shadcn/Base UI:** every primitive in `src/components/ui/` is a custom override. Never ship defaults. Match radius, color, and motion rules above.
 - **Copy:** import from `content/copy-constants.ts`. Never rewrite marketing strings inline.
 
