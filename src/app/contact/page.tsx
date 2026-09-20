@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ContactForm } from "@/components/contact/contact-form";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ContactHero } from "@/components/contact/contact-hero";
@@ -28,7 +28,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     ? "Notification · Restock alert"
     : intentIsCustomFrame
       ? "Brief · Football Frame Commission"
-      : "Chapter One · Reach the Workshop";
+      : "Workshop · Contact";
   const subtitle = intentIsNotify
     ? `You requested updates for ${params.product ?? "an unavailable model"}. Drop your email and we will notify you the moment it returns to the bench.`
     : intentIsCustomFrame
@@ -80,20 +80,28 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 <InfoBlock
                   label="Workshop"
                   primary="Studio 04, Block-C"
-                  secondary="Gulberg III · Lahore, 54000"
+                  secondary="Gulgasht · Multan, 60000"
                 />
                 <InfoBlock
                   label="Email"
                   primary="hello@frameclub.pk"
                   href="mailto:hello@frameclub.pk"
                 />
-                <InfoBlock
-                  label="WhatsApp"
-                  primary="Direct to the workshop"
-                  secondary="Reply within 1 working day"
-                  href={WHATSAPP_LINK}
-                  hrefLabel="Open chat →"
-                />
+                {WHATSAPP_LINK ? (
+                  <InfoBlock
+                    label="WhatsApp"
+                    primary="Direct to the workshop"
+                    secondary="Reply within 1 working day"
+                    href={WHATSAPP_LINK}
+                    hrefLabel="Open chat →"
+                  />
+                ) : (
+                  <InfoBlock
+                    label="Reach us"
+                    primary="Use the form"
+                    secondary="We reply within 1 working day"
+                  />
+                )}
                 <div
                   style={{
                     borderTop: "0.5px solid var(--border)",

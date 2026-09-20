@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -90,7 +90,7 @@ export function ContactHero({ chapterLabel, title, subtitle }: Props) {
           </p>
           <div style={{ height: 1, background: "var(--border)" }} />
           <p className="font-body uppercase text-text-muted" style={KICKER}>
-            Lahore · Pakistan
+            Multan · Pakistan
           </p>
         </div>
 

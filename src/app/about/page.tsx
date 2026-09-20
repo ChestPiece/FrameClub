@@ -1,4 +1,4 @@
-import { SiteFooter } from "@/components/layout/site-footer";
+﻿import { SiteFooter } from "@/components/layout/site-footer";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { Button } from "@/components/ui/button";
 import { AboutHero } from "@/components/about/about-hero";
@@ -50,7 +50,7 @@ export default function AboutPage() {
               style={{ gap: 80, alignItems: "start" }}
             >
               <p className="font-body text-text-muted" style={{ ...KICKER, paddingTop: 12 }}>
-                Lahore, Pakistan
+                Multan, Pakistan
               </p>
               <div className="flex flex-col" style={{ gap: 28 }}>
                 <p
@@ -66,7 +66,7 @@ export default function AboutPage() {
                   style={{ fontSize: 18, lineHeight: 1.75, margin: 0 }}
                 >
                   Today every order is the same conversation: what car, what backdrop,
-                  what should the plate say. The workshop in Lahore handles the rest —
+                  what should the plate say. The workshop in Multan handles the rest —
                   sourcing the diecast, finishing the wood, mounting the spec plate,
                   sealing the glass. Seven days from confirmed payment to your door.
                   No warehouse, no inventory, no compromise.

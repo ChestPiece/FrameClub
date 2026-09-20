@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { TransitionLink } from "@/components/layout/page-transition";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Button } from "@/components/ui/button";
-import { WHATSAPP_LINK } from "@/lib/content/copy-constants";
 
 export default function NotFoundPage() {
   return (
@@ -20,9 +18,12 @@ export default function NotFoundPage() {
               <Button render={<TransitionLink href="/shop" />} variant="brand" className="display-kicker w-full">
                 BACK TO COLLECTION
               </Button>
-              <Link href={WHATSAPP_LINK} className="text-xs uppercase tracking-[0.16em] text-text-muted hover:text-text-primary">
-                Or contact us on WhatsApp
-              </Link>
+              <TransitionLink
+                href="/contact"
+                className="text-xs uppercase tracking-[0.16em] text-text-muted hover:text-text-primary"
+              >
+                Or contact the workshop
+              </TransitionLink>
             </div>
           </article>
         </section>

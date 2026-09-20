@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -89,7 +89,7 @@ export function AboutHero() {
           </p>
           <div style={{ height: 1, background: "var(--border)" }} />
           <p className="font-body uppercase text-text-muted" style={KICKER}>
-            Lahore · Pakistan
+            Multan · Pakistan
           </p>
         </div>
 
@@ -143,7 +143,7 @@ export function AboutHero() {
               lineHeight: 1.75,
             }}
           >
-            Frame Club is a single-bench workshop in Lahore building made-to-order
+            Frame Club is a single-bench workshop in Multan building made-to-order
             diecast frames for car obsessives. One flat price. Every piece handbuilt.
             Fifty delivered so far. Zero complaints.
           </p>

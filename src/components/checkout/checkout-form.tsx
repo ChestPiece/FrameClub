@@ -120,9 +120,9 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
     if (fields.length === 0) return;
     animate(fields, {
       opacity: [0, 1],
-      translateY: [10, 0],
-      duration: 360,
-      delay: stagger(40, { start: 140 }),
+      translateY: [6, 0],
+      duration: 180,
+      delay: stagger(24, { start: 40 }),
       ease: "outCubic",
     });
   }, [step]);
@@ -279,18 +279,18 @@ export function CheckoutForm({ product, slug, background, notes, initialValues }
         <div className="flex items-center justify-between gap-6">
           <div>
             <p className="technical-label text-[10px] text-text-muted" style={{ marginBottom: 8 }}>
-              § Checkout
+              Checkout
             </p>
             <h1
               className="font-display uppercase text-text-primary"
               style={{
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                fontSize: "clamp(2rem, 4vw, 3.25rem)",
                 letterSpacing: "0.04em",
                 lineHeight: 1,
                 fontWeight: 400,
               }}
             >
-              Build Your Order
+              Confirm & pay
             </h1>
           </div>
           {stepIndicator}

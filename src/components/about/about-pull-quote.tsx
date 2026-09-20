@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -111,7 +111,7 @@ export function AboutPullQuote() {
                   The Workshop
                 </div>
                 <p className="font-body text-text-muted" style={KICKER}>
-                  Frame Club · Lahore
+                  Frame Club · Multan
                 </p>
               </div>
             </div>

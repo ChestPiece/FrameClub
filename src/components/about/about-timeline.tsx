@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -21,7 +21,7 @@ const PHASES = [
   {
     n: "02",
     title: "WORKSHOP FLOW",
-    body: "A single production line in Lahore. Sourcing, woodwork, mounting, sealing — handled bench to bench. Same hands on every frame. Seven days, every time.",
+    body: "A single production line in Multan. Sourcing, woodwork, mounting, sealing — handled bench to bench. Same hands on every frame. Seven days, every time.",
   },
   {
     n: "03",

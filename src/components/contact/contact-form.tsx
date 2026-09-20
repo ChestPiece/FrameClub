@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
@@ -235,7 +235,7 @@ export function ContactForm({ intentIsNotify = false, intentIsCustomFrame = fals
             </Label>
             <Input
               id="contact-team"
-              placeholder="e.g. Real Madrid, Lahore FC"
+              placeholder="e.g. Real Madrid, Multan FC"
               className={inputClass}
               {...register("team")}
             />
