@@ -19,7 +19,7 @@ export function RelatedProductsSection({ related }: RelatedProductsSectionProps)
       <RelatedProductsReveal className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {related.map((item) => (
           <article key={item.id} data-reveal className="group">
-            <div className="relative mb-5 aspect-4/5 overflow-hidden bg-bg-deep">
+            <div className="relative mb-5 aspect-4/5 overflow-hidden rounded-lg bg-bg-deep">
               <Image
                 src={item.images[0]}
                 alt={item.name}

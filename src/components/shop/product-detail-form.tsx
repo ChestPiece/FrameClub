@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -192,14 +192,15 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
             <div
               ref={tiltRef}
               data-fc-tilt
-              style={{
-                position: "relative",
-                aspectRatio: "4/5",
-                background: "var(--bg-deep)",
-                padding: 36,
-                transformStyle: "preserve-3d",
-                willChange: "transform",
-              }}
+                style={{
+                  position: "relative",
+                  aspectRatio: "4/5",
+                  background: "var(--bg-deep)",
+                  padding: 28,
+                  transformStyle: "preserve-3d",
+                  willChange: "transform",
+                  border: "1px solid var(--border)",
+                }}
             >
               <div
                 style={{
@@ -759,21 +760,35 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
               >
                 <span>✓ Nationwide Delivery</span>
                 <span>✓ Secure PayFast</span>
-                <span>✓ Built In Lahore</span>
+                <span>✓ Built In Multan</span>
               </div>
             </form>
 
-            <Link
-              href={WHATSAPP_LINK}
-              className="font-body text-text-muted hover:text-text-primary"
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-              }}
-            >
-              Ask a question on WhatsApp →
-            </Link>
+            {WHATSAPP_LINK ? (
+              <Link
+                href={WHATSAPP_LINK}
+                className="font-body text-text-muted hover:text-text-primary"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Ask a question on WhatsApp →
+              </Link>
+            ) : (
+              <TransitionLink
+                href="/contact"
+                className="font-body text-text-muted hover:text-text-primary"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Ask a question →
+              </TransitionLink>
+            )}
           </div>
         </div>
       </div>
@@ -838,10 +853,10 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
               <SpecRow k="SKU" v={product.id.slice(0, 8).toUpperCase()} last />
             </div>
             <div>
-              <SpecRow k="Power" v={power || "—"} />
-              <SpecRow k="Torque" v={torque || "—"} />
-              <SpecRow k="Top Speed" v={topSpeed || "—"} />
-              <SpecRow k="0–100 km/h" v={zeroToHundred || "—"} />
+              <SpecRow k="Power" v={power || "—"} emphasize />
+              <SpecRow k="Torque" v={torque || "—"} emphasize />
+              <SpecRow k="Top Speed" v={topSpeed || "—"} emphasize />
+              <SpecRow k="0–100 km/h" v={zeroToHundred || "—"} emphasize />
               <SpecRow k="Year" v={year || "—"} last />
             </div>
           </div>
@@ -854,7 +869,7 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
             style={{ fontSize: 15, lineHeight: 1.7 }}
           >
             <p style={{ margin: 0 }}>
-              Each frame is assembled by hand in Lahore using laser-cut steel, museum-grade
+              Each frame is assembled by hand in Multan using laser-cut steel, museum-grade
               acrylic, and a CNC-machined backplate. The diecast model is mounted on a hidden
               spine so it appears to float against the chosen backdrop.
             </p>
@@ -901,8 +916,8 @@ export function ProductDetailForm({ product }: ProductDetailFormProps) {
         }
         @media (min-width: 1024px) {
           .product-detail-grid {
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 64px;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 72px;
           }
           .product-detail-left {
             position: sticky;
@@ -1177,17 +1192,31 @@ function FootballFrameDetail({ product }: { product: Product }) {
               </Button>
             </div>
 
-            <Link
-              href={WHATSAPP_LINK}
-              className="font-body text-text-muted hover:text-text-primary"
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-              }}
-            >
-              Or talk to the workshop on WhatsApp →
-            </Link>
+            {WHATSAPP_LINK ? (
+              <Link
+                href={WHATSAPP_LINK}
+                className="font-body text-text-muted hover:text-text-primary"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Or talk to the workshop on WhatsApp →
+              </Link>
+            ) : (
+              <TransitionLink
+                href="/contact"
+                className="font-body text-text-muted hover:text-text-primary"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Or talk to the workshop →
+              </TransitionLink>
+            )}
           </div>
         </div>
       </div>
@@ -1210,13 +1239,13 @@ function FootballFrameDetail({ product }: { product: Product }) {
   );
 }
 
-function SpecRow({ k, v, last }: { k: string; v: string; last?: boolean }) {
+function SpecRow({ k, v, last, emphasize }: { k: string; v: string; last?: boolean; emphasize?: boolean }) {
   return (
     <div
       style={{
         display: "grid",
         gridTemplateColumns: "1fr auto",
-        padding: "14px 0",
+        padding: emphasize ? "20px 0" : "14px 0",
         borderBottom: last ? "none" : "0.5px solid var(--border-subtle)",
         alignItems: "baseline",
       }}
@@ -1233,8 +1262,12 @@ function SpecRow({ k, v, last }: { k: string; v: string; last?: boolean }) {
         {k}
       </span>
       <span
-        className="font-display text-text-primary"
-        style={{ fontSize: 18, letterSpacing: "0.04em" }}
+        className={`font-display ${emphasize ? "text-brand-bright" : "text-text-primary"}`}
+        style={{
+          fontSize: emphasize ? 28 : 18,
+          letterSpacing: "0.04em",
+          lineHeight: 1,
+        }}
       >
         {v}
       </span>

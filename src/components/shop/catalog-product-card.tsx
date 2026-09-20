@@ -10,64 +10,72 @@ type CatalogProductCardProps = {
   product: Product;
 };
 
+const isStudioReference = (src: string) => src.startsWith("/Assets/");
+
 export function CatalogProductCard({ product }: CatalogProductCardProps) {
   const defaultBackground = product.backgrounds[0]?.value ?? "carbon-grid";
   const quickAddHref = `/checkout?slug=${encodeURIComponent(product.slug)}&background=${encodeURIComponent(defaultBackground)}`;
   const isFootball = product.category === "football";
   const quoteHref = `/contact?intent=custom-frame&product=${encodeURIComponent(product.slug)}`;
+  const heroSrc = product.images[0] ?? "";
+  const showReferenceNote = isStudioReference(heroSrc);
 
   return (
     <article
       data-animate-item
       data-flip-card
       data-reveal
-      data-tilt
-      className={`group flex flex-col bg-bg-elevated transition-colors duration-300 ${
+      className={`group flex flex-col overflow-hidden rounded-lg border border-border/60 bg-bg-deep transition-[border-color] duration-200 ${
         product.status === "unavailable" ? "opacity-75" : "opacity-100"
       }`}
     >
       <TransitionLink href={`/shop/${product.slug}`} className="block cursor-pointer">
-        <div className="relative overflow-hidden bg-bg-deep">
-          <div className="relative aspect-4/3 w-full overflow-hidden will-change-transform">
+        <div className="relative overflow-hidden bg-bg-base">
+          <div className="relative aspect-[3/4] w-full overflow-hidden">
             <Image
-              src={product.images[0]}
+              src={heroSrc}
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain p-5 sm:p-8 opacity-95 transition-[opacity,transform] duration-500 ease-out motion-safe:group-hover:scale-[1.04] group-hover:opacity-100"
+              className="object-contain p-6 opacity-95 transition-opacity duration-300 group-hover:opacity-100"
             />
-            <div className="absolute right-4 top-4 z-10 rotate-12 border border-brand bg-bg-surface/80 px-2 py-1 text-[10px] uppercase tracking-widest text-brand backdrop-blur-sm">
-              MADE TO ORDER
-            </div>
           </div>
 
-          <div className="absolute left-4 top-4 z-20">
+          <div className="absolute left-3 top-3 z-20">
             <StatusBadge status={product.status} />
           </div>
+
+          {showReferenceNote ? (
+            <p
+              className="absolute bottom-3 left-3 font-body uppercase text-text-muted"
+              style={{ fontSize: 9, letterSpacing: "0.2em", margin: 0 }}
+            >
+              Studio reference
+            </p>
+          ) : null}
         </div>
 
-        <div className="border-t-2 border-border/50 p-8 transition-colors duration-300 group-hover:border-brand">
+        <div className="border-t border-border/50 p-6">
           <h2 className="display-kicker text-xl sm:text-2xl leading-none">{product.name}</h2>
           <p className="mt-2 text-xs uppercase tracking-[0.2em] text-text-muted">{product.brand}</p>
-          <p className="mt-4 line-clamp-2 text-sm text-text-muted">{product.description}</p>
         </div>
       </TransitionLink>
 
-      <div className="mt-auto space-y-4 px-8 pb-8">
-        <div className="flex items-center justify-between bg-bg-deep px-3 py-2.5">
+      <div className="mt-auto space-y-3 px-6 pb-6">
+        <div className="flex items-center justify-between rounded-md border border-border/40 px-3 py-2.5">
           <span className="technical-label text-[10px] text-text-muted">Price</span>
           <span className="display-kicker text-sm text-text-primary">
             {isFootball ? FOOTBALL_FRAME_COPY.priceLine : formatPkr(product.price)}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2">
           <Button
             render={<TransitionLink href={`/shop/${product.slug}`} />}
             variant="outline"
             className="display-kicker min-touch-target w-full justify-center"
           >
-            View Specs
+            Configure
           </Button>
 
           {isFootball ? (
@@ -92,7 +100,7 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
               variant="brand"
               className="display-kicker min-touch-target w-full justify-center"
             >
-              Pre-Order Now
+              Pre-Order
             </Button>
           ) : (
             <Button
@@ -100,7 +108,7 @@ export function CatalogProductCard({ product }: CatalogProductCardProps) {
               variant="brand"
               className="display-kicker min-touch-target w-full justify-center"
             >
-              Quick Add
+              Order
             </Button>
           )}
         </div>

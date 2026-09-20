@@ -2,8 +2,8 @@ import type { ProductCategory } from "@/lib/db/types";
 
 /**
  * Per-slug product photography served from `public/Assets/Cars/`.
- * Add entries here when seeding new products so the catalog and detail pages
- * have a real image even if the DB row's `images` column is empty.
+ * Temporary studio references until DB `images` are populated — catalog
+ * labels these "Studio reference" so we don't fake unique photography.
  */
 const PRODUCT_IMAGE_MAP: Record<string, string[]> = {
   // Cars

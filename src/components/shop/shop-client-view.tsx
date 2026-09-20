@@ -107,21 +107,20 @@ export function ShopClientView({ products }: ShopClientViewProps) {
                 margin: 0,
               }}
             >
-              THE{" "}
-              <span style={{ color: "var(--brand-bright)" }}>COLLECTION.</span>
+              GALLERY
             </h1>
 
             <p
               style={{
-                maxWidth: 640,
-                fontSize: 16,
+                maxWidth: 520,
+                fontSize: 15,
                 lineHeight: 1.7,
                 color: "var(--text-muted)",
                 margin: 0,
               }}
             >
-              {products.length} frames in this drop. One flat price. Every unit
-              handbuilt to spec. Filter, configure, ship.
+              {products.length} frames. One price. Configure the backdrop on each
+              piece, then pay upfront.
             </p>
           </div>
 
@@ -171,8 +170,8 @@ export function ShopClientView({ products }: ShopClientViewProps) {
                       : "transparent",
                     color: active ? "var(--text-primary)" : "var(--text-muted)",
                     cursor: "pointer",
-                    transition: "all 0.25s ease",
-                    borderRadius: 0,
+                    transition: "border-color 160ms var(--ease-out, ease-out), color 160ms var(--ease-out, ease-out), background-color 160ms var(--ease-out, ease-out)",
+                    borderRadius: "var(--radius)",
                   }}
                 >
                   {tab.label}
@@ -231,8 +230,8 @@ export function ShopClientView({ products }: ShopClientViewProps) {
                         : "transparent",
                       color: active ? "var(--text-primary)" : "var(--text-muted)",
                       cursor: "pointer",
-                      transition: "all 0.25s ease",
-                      borderRadius: 0,
+                      transition: "border-color 160ms var(--ease-out, ease-out), color 160ms var(--ease-out, ease-out), background-color 160ms var(--ease-out, ease-out)",
+                      borderRadius: "var(--radius)",
                     }}
                   >
                     {b === "all" ? "All" : b}
@@ -273,7 +272,7 @@ export function ShopClientView({ products }: ShopClientViewProps) {
                   fontSize: 11,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
-                  borderRadius: 0,
+                  borderRadius: "var(--radius)",
                   cursor: "pointer",
                   appearance: "none",
                 }}
