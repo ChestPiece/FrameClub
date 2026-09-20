@@ -20,8 +20,7 @@ type MotionSet = {
   press: Tween;
 };
 
-// Premium motion: scale + subtle lift (y) + filter brightness on press.
-// Sharp eases (expo / power3) match the brand's 0px-radius, hard-edge aesthetic.
+// Soft eases (expo / power3) — Warm Frame Atelier, 8px soft corners.
 export const BUTTON_MOTION_TWEENS: Record<ButtonMotionLevel, MotionSet> = {
   strong: {
     rest:  { scale: 1,     y: 0,  duration: 0.45, ease: "expo.out" },
